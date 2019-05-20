@@ -1,0 +1,429 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  background-color: #eee;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+.tex-c {
+  text-align: center;
+}
+.tex-l {
+  text-align: left;
+}
+.paddL {
+  padding-left: 5px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.wid10 {
+  width: 10%;
+}
+.wid15 {
+  width: 15%;
+}
+.wid25 {
+  width: 25%;
+}
+.wid30 {
+  width: 30%;
+}
+.wid35 {
+  width: 35%;
+}
+.wid50 {
+  width: 50%;
+}
+.wid40 {
+  width: 40%;
+}
+.container-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.container-list:first-child {
+  padding-top: 30px;
+}
+.container-list:first-child.paddtop-0 {
+  padding-top: 0;
+}
+.container-list .container-item {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  border: 1px solid #33b4ff;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 5px;
+  margin: 10px 30px;
+}
+.container-list .container-item a {
+  display: block;
+  text-decoration: none;
+  color: #333;
+}
+.container-list .container-item .text-in {
+  width: 100%;
+  border: 1px solid #ebebeb;
+  outline: none;
+  height: 30px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.container-list .container-item .text-in:focus {
+  border-color: #ff9600;
+}
+.btn {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 18px;
+  background-color: #3CC9DA;
+  color: #fff;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 14px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: .9;
+  filter: alpha(opacity=90);
+  outline: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.td-btn-wrap .btn {
+  padding: 0 2px;
+}
+.title {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 30px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #3CC9DA;
+  font-size: 18px;
+}
+.container-list {
+  width: 100%;
+}
+.container-list .input-wrap {
+  border: 0;
+  font-size: 14px;
+  margin-top: 0;
+}
+.container-list .input-wrap input[type='radio'] {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+.container-list .abbreviation {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.container-list .text-wrap {
+  border: 0;
+  margin: 0;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-left: 10px;
+}
+.container-list .text-wrap p {
+  text-align: left;
+}
+.container-list .text-wrap p.bold {
+  font-weight: 700;
+}
+.tab-wrap {
+  width: 100%;
+  border-top: 1px solid #ebebeb;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tab-wrap .ui-table {
+  font-size: 14px;
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+.tab-wrap .ui-table td {
+  line-height: 1;
+  padding: 8px 5px;
+  border: 1px solid #ebebeb;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tab-wrap .ui-table td.padd0 {
+  padding: 8px 0;
+}
+.tab-wrap .ui-table td .text-in {
+  width: 100%;
+  border: 1px solid #ebebeb;
+  outline: none;
+  height: 30px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tab-wrap .ui-table td .text-in:focus {
+  border-color: #ff9600;
+}
+.tab-wrap .ui-table td.td-btn-wrap {
+  padding: 8px 0;
+}
+.bar {
+  display: block;
+  height: 10px;
+  background-color: #e0e0e0;
+}
+.bar:active {
+  border: 0;
+}
+.com-name > div {
+  display: table;
+  height: 40px;
+}
+.com-name > div .long-show {
+  font-size: 14px;
+  display: table-cell;
+  vertical-align: middle;
+}
+.order-check-bottom10 {
+  margin-bottom: 10px;
+}
+.order-check-paddR10 {
+  padding-right: 10px;
+}
+select {
+  /*Chrome和Firefox里面的边框是不一样的，所以复写了一下*/
+  border: solid 1px #ebebeb;
+  /*很关键：将默认的select选择框样式清除*/
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  /*在选择框的最右侧中间显示小箭头图片*/
+  background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+  /*为下拉小箭头留出一点位置，避免被文字覆盖*/
+  padding-right: 14px;
+}
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+select::-ms-expand {
+  display: none;
+}
+.order-check-select {
+  width: 100%;
+  height: 30px;
+  border: 1px solid #ebebeb;
+  vertical-align: middle;
+  line-height: 30px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.order-check-select:focus {
+  border-color: #ff9600;
+}
+.footer-btn {
+  height: 30px;
+  padding-top: 10px;
+  text-align: right;
+}
+.break-all {
+  word-break: break-all;
+}
+.inventory_check_list > a {
+  text-decoration: none;
+  color: #666;
+  display: block;
+  border-bottom: 1px solid #ebebeb;
+}
+.inventory_check_list .container-list {
+  padding-top: 0;
+}
+.inventory-container-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.inventory-container-list .inventory-container-item {
+  padding-left: 10px;
+}
+.inventory-container-list .inventory-container-item p {
+  font-size: 12px;
+}
+.layout {
+  width: 100%;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.login-header {
+  display: block;
+  padding: 60px 0 32px;
+}
+.login-header em {
+  display: block;
+  margin: 0 auto 22px;
+  background: url("../../common/image/logo_li.png") no-repeat;
+  width: 100%;
+  height: 56px;
+}
+.login-form .flied {
+  padding: 0 10px;
+  height: 56px;
+  font-size: 14px;
+  -webkit-box-shadow: 0 1px 1px rgba(11, 3, 5, 0.1);
+  box-shadow: 0 1px 1px rgba(11, 3, 5, 0.1);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+.login-form .flied .label {
+  width: 60px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+.login-form .flied .input {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  height: 100%;
+  border: 0;
+  font-size: 14px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: inherit;
+  color: #333;
+}
+.login-form .flied .input:focus {
+  outline: 0 none;
+}
+.login-form .form-user {
+  border-radius: 16px 16px 0 0;
+  margin-bottom: 1px;
+}
+.login-form .form-password {
+  border-radius: 0 0 16px 16px;
+}
+.login-form .btn-blue {
+  background-color: #33b4ff;
+}
+.login-form .btnadpt {
+  margin-top: 30px;
+  width: 100%;
+  height: 45px;
+  line-height: 45px;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 20px;
+  color: #fff;
+  border: 1px solid rgba(186, 186, 186, 0.3);
+}
+.error_bg {
+  border: 1px solid #f56700 !important;
+}
+.error_tips {
+  padding: 5px 0;
+}
+.error_tips i {
+  color: #f56700;
+  vertical-align: middle;
+}
+.error_tips .tip_text {
+  font-size: 12px;
+  color: #f56700;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 50px white inset;
+  box-shadow: 0 0 0 50px white inset;
+  -webkit-text-fill-color: #333;
+}
+/*chrome 下修改占位字符的显示颜色*/
+::-webkit-input-placeholder {
+  color: #969696;
+}
+input:-moz-placeholder {
+  color: #969696;
+}
+.storagein-list li {
+  padding: 0 0 5px 10px;
+}
+.storagein-list .storagein-list-wrap p {
+  font-size: 12px;
+  color: #666;
+  padding: 2px 0 2px 0px;
+  line-height: 1;
+}
+li {
+  list-style: none;
+}
+.item-list {
+  zoom: 1;
+}
+.item-list:after,
+.item-list:before {
+  content: "";
+  display: table;
+}
+.item-list:after {
+  clear: both;
+}
+.item-list li {
+  float: left;
+  width: 50%;
+}
+.item-list li .item {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 10px 30px;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #33b4ff;
+  border-radius: 5px;
+}
+.item a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+}
+.inventory_check_list a {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eb7350;
+}

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增角色</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <style>
+        .add-use-wrapper {
+            width: 1000px;
+        }
+
+        .layui-elem-field legend {
+            margin-left: 25px;
+            padding: 0 10px;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .layui-table .layui-input-block {
+            margin-left: 0;
+        }
+
+        .layui-table .layui-form-item .layui-form-checkbox[lay-skin="primary"] {
+            margin-top: 0;
+        }
+
+        .miozn-botton {
+            text-align: center;
+        }
+
+        .miozn-botton .layui-input-block {
+            margin-left: 0;
+        }
+        .content-wrpper{
+            padding: 20px 20px 0 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <form id="add_role">
+        <div class="add-use-wrapper">
+            <div action="" class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">*角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="" lay-verify="required" id="role_name" placeholder="请输入登录用户名"
+                               autocomplete="off" maxlength="49"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">*角色描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="" lay-verify="required" id="role_desc" placeholder="" maxlength="200"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>权限设置</legend>
+                    </fieldset>
+
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="50">
+                            <col width="150">
+                            <col width="150">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose"></th>
+                            <th>功能权限</th>
+                            <th>功能权限</th>
+                            <th>具体操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="content">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="layui-form-item miozn-botton">
+                    <div class="layui-input-block">
+                        <button id="sure_button" type="submit" lay-filter="sure_button" class="layui-btn" lay-submit>
+                            确定
+                        </button>
+                        <button id="cancel_button" class="layui-btn layui-btn-primary">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/javascript" src="../../layui/lay/dest/layui.all.js"></script>
+<script type="x-jsrender" id="j-menu-list">
+<tr>
+    <td rowspan="{{:children.length}}"><input   lay-filter="checkboxed" type="checkbox" value="" code="{{:parentCode}}" name="" lay-skin="primary" ></td>
+    <td rowspan="{{:children.length}}"><input  lay-verify="meunCheck"  lay-filter="checkboxed" type="checkbox" {{if hasHideChild}}hide_child="true"{{/if}} parent_code='{{:parentCode}}' code="{{:content.code}}" lay-skin="primary" value="{{:content.id}}" title="{{:content.name}}"></td>
+    {{for children}}
+      {{if #index!=0}}
+        <tr>
+      {{/if}}
+    <td>
+        <div class="layui-input-block">
+            <input type="checkbox" lay-filter="checkboxed"  lay-verify="meunCheck" " hide_child="true" parent_code='{{:parentCode}}'  code="{{:content.code}}"  lay-skin="primary" value="{{:content.id}}" title="{{:content.name}}" >
+        </div>
+    </td>
+    <td>
+        <div class="layui-input-block">
+         {{for children}}
+            <input type="checkbox" lay-filter="checkboxed"  lay-verify="meunCheck"  " {{if hasHideChild}}hide_child="true"{{/if}} parent_code='{{:parentCode}}'  code="{{:content.code}}"  lay-skin="primary"  value="{{:content.id}}" title="{{:content.name}}"  >
+         {{/for}}
+        </div>
+    </td>
+   </tr>
+ {{/for}}
+
+
+
+
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer;
+        form.verify({
+            meunCheck: function () {
+                var roleList = selectCheckValueList();
+                if (!(Utils.isNotNull(roleList) && roleList.length > 0)) {
+                    return "请选择相关的权限";
+                }
+
+            }
+        });
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox'); //渲染选中checkBox 的样式
+        })
+        var id = Utils.getHrefValue("id");
+
+        $("#cancel_button").click(function () {
+            callParent.openTab("role_page");
+            callParent.closeTab("sys_role_add");
+        });
+        //监听提交
+        form.on('submit(sure_button)', function (data) {
+            var tipInfo = "确定保存改内容吗？"
+            if (Utils.isNotNull(id) && id.length > 0) {
+                tipInfo = "确定更新该角色吗？";
+            }
+            layer.confirm(tipInfo, function () {
+                var data = {};
+                data.roleInfo = {}
+                data.roleInfo.id = id;
+                data.roleInfo.name = $("#role_name").val();
+                data.roleInfo.roleDesc = $("#role_desc").val();
+                data.menuIdList = selectCheckValueList();
+                ajaxsend(data, "/api/admin/sys/role/save", function (dataJson) {
+                    if (Utils.isNotNull(id) && id.length > 0) {
+                        layer.alert("更新成功", {}, function (index) {
+                            layer.close(index)
+                            callParent.parentUse("role_page", "search");
+                        });
+                    } else {
+                        layer.alert("新增成功", {}, function () {
+                            callParent.parentUse("role_page", "search");
+                            callParent.openTab("role_page");
+                            callParent.closeTab("sys_role_add");
+                        });
+                    }
+                }, "post")
+            })
+            return false;
+        });
+
+
+        ajaxsend("", "/api/admin/common/list/menu_info", function (dataJson) {
+            var resultMap = new Map();
+            for (var i in dataJson.result) {
+                resultMap.push(dataJson.result[i].id, {
+                    content: dataJson.result[i],
+                    hasHideChild: false,
+                    children: new Array()
+                });
+            }
+            var menuList = new Array();
+            var obj = null;
+            for (var i in resultMap.key()) {
+                var key = resultMap.key()[i];
+                obj = resultMap.get(key);
+                var menuType = (obj.content.menuType - 0);
+                if (menuType == 0) {
+                    obj.parentCode = "top_" + i;
+                    menuList.push(obj);
+                } else if (menuType == 1 || menuType == 3) {
+                    var parentMenut = resultMap.get(obj.content.parentMenuId);
+                    if (Utils.isNotNull(parentMenut)) {
+                        obj.parentCode = parentMenut.content.code;
+                        parentMenut.children.push(obj);
+                    }
+                } else if (menuType == 4) {
+                    var parentMenut = resultMap.get(obj.content.parentMenuId);
+                    if (Utils.isNotNull(parentMenut)) {
+                        parentMenut.hasHideChild = true;
+                    }
+                }
+            }
+            $("#content").empty();
+            for (var i in menuList) {
+                var menuNoteObj = menuList[i];
+                var jsRenderTpl = $.templates('#j-menu-list');
+                /*绑定数据*/
+                var finalTpl = jsRenderTpl(menuNoteObj);
+                $("#content").append(finalTpl)
+            }
+            if (!Utils.isContain(dataJson.authorityCodeList, "role_save")) {
+                $("#add_role input").attr("disabled", "disabled");
+                $("#sure_button").hide()
+            }
+            form.render('checkbox'); //
+            if (Utils.isNotBlack(id)) {
+                ajaxsend({id: id}, "/api/admin/sys/role/info", function (dataJson) {
+                    $("#role_name").val(dataJson.result.roleInfo.name);
+                    $("#role_desc").val(dataJson.result.roleInfo.roleDesc);
+                    $("#content input[type=checkbox]").each(function (i, item) {
+                        if (Utils.isContain(dataJson.result.menuIdList, $(this).val())) {
+                            item.checked = true;
+                        } else {
+                            item.checked = false;
+                        }
+                        if (Utils.isNotBlack($(this).attr("parent_code")) && $(this).attr("parent_code").indexOf("top_") == 0) {
+                            selectParent($(this).attr("parent_code"), item.checked);
+                        }
+                    });
+                    form.render('checkbox'); //
+                });
+            }
+            bind();
+        });
+        function bind() {
+            form.on('checkbox(checkboxed)', function (data) {
+                var code = $(this).attr("code");
+                selectChild(code, data.elem.checked)
+                selectParent($(this).attr("parent_code"), data.elem.checked)
+                form.render('checkbox');
+            });
+
+        }
+
+        function selectChild(code, checked) {
+            $("#content input[type=checkbox]").each(function (i, item) {
+                if ($(this).attr("parent_code") == code) {
+                    item.checked = checked;
+                    selectChild($(this).attr("code"), checked)
+                }
+            })
+        }
+
+        function selectParent(code, checked) {
+            $("#content input[type=checkbox]").each(function (i, item) {
+                if (!checked) {
+                    $("#content input[type=checkbox]").each(function (i, item) {
+                        if ($(this).attr("parent_code") == code) {
+                            if (item.checked) {
+                                checked = true;
+                            }
+                        }
+                    });
+                }
+                if ($(this).attr("code") == code) {
+                    if (!(!checked && $(this).attr("hide_child") == "true")) {
+                        item.checked = checked;
+                    }
+                    selectParent($(this).attr("parent_code"), checked)
+
+                }
+            })
+        }
+
+        function selectCheckValueList() {
+            var checkValueList = new Array();
+            $("#content input[type=checkbox]").each(function (i, item) {
+                if (item.checked) {
+                    if (Utils.isNotBlack($(this).val()))
+                        checkValueList.push($(this).val());
+                }
+            })
+            return checkValueList;
+        }
+
+        callParent.isLoadEnd("sys_role_add")
+    })
+</script>
+</body>
+</html>

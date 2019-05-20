@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>退货账单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item ">
+                    <div class="layui-inline ">
+                       <div class="layui-input-inline">
+                        <select id="searchItem">
+                            <option value="orderSn">订单号</option>
+                            <option value="no">退货单号</option>
+                            <option value="shipper">退货人</option>
+                            <option value="phone">退货人电话</option>
+                        </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="exchangeStatus">
+                                <option value="">选择状态</option>
+                                <option value="false">待换货</option>
+                                <option value="true">已换货</option>
+                            </select>
+                        </div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">创建日期</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num">退货单号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num">订单编号</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50">换货人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">电话</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 ">状态</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.createTime)}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.no}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.orderSn}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.shipper}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.phone}}</div></td>
+        <td class="trDetail text-c"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.exchangeStatusStr}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+            {{#if (!item.exchangeStatus) { }}
+
+                <button class="exchange" val="{{item.id}}" title="确认换货">
+                    <i class="icon-zhenque"></i>
+                </button>
+
+            {{# } }}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr aglin='center'>
+        <td colspan="6" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="tplItem" type="text/html">
+    <td colspan="7" class="itemContent purchaseItemContent">
+        <div>
+            <p class="trDetail-title">换货明细</p>
+        </div>
+        <div style="">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商品sku</th>
+                    <th>商品名称</th>
+                    <th>数量</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d, function(index, item){ }}
+                <tr>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.quantity}}</td>
+                </tr>
+                {{# }); }}
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+        
+        $(document).on("click", ".exchange", function () {
+            var id = $(this).attr('val');
+            layer.confirm("确认换货?", {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/admin/returns/confirmExchange.json?id=" + id, function (dataJson) {
+                    pageOrder();
+                    layer.msg('成功');
+                });
+                layer.close(index);
+            });
+            return false;
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxPage('/admin/returns/exchange.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function () {
+            var searchItem=$("#searchItem").val();
+            var searchParam=$("#searchParam").val();
+            var exchangeStatus=$("#exchangeStatus").val();
+            var map=new Map();
+            if(searchItem && searchParam){
+                map.push(searchItem, searchParam);;
+            }
+            if(exchangeStatus){
+                map.push("exchangeStatus",exchangeStatus)
+            }
+            pageOrder(orderObj.setOption(map.mapObj))
+            return false;
+        });
+        pageOrder();
+
+        //明细
+        $(document).on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            var varCon = $("#itemContent");
+            if (varCon.length == 0) {
+                varThis.parent('tr').after('<tr id="itemContent" val="' + varId + '"></tr>');
+                varThis.parent().addClass('bg');
+                myAjax.ajaxTpl("/admin/returns/findItems.json?id=" + varId, 'itemContent', 'tplItem');
+            } else {
+                varCon.remove();
+                varThis.parent().removeClass('bg')
+                if (varCon.attr('val') != varId) {
+                    varThis.parent().siblings('tr.bg').removeClass('bg')
+                    varThis.parent().addClass('bg');
+                    varThis.parent('tr').after('<tr id="itemContent" val="' + varId + '"></tr>');
+                    myAjax.ajaxTpl("/admin/returns/findItems.json?id=" + varId, 'itemContent', 'tplItem');
+                }
+            }
+        });
+
+        callParent.isLoadEnd("returns_exchange");
+        callParent.register(function () {
+        	pageOrder();
+        }, "refresh");
+		
+        $('#searchParam').bind('keypress', function(event) {  
+	        var theEvent = event || window.event;      
+	        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;      
+	        if (code == 13) {                    
+	        	event.preventDefault();      
+	           //回车执行查询  
+	          $("#btnSearch").click();   
+	        }   
+	    });   	
+    });
+</script>
+</body>
+</html>

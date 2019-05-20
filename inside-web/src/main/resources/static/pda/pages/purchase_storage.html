@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>采购转入库</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <style>
+        .inventory_check_list a{
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eb7350;
+        }
+    </style>
+</head>
+<body>
+<div class="container-wrap" style="height: 100%">
+    <div class="title">
+        <p>采购转入库</p>
+    </div>
+    <div class="inventory_check_list" id="pageContent">
+    </div>
+    <div id="pageNum" style="text-align:right"></div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <a href="purchase_storage_in.html?purchaseId={{item.id}}&pNo={{item.purchaseNo}}&sId={{item.supplierId}}&wId={{item.warehouseId}}">
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 3">
+                <p class="bold">采购单号</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">{{item.purchaseNo}}</p>
+            </div>
+        </div>
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 3">
+                <p class="bold">供应商</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">{{item.supplierName}}</p>
+            </div>
+        </div>
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 3">
+                <p class="bold">预计到货时间</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">
+                    {{# if(item.hopeTime !=null){}}
+                    {{laydate.now(item.hopeTime,'YYYY-MM-DD hh:mm:ss')}}
+                    {{# }else{}}
+                    -
+                    {{#}}}
+                </p>
+            </div>
+        </div>
+    </a>
+    {{#  }); }}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var myAjax = layui.myAjax;
+
+        myAjax.ajaxPage('/purchase/list.json?status=4', 'pageNum', 'pageContent', 'pageTpl', {"params_order_name":"up_time","params_order_type":"0"});
+});
+</script>
+</body>
+</html>

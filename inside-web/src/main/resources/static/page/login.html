@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>杭州中策 </title>
+
+    <link rel="stylesheet" href="../common/css/sccl.css">
+    <link rel="stylesheet" href="../common/css/login.css">
+
+    <script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+
+</head>
+<body>
+<div class="home">
+    <div class="logo">
+
+    </div>
+    <h1>杭州中策仓配系统</h1>
+</div>
+<div class="banner">
+    <div class="login">
+        <div class="login_border">
+            <div class="login_content">
+                <form action="">
+                    <div class="userName">
+                        <i class="iconfont">&#xe8e9;</i>
+                        <input type="text" maxlength="20" id="userName" placeholder="请输入用户名">
+                    </div>
+                    <div class="passWord">
+                        <!--<span>密&nbsp;&nbsp;&nbsp;码:</span>-->
+                        <i class="iconfont">&#xe8f2;</i>
+                        <input type="password" maxlength="20" id="passWord" placeholder="请输入密码">
+                    </div>
+                    <div class="remember">
+                        <label>
+                            <input type="checkbox">
+                            记住用户名
+                        </label>
+                        <a href="resetPassword.html" target="_blank">忘记密码</a>
+                    </div>
+                    <div class="login_button">
+                        <input type="submit" value="登录" class="btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="message">
+        <i class="iconfont">&#xe904;</i>
+        <p id="message">账号错误</p>
+    </div>
+</div>
+<div class="footer">
+    <p class="noselect">2017-2022 中策橡胶集团有限公司 中策车空间 仓储配送系统</p>
+</div>
+
+<script type="text/javascript">
+    $().ready(function () {
+
+        /*账号 密码输入不正确时的提示框*/
+        var margin_left = $('.message').width()
+        $('.message').css('margin-left', -margin_left / 2)
+        $("#message ").text("密码错误,请重新输入")
+
+
+       // window.location.href = ("index.html")
+    })
+</script>
+</body>
+</html>

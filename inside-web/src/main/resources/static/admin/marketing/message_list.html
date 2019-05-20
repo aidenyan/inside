@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../common/css/bootstrap.css">-->
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_brand"
+                       class="layui-btn layui-btn-small marketing_coupon_save"
+                       authority_code="marketing_message_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加信息内容</a>
+                    <button class="layui-btn layui-btn-small marketing_message_deleted"
+                            authority_code="marketing_message_deleted" id="marketing_message_deleted">删除
+                    </button>
+                    <button class="layui-btn layui-btn-small marketing_message_stop"
+                            authority_code="marketing_message_stop" id="marketing_message_stop">停止
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <thead>
+                <tr>
+                    <th class="checked width30"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku  width260" >消息名称</th>
+                    <th class="tab_img width70">是否启用</th>
+                    <th class="tab_img width70">类型</th>
+                    <th class="tab_img width70">状态</th>
+                    <th class="tab_img width140">开始日期</th>
+                    <th class="tab_img width140">完成日期</th>
+                    <th class="tab_img width140">创建时间</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+    </div>
+</div>
+<div id="send_list_div" style="display: none">
+
+</div>
+<div id="reg_list">
+
+</div>
+<div id="user_reg_list" style="display: none">
+
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td class="checked"><input type="checkbox" lay-skin="primary" id="{{:id}}"></td>
+    <td>{{:title}}</td>
+    <td>{{if enabled}}启用{{else}}停止{{/if}}</td>
+    <td>{{if type==0}}短信{{else}}app信息{{/if}}</td>
+    <td>{{if sendStatus==0}}未发送{{/if}}{{if sendStatus==1}}正在发送中{{/if}}{{if sendStatus==2}}已完成{{/if}}</td>
+    <td>{{:sendTimeStr}}</td>
+    <td>{{:sendEndTimeStr}}</td>
+    <td>{{:createDate}}</td>
+    <td class="state_uhandle">
+                <a  message="{{:id}}" class="update marketing_message_save"  title="编辑" authority_code="marketing_message_save">
+                      <i class="icon-bianji"></i>
+                </a>
+                <a class="delete marketing_message_deleted"   title="删除"  message="{{:id}}" authority_code="marketing_message_deleted">
+                                <i class="icon-delete"></i>
+                </a>
+                  {{if enabled && sendStatus==0}}
+                 <a class=" update marketing_message_stop"   title="停止"     message="{{:id}}" authority_code="marketing_message_stop"  >
+                     <i class="icon-uniE617"></i>
+                </a>
+                {{/if}}
+                   {{if regId==null }}
+                <a class=" update marketing_message_code_create" data-title="{{:title}}"  title="选择用户"  message="{{:id}}" authority_code="marketing_message_code_create"  >
+                   <i class="icon-zhenque"></i>
+                </a>
+                {{/if}}
+
+    </td>
+</tr>
+{{/for}}
+
+</script>
+
+
+
+<script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:regName}}</option>
+    {{/for}}
+</script>
+<script type="x-jsrender" id="j-reg-list">
+   <form id="form_edit_reg" action="" class="layui-form dialog" style="display:none" >
+        <input  type="hidden" name="messageId" value="{{:messageId}}"/>
+         <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label"><span style="color:red">*</span>消息名称</label>
+            <div class="layui-input-inline detailedAddress">
+                   {{:title}}
+            </div>
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">发放用户</label>
+            <div class="layui-input-inline mizo-selectW">
+                <select id="reg_list_select" name="regId"  lay-verify="required">
+                      <option value="">请选择</option>
+                </select>
+              </div>
+        </div>
+    </div>
+        <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">所选用户</label>
+            <div class="layui-input-inline mizo-selectW">
+                 <a class="layui-btn-small" id="select_user_info" href="javascript:void(-1);">查看用户</a>
+              </div>
+        </div>
+    </div>
+            <input type="hidden" id="form_submit" lay-submit lay-filter="form_submit" />
+</form>
+
+</script>
+
+<script type="x-jsrender" id="j-code-send-list">
+  <div class="layui-form" id="coupon_code_send_list">
+  <table class="layui-table" >
+                <colgroup>
+                    <col width="160">
+                    <col width="180">
+                    <col width="180">
+
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="tab_sku sort" name="brand.name">规则名称</th>
+                     <th class="tab_img ">发放名称</th>
+                      <th class="tab_sku sort" >状态</th>
+                    <th class="tab_img ">发放时间</th>
+                   <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="code_send_page_body">
+
+   </tbody>
+  </table>
+  </div>
+
+</script>
+
+<script type="x-jsrender" id="j-user-send-tr">
+ <div class="layui-form">
+  <table class="layui-table" style="high" >
+                <colgroup>
+                    <col width="160">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="tab_sku sort" name="brand.name">用户名称</th>
+                               <th class="tab_sku sort" name="brand.name">用户号码</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                {{for result}}
+      <tr>
+     <td>{{:memberName}}</td>
+           <td>{{:mobile}}</td>
+    </tr>
+    {{/for}}
+   </tbody>
+  </table>
+        </div>
+   <div class="cf">
+            <div id="user_pager" style="text-align:right"></div>
+        </div>
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var currPageNo;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        $("#add_brand").click(function () {
+            openEditContent("新增消息")
+        });
+        $("#marketing_message_deleted").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    idList.push(checkBox($(this), $(this).attr("id")));
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要删除所选消息信息吗？",{icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function () {
+                    ajaxsend({messageIds: idList}, "/admin/marketing/message/deleted.json", function () {
+                        layer.alert("删除成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                layer.alert("请选择要删除的消息信息", function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        $("#marketing_message_stop").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    idList.push(checkBox($(this), $(this).attr("id")));
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要停止所选消息信息吗？",{icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function () {
+                    ajaxsend({messageIds: idList}, "/admin/marketing/message/stop.json", function () {
+                        layer.alert("停止成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                layer.alert("请选择要停止的消息信息", function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+
+        var orderObj = new Order(function (obj) {
+            search();
+        });
+
+        function search(pageNo) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var option = {pageNo: pageNo, pageSize: pageSize};
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/admin/marketing/message/list.json", function (dataJson) {
+                for (var i = 0; i < dataJson.result.result.length; i++) {
+                    var messageInfoList = dataJson.result.result[i];
+                    messageInfoList.sendTimeStr = Utils.formatTime(Utils.createTimeByLong(messageInfoList.sendTime), "YYYY-MM-DD HH:MS:SS")
+                    messageInfoList.sendEndTimeStr = Utils.formatTime(Utils.createTimeByLong(messageInfoList.sendEndTime), "YYYY-MM-DD HH:MS:SS")
+                    messageInfoList.createDate = Utils.formatTime(Utils.createTimeByLong(messageInfoList.createTime), "YYYY-MM-DD HH:MS:SS")
+                }
+                var data = dataJson;
+                createTableData(data);
+                checkLocalAuthority(data);
+                form.render('checkbox'); //
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+                bindListButton();
+            })
+        }
+
+        function createTableData(data) {
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+            /*绑定数据*/
+                    finalTpl = jsRenderTpl(data.result);
+            $('#page_tbody').html(finalTpl)
+
+        }
+
+        function bindListButton() {
+            $("#page_tbody .state_uhandle  a").click(function () {
+                var url = "";
+                var data = {id: $(this).attr("coupon")}
+                if ($(this).attr("authority_code") == "marketing_message_deleted") {
+                    url = "/admin/marketing/message/deleted.json";
+                    data.messageIds = $(this).attr("message");
+                    layer.confirm("确定要删除该消息信息吗？", {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']},function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index);
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_message_save") {
+                    openEditContent("修改消息信息", {id: $(this).attr("message")});
+                } else if ($(this).attr("authority_code") == "marketing_coupon_info") {
+                    openEditContent("消息信息查看", {id: $(this).attr("message"), type: "look"});
+                } else if ($(this).attr("authority_code") == "marketing_message_stop") {
+                    url = "/admin/marketing/message/stop.json";
+                    data.messageIds = $(this).attr("message");
+                    layer.confirm("确定要停止该消息信息吗？", {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']},function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index);
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_message_code_create") {
+                    url = "/admin/marketing/message/reg/list.json";
+                    var messageId = $(this).attr("message");
+                    var title=$(this).attr("data-title");
+                    ajaxsend("", url, function (dataJson) {
+                        var jsRenderTpl = $.templates('#j-reg-list'),
+                        /*绑定数据*/
+                                finalTpl = jsRenderTpl({messageId: messageId,title:title});
+                        $("#reg_list").html(finalTpl);
+                        jsRenderTpl = $.templates('#j-option');
+                        /*绑定数据*/
+                        finalTpl = jsRenderTpl(dataJson);
+                        $("#reg_list_select").append(finalTpl);
+                        $("#select_user_info").click(function () {
+                            searchUser();
+                        });
+                        layer.open({
+                            title: "选择会员",
+                            type: 1
+                            , content: $("#form_edit_reg")
+                            , btn: ["确定", "取消"]
+                            , area: ["600px", "380px"]
+                            , closeBtn: 0
+                            , btnAlign: 'r',
+                            success: function () {
+                                form.render();
+                            }
+                            , yes: function (index, item) {
+                                form.on("submit(form_submit)", function () {
+                                    ajaxsend($("#form_edit_reg").serialize(), "/admin/marketing/message/code_create.json", function (dataJson) {
+                                        layer.alert("操作成功", function (indexAlert) {
+                                            search(currPageNo);
+                                            layer.close(index);
+                                            layer.close(indexAlert);
+                                        })
+                                    });
+                                });
+                                $("#form_submit").click();
+                            }, btn2: function () {
+                                $("#form_edit_reg").remove();
+                            }
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_coupon_send_list") {
+                    dealRegList($(this),true);
+                }
+            });
+        }
+        function dealRegList(that, isOpen) {
+            var data = {};
+            data.messageId = $(that).attr("coupon");
+            dealSendList(data, "/admin/marketing/coupon/send_list.json", function (dataJson) {
+                if (Utils.isNotNull(dataJson) && Utils.isNotNull(dataJson.result)&& dataJson.result.length > 0) {
+                    for (var i = 0; i < dataJson.result.length; i++) {
+                        dataJson.result[i].sendTimeFormat = Utils.formatTime(Utils.createTimeByLong(dataJson.result[i].sendDate), "YYYY-MM-DD HH:MS:SS");
+                    }
+                }
+                var jsRenderTpl, finalTpl;
+                if (isOpen) {
+                    jsRenderTpl = $.templates('#j-code-send-list');
+                    finalTpl = jsRenderTpl(dataJson);
+                }
+                $("#send_list_div").html(finalTpl);
+                jsRenderTpl = $.templates('#j-code-send-tr');
+                /*绑定数据*/
+                finalTpl = jsRenderTpl(dataJson);
+                $("#code_send_page_body").html(finalTpl);
+                if (isOpen) {
+                    layer.open({
+                        title: "已经分配的信息"
+                        , type: 1
+                        , content: $("#send_list_div")
+                        , area: ["763px", "380px"]
+                        , btn: ["确定"]
+                        , closeBtn: 0
+                        , btnAlign: 'r'
+                        , yes: function (index, item) {
+                            layer.close(index);
+                            $("#coupon_code_send_list").remove();
+                        }
+                    });
+                }
+                $("#coupon_code_send_list .layui-btn-group a").click(function () {
+                    var sendId = $(this).attr("send_id");
+                    ajaxsend({couponCodeSendId: sendId}, "/admin/marketing/coupon/code_send_stop.json", function (dataJson) {
+                        layer.alert("操作成功", function (index) {
+                            layer.close(index);
+                            dealRegList(that, false);
+                        })
+                    });
+                });
+            });
+        }
+
+        function dealSendList(data, url, deal) {
+            ajaxsend(data, url, function (dataJson) {
+                deal.call(this, dataJson);
+            })
+
+        }
+
+        function searchUser(pageNo) {
+            var isOpen=false;
+            if (!Utils.isNotNull(pageNo)) {
+                isOpen=true;
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 30;
+            var option = {pageNo: pageNo, pageSize: pageSize};
+            var regListId = $("#reg_list_select").val();
+            if (Utils.isBlank(regListId)) {
+                layer.alert("请选择发放用户的规则");
+                return;
+            } else {
+                option.regId = regListId
+                ajaxsend(option, "/admin/marketing/coupon/send_user/list.json", function (dataJson) {
+                    var jsRenderTpl = $.templates('#j-user-send-tr'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl(dataJson.result);
+                    $("#user_reg_list").html(finalTpl);
+                    if(isOpen){
+                        layer.open({
+                            title: "用户列表",
+                            type: 1
+                            , content: $("#user_reg_list")
+                            , btn: ["确定"]
+                            , area: ["600px", "390px"]
+                            , closeBtn: 0
+                            , btnAlign: 'r',
+                            success: function () {
+                                form.render();
+                            }
+                            , yes: function (index, item) {
+                                layer.close(index);
+                                $("#user_reg_list").html("");
+                            }
+                        })}
+                    laypage({
+                        cont: "user_pager",
+                        curr: dataJson.result.pageNo
+                        , pages: dataJson.result.totalPage
+                        , skip: true
+                        , jump: function (jumpObj, first) {
+                            if (!first) {
+                                searchUser(jumpObj.curr);
+                            }
+                        }
+                    })
+                })
+            }
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+        function openEditContent(title, paramter) {
+            var url = "admin/marketing/message_info.html?";
+            if (Utils.isNotNull(paramter)) {
+                for (var i in paramter) {
+                    url = url + "&" + i + "=" + paramter[i];
+                }
+            }
+            callParent.openTab("marketing_message_add", 0, title, url, true);
+        }
+
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["marketing_message_deleted", "marketing_message_save", "marketing_message_stop",'marketing_message_code_create']);
+        }
+
+        callParent.isLoadEnd("marketing_message");
+        callParent.register(function () {
+            search(currPageNo)
+        }, "search");
+        search();
+    })
+</script>
+</body>
+</html>

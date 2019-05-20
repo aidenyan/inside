@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>库存管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmInven">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <input type="button" id="btnPurchase" class="layui-btn layui-btn-small" value="创建采购单">
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="SKU编码/商品名称"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <input type="button" id="btnUpload" class="layui-btn layui-btn-small" value="导入">
+                        <input type="button" id="btnExport" class="layui-btn layui-btn-small" value="导出">
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId">
+                                <option value="-1">选择仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcBrand" name="brandId">
+                                <option value="-1">选择品牌</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcType" name="typeId">
+                                <option value="-1">选择分类</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcSupplier" name="supplierId" lay-search>
+                                <option value="-1">选择供应商</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-block mizo-margin-0">
+                                <input name="isWarn" lay-skin="primary" title="预警" type="checkbox" value="true">
+                                <input name="isLess" lay-skin="primary" title="缺货" type="checkbox" value="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-checkbox" style="">
+                                    <input type="checkbox" id="selectAllCheckBox"
+                                           lay-filter="selectAllCheckBox" lay-skin="primary">
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-user_name sort" name="warehouse_name"
+                                     style="">所在仓库
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="sku_code" style="">
+                                    SKU编码
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-user_name " style="">品牌</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-address sort" name="product_name" style="">
+                                    商品名称
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " style="">单位</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-w100" style="">商品分类</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name9">
+                                <div class="datagrid-cell datagrid-cell-c1-w100 amount" style="">库位库存</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">预警值</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">销售库存</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">实际库存</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">采购数量</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">上月销量</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value" lay-ignore="">
+                <option value="20" selected="">20 条/页</option>
+                <option value="100">100 条/页</option>
+                <option value="300">300 条/页</option>
+                <option value="500">500 条/页</option>
+            </select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-checkbox">
+                <input name="" lay-skin="primary" type="checkbox" value="{{item.skuCode}}">
+            </div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-user_name">{{item.warehouseName}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-order_num">{{item.skuCode}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-user_name">{{item.brandName}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-address over_hid" title="{{item.productName}}">
+                {{item.productName}}
+            </div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w50">{{item.productUnit}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w100">{{item.categoryName}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w100">{{item.locationNo}}</div>
+        </td>
+        <td class="">
+            <div class="datagrid-cell tdWarn datagrid-cell-c1-w70" id="{{item.id}}">{{item.warnNum || 0}}</div>
+        </td>
+        <td style="{{# if (item.saleNum < item.warnNum){ }}color:red;{{#  } }}">
+            <div class="datagrid-cell datagrid-cell-c1-w70">{{item.saleNum}}</div>
+        </td>
+        <td style="{{# if (item.inventoryNum < item.warnNum){ }}color:red;{{#  } }}">
+            <div class="datagrid-cell datagrid-cell-c1-w70">{{item.inventoryNum}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w70">{{item.purchaseNum || ''}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w70">{{item.saleCount || ''}}</div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length === 0){ }}
+    <tr>
+        <td colspan="11" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplSupplier" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        $("#btnPurchase").click(function () {
+            if ($.trim($("#slcSupplier").val()) == "" || $.trim($("#slcSupplier").val()) == "-1") {
+                layer.alert("请选择供应商");
+            } else {
+                var skus = [];
+                var child = $('#pageContent').find('input[type="checkbox"]');
+                child.each(function (index, item) {
+                    if(item.checked) {
+                        skus.push(item.value);
+                    }
+                });
+                var resHouse = $.trim($("#slcWarehouse").val());
+                var resSup = $.trim($("#slcSupplier").val());
+                callParent.openTab("purchase_add", 0, "编辑采购单", "admin/purchase/purchase_add.html?skus=" + skus + "&resHouse=" + resHouse + "&resSup=" + resSup, true);
+            }
+        });
+
+        form.on('checkbox(selectAllCheckBox)', function (data) {
+            var child = $('#pageContent').find('input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        $("#btnUpload").click(function () {
+            var slc = '<select id="upWare" name="upWare">' + $("#slcWarehouse").html() + '</select>';
+            layer.open({
+                title: "导入库存"
+                ,
+                type: 1
+                ,
+                content: '<form id="uploadForm" style="text-align: center"><table class="upload_form_table"><tr><th>仓库：</th><td>' + slc + '</td><td></td></tr><tr><th>上传文件：</th><td><input type="file" name="file" id="upload_file"/></td><td><span style="color:red">导入每次最多500行</span><a href="../../file/inventory.xlsx" target="_blank">下载模板</a></td></tr></table><\/form>'            //弹窗内容
+                ,
+                area: ["600px", "300px"]         //设置窗体高度 和宽度
+                ,
+                btn: ["上传", "取消"]
+                ,
+                closeBtn: 0                      //取消右上角关闭按钮
+                ,
+                btnAlign: 'c'
+
+                ,
+                success: function (layero, index) {
+                    layero.addClass('layui-form');
+                    layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '');
+                    form.render();
+                }
+                ,
+                yes: function (index, item) {
+                    doUpload(index);
+                }
+            });
+        });
+
+        function doUpload(index) {
+            var formData = new FormData($("#uploadForm")[0]);
+            if ($.trim($("#upload_file").val()) == "") {
+                layer.alert("请选择要上传的文件");
+                return;
+            }
+            if ($.trim($("#upWare").val()) == "" || $.trim($("#upWare").val()) == "-1") {
+                layer.alert("请选择仓库");
+                return;
+            }
+            $.ajax({
+                url: '/inventory/upload.json',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    returndata = eval("(" + returndata + ")");
+                    var data = returndata.result;
+                    if (data == "success") {
+                        layer.alert("导入成功");
+                        pageOrder();
+                        layer.close(index);
+                    } else if (data == "fail") {
+                        var message = returndata.message;
+                        var content = "<div>导入失败</div>";
+                        content += "<div style=\"height: 250px;overflow-y:scroll\">";
+                        if (!(message == undefined || message == null || typeof(message) == "undefined")) {
+                            content += "<span>" + message + "</span><br/>";
+                        }
+                        var messageMap = returndata.messageMap;
+                        if (!(messageMap == undefined || messageMap == null || typeof(messageMap) == "undefined")) {
+                            for (var row in messageMap) {
+                                content += "<span>第" + row + "行的错误是：" + messageMap[row] + "</span><br/>";
+                            }
+                        }
+                        content += "</div>";
+                        layer.alert(content);
+                    } else {
+                        layer.alert("导入异常");
+                    }
+                },
+                error: function () {
+                    layer.alert("导入异常");
+                }
+            });
+        }
+
+        $("#btnExport").click(function () {
+            if ($.trim($("#slcWarehouse").val()) == "" || $.trim($("#slcWarehouse").val()) == "-1") {
+                layer.alert("请选择仓库");
+            } else {
+                window.open("/inventory/export.json?" + $("#frmInven").serialize(), "_blank");
+            }
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxPage('/inventory/list.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        $(".page_size_value").change(function () {
+            $("#btnSearch").click();
+        });
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            pageOrder(vSeaData);
+            return false;
+        });
+        pageOrder();
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg', true);
+
+        //获取品牌
+        myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'slcOption', true);
+
+        //获取分类
+        myAjax.ajaxTpl("/admin/common/category/list.json", 'slcType', 'slcOption', true);
+
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true);
+
+        var varThis;
+        $(document).on('dblclick', ".tdWarn", function () {
+            if (!$(this).is('.input')) {
+                var varId = $(this).attr('id');
+                $(this).addClass('input').html('<input type="text" class="" value="' + $(this).text() + '" />').find('input').focus().blur(function () {
+                    var temp = $(this).val();
+                    if (temp == '') {
+                        temp = 0;
+                    }
+                    if (/^\d+$/.test(temp)) {
+                        $(this).parent().removeClass('input').html(temp);
+                        myAjax.ajaxSend('/inventory/updateWarnNum.json', function () {
+//                            layer.msg('修改成功！！');
+                            refresh();
+                        }, {'id': varId, 'warnNum': temp});
+                    } else {
+                        layer.alert('请输入正确的预警值');
+                    }
+                });
+            }
+        });
+
+        callParent.isLoadEnd("purchase_stock");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+</body>
+</html>

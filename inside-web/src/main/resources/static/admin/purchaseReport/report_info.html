@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>汇总统计</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmStorageInfo">
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <input type="button" id="btnExport" class="layui-btn layui-btn-small" value="导出">
+                    </div>
+                    <div class="layui-inline po-r">
+                        <!--<input type="text" name="inputStr" placeholder="SKU/商品名称"-->
+                               <!--autocomplete="off" class="layui-input small mizo-srarch-input">-->
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-search>
+                                    <option value="-1">选择供应商</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcStatus" name="status">
+                                <option value="-1">选择状态</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" lay-verify="required" placeholder="开始日"
+                                   id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" lay-verify="required" placeholder="截止日"
+                                   id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="pageContent" class="layui-form">
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script id="pageTpl" type="text/html">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="sort" name="pur.supplier_name">
+                供应商名称
+            </th>
+            <th class="sort" name="pi.sku_code">
+                商品编码
+            </th>
+            <th class="sort" name="brand.name">
+                品牌
+            </th>
+            <th class="sort" name="pro.name">
+                商品名称
+            </th>
+            <th class="sort" name="num">
+                采购数量
+            </th>
+            <th class="sort amount" name="total_price" data-type="number">
+                合计金额
+            </th>
+            <th>
+                单位
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d, function(index, item){ }}
+        <tr>
+            <td>
+                {{item.supplierName || ''}}
+            </td>
+            <td>
+                {{item.skuCode || ''}}
+            </td>
+            <td>
+                {{item.brandName || ''}}
+            </td>
+            <td>
+                {{item.productName || ''}}
+            </td>
+            <td>
+                {{item.num || ''}}
+            </td>
+            <td class="amount">
+                {{item.totalPrice || ''}}
+            </td>
+            <td>
+                {{item.unit || ''}}
+            </td>
+        </tr>
+        {{# }); }}
+        {{# if(d.length === 0){ }}
+        <tr>
+            <td colspan="7" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+                <div class="null-show"></div>
+            </td>
+        </tr>
+        {{# } }}
+        </tbody>
+    </table>
+</script>
+<script id="tplSupplier" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="tplStatus">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        function loadDate(){
+            var date=new Date();
+            var month=(date.getMonth()+1);
+            if(month<10){
+                month="0"+month;
+            }
+            var formatDate=date.getFullYear()+"-"+month+"-01";
+            $('#startDate').val(formatDate);
+            $('#endDate').val(laydate.now());
+        }
+        loadDate();
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxTpl('/purchaseReport/info.json', 'pageContent', 'pageTpl', false, function(){
+                $("#pageContent tbody .amount").each(function(){
+                    $(this).html(Utils.formatPrice($(this).html()));
+                });
+            }, data);
+        }
+
+        form.on('submit(search)', function (data) {
+            var startDate = $.trim($("#startDate").val());
+            var endDate = $.trim($("#endDate").val());
+            if ((new Date(endDate) - new Date(startDate)) > (60 * 24 * 60 * 60 * 1000)) {
+                layer.alert("结束时间与开始时间不能相差大于两个月！");
+                return false;
+            }
+            vSeaData = data.field;
+            pageOrder(vSeaData);
+            return false;
+        });
+
+        $("#btnExport").click(function () {
+            var startDate = $.trim($("#startDate").val());
+            var endDate = $.trim($("#endDate").val());
+            if ((new Date(endDate) - new Date(startDate)) > (60 * 24 * 60 * 60 * 1000)) {
+                layer.alert("结束时间与开始时间不能相差大于两个月！");
+                return false;
+            }else {
+                window.open("/purchaseReport/export.json?" + $("#frmStorageInfo").serialize(), "_blank");
+            }
+            return false;
+        });
+
+        //获取状态
+        myAjax.ajaxTpl("/purchase/getStatus.json", 'slcStatus', 'tplStatus', true);
+
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true);
+
+        callParent.isLoadEnd("pur_report_info");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+</body>
+</html>

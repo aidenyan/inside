@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>转入库单</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <style>
+        .storagein-list-wrap p {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+</head>
+<body>
+<div class="container-wrap" style="height: 100%">
+    <div class="tab-wrap" style="height: 40%;overflow-y: auto">
+        <form id="frmPurStorPda">
+            <input id="hidRelationType" type="hidden" name="relationType">
+            <input id="hidRelationId" type="hidden" name="relationId">
+            <input id="hidRelationNo" type="hidden" name="relationNo">
+            <input id="hidWId" type="hidden" name="warehouseId">
+            <input id="hidSId" type="hidden" name="supplierId">
+            <input id="hidWName" type="hidden" name="warehouseName">
+            <input id="hidSName" type="hidden" name="supplierName">
+            <input id="hidOperType" type="hidden" name="operType">
+            <ul class="storagein-list">
+            </ul>
+        </form>
+    </div>
+    <div class="bar"></div>
+    <div class="currentShow">
+        <p></p>
+    </div>
+    <form id="form-1">
+        <div class="layui-form">
+            <div class="container-list paddtop-0">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">采购单号</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <div style="display: table-cell;vertical-align: middle;line-height: 1;font-size: 12px;height: 40px">
+                        <p id="pPurNo"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">供应商</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <div style="display: table-cell;vertical-align: middle;line-height: 1;font-size: 12px;height: 40px">
+                        <p id="pSuName"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">库位编码</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input type="text" name="location" class="text-in no1" lay-verify="required">
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">商品条码</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input type="text" name="proSn" class="text-in no2" lay-verify="required">
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">入库数量</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input type="text" name="num" class="text-in no3" lay-verify="required">
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">入库批次</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input type="text" name="batchNo" class="text-in no2">
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">生产批次</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input type="text" name="proNo" class="text-in no2">
+                </div>
+            </div>
+            <div class="container-list order-check-bottom10">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">生产日期</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input type="text" name="proTime" class="text-in no2">
+                </div>
+            </div>
+
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="border: 0">
+                    <input type="button" id="save" value="添&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加" class="btn"
+                           style="width: 95%;border-radius: 10px" lay-submit="" lay-filter="save">
+                    <input type="button" id="submit" value="提&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交" class="btn"
+                           style="width: 95%;border-radius: 10px">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script id="li-template" type="text/html">
+    <li>
+        <div class="storagein-list-wrap">
+            <p>
+                <span class="label">商品条码:</span>
+                <span data-code="{{d.proSn}}" class="pro-sn">{{d.proSn}}</span>
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].skuCode" value="{{d.skuCode}}"/>
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].proSn" value="{{d.proSn}}">
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].batchNo" value="{{d.batchNo || '' }}">
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].proNo" value="{{d.proNo || '' }}">
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].proTime" value="{{d.proTime || '' }}">
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].price" value="{{d.price || '' }}">
+            </p>
+            <p>
+                <span class="label">商品名称:</span>
+                <span>{{d.productName}}</span>
+            </p>
+            <p>
+                <span class="label">单位:</span>
+                <span>{{d.productUnit}}</span>
+            </p>
+            <p class="pro-location">
+                <span class="label">入库库位:</span>
+                <span class="location-sn">{{d.location}}</span>
+                <em class="location-sn-num">({{d.num}})</em>
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].locationList[0].num"
+                       value="{{d.num}}">
+                <input type="hidden" name="storageItemMap[{{d.skuCode}}].locationList[0].locationNo"
+                       value="{{d.location}}">
+            </p>
+            <p class="pro-num">
+                <span class="label">入库数量:</span>
+                <span><em class="in-num">{{d.num}}</em><input type="hidden" name="storageItemMap[{{d.skuCode}}].num" value="{{d.num}}"></span>
+            </p>
+        </div>
+    </li>
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var laytpl = layui.laytpl
+                , myAjax = layui.myAjax
+                , form = layui.form();
+
+        var purchaseId = params.get('purchaseId');
+        var pNo = params.get('pNo');
+        var sId = params.get('sId');
+        var wId = params.get('wId');
+        if (purchaseId != null) {
+            $("#pPurNo").html(pNo);
+            $("#hidRelationType").val(1);
+            $("#hidRelationId").val(purchaseId);
+            $("#hidRelationNo").val(pNo);
+            $("#hidWId").val(wId);
+            $("#hidSId").val(sId);
+            $("#hidOperType").val(8);
+            myAjax.ajaxSend('/admin/common/warehouse/get.json?companyOrgId=' + wId, function (data) {
+                $("#hidWName").val(data.result.companyShortName);
+            });
+            myAjax.ajaxSend('/supplier/get.json?supplierId=' + sId, function (data) {
+                $("#hidSName").val(data.result.supplierName);
+                $("#pSuName").html(data.result.supplierName);
+            });
+        }
+
+        form.on('submit(save)', function (data) {
+            data.field.location = data.field.location.toLocaleUpperCase();
+            myAjax.ajaxSend('/storage/pda/getProduct.json', function (dataRes) {
+                var flag = false;
+                $('.pro-sn').each(function (index, item) {
+                    if ($(item).text() != data.field.proSn) {
+                        return;
+                    } else {
+                        flag = true;
+                        var $this = $(item).parents('.storagein-list-wrap');
+                        var mark = false;
+                        var listIndex = 0;
+                        //修改总数量
+                        var vInNum = $(item).parent().parent().find('.in-num');
+                        var vNum = parseInt(vInNum.text()) + parseInt(data.field.num);
+                        vInNum.text(vNum);
+                        vInNum.next().val(vNum);
+                        $('.location-sn', $this).each(function (index, item) {
+                            listIndex++;
+                            if ($(item).text() === data.field.location) {
+                                mark = false;
+                                var oldNum = $(item).next().text();
+                                oldNum = oldNum.match(/\d+/);
+                                //修改库位数量
+                                var newnum = parseInt(oldNum) + parseInt(data.field.num);
+                                $(item).next().text('(' + newnum + ')');
+                                $(item).next().next().val(newnum);
+                                return false;
+                            } else {
+                                mark = true;
+                            }
+                        });
+                        if (mark) {
+                            var str = '<span class="location-sn">' + data.field.location + '</span>' + '<em>(' + data.field.num + ')</em>' +
+                                    '<input type="hidden" name="storageItemMap[' + dataRes.result.skuCode + '].locationList[' + listIndex + '].num" value="' + data.field.num + '">' +
+                                    '<input type="hidden" name="storageItemMap[' + dataRes.result.skuCode + '].locationList[' + listIndex + '].locationNo" value="' + data.field.location + '">';
+                            $('.pro-location', $this).append(str);
+                        }
+                    }
+                });
+                if (!flag) {
+                    var temp = $.extend(data.field, {
+                        'skuCode': dataRes.result.skuCode,
+                        'proSn': dataRes.result.proSn,
+                        'productName': dataRes.result.productName,
+                        'productUnit': dataRes.result.productUnit,
+                        'price': dataRes.result.price
+                    });
+                    renderHtml(temp)
+                }
+            }, {"proSn": data.field.proSn, "purId": purchaseId, "wid": wId, "location": data.field.location}, 'post');
+        });
+        function renderHtml(data) {
+            var temp = $('#li-template').html();
+            laytpl(temp).render(data, function (html) {
+                $('.storagein-list').append(html)
+            });
+        }
+
+        $('#submit').on('click', function () {
+            if (checkSave()) {
+                myAjax.ajaxSend('/storage/inSave.json', function () {
+                    layer.msg('提交成功');
+                    $('.storagein-list').html('');
+                }, $('#frmPurStorPda').serialize(), 'post');
+            }
+            return false;
+        });
+    })
+
+</script>
+</body>
+</html>

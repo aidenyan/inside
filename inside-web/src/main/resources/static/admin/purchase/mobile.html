@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document2017/6/2 0002</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            /*font-family: "Microsoft Yahei", "微软雅黑";*/
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .togetherList .listHeader:after {
+            display: block;
+            content: "";
+            clear: both;
+        }
+
+        .togetherList li:after {
+            display: block;
+            content: "";
+            clear: both;
+        }
+
+        .togetherList .listHeader div,
+        .togetherList .listBody div {
+            float: left;
+            text-align: left;
+            font-size: 12px;
+            margin: 9px 0;
+            padding-left: 3px;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .togetherList .listBody div[class^="w"] {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .togetherList {
+            width: 100%;
+        }
+
+        .togetherList:before,
+        .togetherList:after {
+            width: 0;
+            height: 0;
+            line-height: 0;
+            font-size: 0;
+            content: '';
+            display: block;
+            position: absolute;
+        }
+
+        .togetherList:before {
+            top: -20px;
+            left: 10px;
+            border: 10px dashed transparent;
+            border-bottom: 10px solid #e0e0e0;
+        }
+
+        .togetherList:after {
+            top: -19px;
+            left: 10px;
+            border: 10px dashed transparent;
+            border-bottom: 10px solid #fff;
+        }
+
+        .togetherList .wp20 {
+            width: 20%;
+        }
+
+        .togetherList .wp50 {
+            width: 50%;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .table {
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .table > thead > tr > th,
+        .table > tbody > tr > th,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > tbody > tr > td,
+        .table > tfoot > tr > td {
+            padding: 8px 0;
+            /*line-height: 1;*/
+            line-height: 20px;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+            text-align: left;
+            padding-left: 3px;
+            box-sizing: border-box;
+
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .table > thead > tr > th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #ddd;
+        }
+        .layui-btn-group a{
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th width="45%">供应商名称</th>
+        <th width="20%">采购金额</th>
+        <th width="15%">采购人</th>
+        <th width="20%">操作</th>
+    </tr>
+    </thead>
+    <tbody id="pageContent">
+
+    </tbody>
+</table>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script>
+    layui.use(['form', 'laytpl', 'myAjax'], function () {
+        var layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+
+        var vToken = params.get('token');
+        var vType = params.get('type');
+        if (vToken != null && vType != null) {
+            //通过
+            $("#pageContent").on("click", ".pass", function () {
+                var varId = $(this).attr('val');
+                layer.confirm('确认通过吗?', {icon: 3, title: '提示'}, function (index) {
+                    var vUrl;
+                    if (vType == 1) {
+                        vUrl = "/purchase/firstPassM.json?id=" + varId + "&token=" + vToken;
+                    } else {
+                        vUrl = "/purchase/secondPassM.json?id=" + varId + "&token=" + vToken;
+                    }
+                    myAjax.ajaxSend(vUrl, function (dataJson) {
+                        purList();
+                        layer.msg('审核通过');
+                    });
+                    layer.close(index);
+                });
+            });
+
+            //拒绝
+            $("#pageContent").on("click", ".reject", function () {
+                var varId = $(this).attr('val');
+                layer.confirm('确认拒绝吗?请输入原因：<input type="text" class="layui-input" id="txtAR" />', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    var vUrl;
+                    if (vType == 1) {
+                        vUrl = "/purchase/firstRejectM.json?id=" + varId + "&token=" + vToken + '&approvalRemark=' + $("#txtAR").val();
+                    } else {
+                        vUrl = "/purchase/secondRejectM.json?id=" + varId + "&token=" + vToken + '&approvalRemark=' + $("#txtAR").val();
+                    }
+                    myAjax.ajaxSend(vUrl, function (dataJson) {
+                        purList();
+                        layer.msg('审核拒绝');
+                    });
+                    layer.close(index);
+                });
+            });
+
+            function purList() {
+                if (vType == 1) {
+                    myAjax.ajaxTpl('/purchase/firstList.json?token=' + vToken, 'pageContent', 'pageTpl');
+                } else {
+                    myAjax.ajaxTpl('/purchase/secondList.json?token=' + vToken, 'pageContent', 'pageTpl');
+                }
+            }
+
+            purList();
+
+            //明细
+            $(document).on("click", ".trDetail", function () {
+                var varThis = $(this);
+                var varId = varThis.parent().attr('id');
+                var varCon = $("#purchaseItemContent");
+                if (varCon.length == 0) {
+                    varThis.parent('tr').after('<tr id="purchaseItemContent" val="' + varId + '"></tr>');
+                    myAjax.ajaxTpl("/purchase/findItems.json?purchaseId=" + varId + "&token=" + vToken, 'purchaseItemContent', 'tplPurchaseItem');
+                } else {
+                    varCon.remove();
+                    if (varCon.attr('val') != varId) {
+                        varThis.parent('tr').after('<tr id="purchaseItemContent" val="' + varId + '"></tr>');
+                        myAjax.ajaxTpl("/purchase/findItems.json?purchaseId=" + varId + "&token=" + vToken, 'purchaseItemContent', 'tplPurchaseItem');
+                    }
+                }
+            });
+        }
+    })
+</script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td class="trDetail">{{item.supplierName}}</td>
+        <td class="trDetail">{{item.totalAmount}}</td>
+        <td class="trDetail">{{item.purchaseName}}</td>
+        <td style="padding-left: 0">
+            <div class="layui-btn-group">
+                <a href="javascript:;" class="pass" val="{{item.id}}">通过</a>
+                <a href="javascript:;" class="reject" val="{{item.id}}">拒绝</a>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.length == 0){ }}
+    <tr>
+        <td colspan="4" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="tplPurchaseItem" type="text/html">
+    <tr id="view">
+        <td colspan="4">
+            <div CLASS="togetherList">
+                <div class="listHeader">
+                    <div class="wp50">商品名称</div>
+                    <div class="wp20" style="text-align: right;">单价</div>
+                    <div style="width: 15%;text-align: right;">数量</div>
+                    <div style="width: 15%;text-align: right;">合计</div>
+                </div>
+                <ul class="listBody">
+                    {{# layui.each(d.purchaseItemDTOList, function(index, item){ }}
+                    <li>
+                        <div class="wp50">{{item.productName}}</div>
+                        <div class="wp20" style="text-align: right;">{{item.purchasePrice}}</div>
+                        <div style="width: 15%;text-align: right;">{{item.purchaseNum}}</div>
+                        <div style="width: 15%;text-align: right;">{{(item.purchaseNum)*(item.purchasePrice)}}</div>
+                    </li>
+                    {{# }); }}
+                    <li>
+                        <div class="wp50">合计：</div>
+                        <div class="wp20"></div>
+                        <div style="width: 15%;"></div>
+                        <div style="width: 15%;text-align: right;">{{d.totalAmount}}</div>
+                    </li>
+                    <li>
+                        <div style="width: 30%;">备注：</div>
+                        <div>{{d.remark}}</div>
+                    </li>
+
+                    {{# if(d.firstRemark != null && d.firstRemark != ''){ }}
+                    <li>
+                        <div style="width: 30%;">初审拒绝原因：</div>
+                        <div>{{d.firstRemark}}</div>
+                    </li>
+                    {{# } }}
+                    {{# if(d.secondRemark != null && d.secondRemark != ''){ }}
+                    <li>
+                        <div style="width: 30%;">终审拒绝原因：</div>
+                        <div>{{d.secondRemark}}</div>
+                    </li>
+                    {{# } }}
+                </ul>
+            </div>
+        </td>
+    </tr>
+</script>
+
+
+</body>
+</html>

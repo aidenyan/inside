@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>入库管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline">
+                        <a href="javascript:;" id="storageInAdd" class="layui-btn layui-btn-small"> <i
+                                class="layui-icon"
+                                style="vertical-align: middle">
+                            &#xe61f;</i>新增入库单</a>
+                        <!--<button class="layui-btn layui-btn-small">删除</button>-->
+                    </div>
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="入库单号/关联单号/操作人/SKU"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId">
+                                <option value="">选择仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcStatus" name="status">
+                                <option value="">选择状态</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcOperType" name="operType">
+                                <option value="">入库类型</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!--<div class="layui-form">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    &lt;!&ndash;<th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>&ndash;&gt;
+                    <th class="width40">序号</th>
+                    <th class="sort width120" name="storage_out_in_no">入库单号</th>
+                    <th class="sort width120" name="relation_no">关联单号</th>
+                    <th class="sort width120" name="warehouse_name">入库仓库</th>
+                    <th class="width100">入库类型</th>
+                    <th class="sort" name="supplier_name">供应商名称</th>
+                    <th class="width70">操作人</th>
+                    <th class="width130">维护时间</th>
+                    <th class="sort width130" name="confirmed_time">入库时间</th>
+                    <th class="width70">状态</th>
+                    <th class="width120">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pageContent">
+
+                </tbody>
+            </table>
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-number " style="">序号</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="storage_out_in_no"
+                                     style="">入库单号
+                                </div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="relation_no" style="">
+                                    关联单号
+                                </div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="warehouse_name" style="">
+                                    入库仓库
+                                </div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w80 " style="">入库类型</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w200 sort" name="supplier_name" style="">
+                                    供应商名称
+                                </div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w80" style="">操作人</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-time " style="">维护时间</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-time sort" name="confirmed_time" style="">
+                                    入库时间
+                                </div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " style="">入库状态</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w100" style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value"  lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+<script type="text/javascript" src="../../js/print/print.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <!--<td>{{# if(item.status == 0){ }}<input name="" lay-skin="primary" type="checkbox">{{# } }}</td>-->
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-number">{{(index+1)+(d.pageSize*(d.pageNo-1))}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">{{item.storageOutInNo}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">{{item.relationNo || ''}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-w80">{{item.operTypeStr}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-w200">{{item.supplierName || ''}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-w80">{{item.confirmedName || ''}}</div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.modifyTime, 'YYYY-MM-DD hh:mm:ss')}}
+            </div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.confirmedTime, 'YYYY-MM-DD
+                hh:mm:ss')}}
+            </div>
+        </td>
+        <td class="trDetail">
+            <div class="datagrid-cell datagrid-cell-c1-w50">{{item.statusStr}}</div>
+        </td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w100">
+                {{# if(item.status == 0){ }}
+
+                <button class=" sureIn" val="{{item.id}}" title="确认入库">
+                    <i class="icon-zhenque"></i>
+                </button>
+                <button class=" update" val="{{item.id}}" title="编辑">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class=" delete" val="{{item.id}}" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+
+                {{# } }}
+                {{# if(item.status == 1){ }}
+                <button class=" print" val="{{item.id}}" sn="{{item.storageOutInNo}}"
+                        count="{{item.printCount || 0}}" title="打印">
+                    <i class="icon-print"></i>
+                </button>
+                {{# } }}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr>
+        <td colspan="11" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    <option value="-1">选择状态</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    <option value="-1">选择仓库</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionType">
+    <option value="-1">选择类型</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script id="tplSupplier" type="text/html">
+    <option value="-1">请选择供应商</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplStorageItem" type="text/html">
+    <td colspan="11" class="purchaseItemContent">
+        <div>
+            <p class="trDetail-title">入库明细</p>
+        </div>
+        <div style="">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商品编码</th>
+                    <th>品牌</th>
+                    <th>商品名称</th>
+                    <th>商品条码</th>
+                    <th>入库批次</th>
+                    <th>生产批次</th>
+                    <th>生产日期</th>
+                    <th>单位</th>
+                    <th class="number">入库数量</th>
+                    <th>入库库位</th>
+                    {{# if(d.operType == 8 || d.operType == 9){ }}
+                    <th class="number">已入库数量</th>
+                    <th class="number">总数量</th>
+                    {{# } }}
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d.storageItemDTOList, function(index, item){ }}
+                <tr>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.brandName}}</td>
+                    <td>{{item.productName}}</td>
+                    <td>{{item.proSn || ''}}</td>
+                    <td>{{item.batchNo || ''}}</td>
+                    <td>{{item.proNo || ''}}</td>
+                    <td>{{laydate.now(item.proTime)}}</td>
+                    <td>{{item.productUnit}}</td>
+                    <td class="number">{{item.num}}</td>
+                    <td>{{item.locationStr}}</td>
+                    {{# if(d.operType == 8 || d.operType == 9){ }}
+                    <td class="number">{{item.inNum || ''}}</td>
+                    <td class="number">{{item.purchaseNum || ''}}</td>
+                    {{# } }}
+                    <td class="state_uhandle">
+                        <div class="datagrid-cell datagrid-cell-c1-w50">
+                            <button class="printSn" sku="{{item.skuCode}}" batchNo="{{item.batchNo}}"
+                                    sn="{{d.storageOutInNo}}" proName="{{item.productName}}" proSn="{{item.proSn}}"
+                                    title="打印条码">
+                                <i class="icon-print"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <td>备注</td>
+                    <td colspan="13">{{d.remark || ''}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+<script type="text/html" id="tplPrint">
+    <input id="hidPrintCount" type="hidden" value="{{d.printCount}}"/>
+    <div id="form1">
+        <h3>商品入库单</h3>
+        <table>
+            <tr class="text_left">
+                <th>入库单号</th>
+                <td colspan="2">{{d.storageOutInNo}}</td>
+                <th>入库类型</th>
+                <td>{{d.operTypeStr}}</td>
+                <th>实际到货时间</th>
+                <td colspan="2">{{laydate.now(d.modifyDate, 'YYYY-MM-DD hh:mm:ss')}}</td>
+
+            </tr>
+            <tr class="text_left">
+                <th>仓库</th>
+                <td colspan="2">{{d.warehouseName}}</td>
+                <th>供应商</th>
+                <td colspan="4">{{d.supplierName}}</td>
+                <!--<th>备注</th>
+                <td colspan="2">{{d.remark}}</td>-->
+            </tr>
+            <tr>
+                <td colspan="8" class="height_30" style="text-align: left">
+                    备&nbsp;注：{{d.remark}}
+                </td>
+            </tr>
+        </table>
+        <table style="margin-top: 10px">
+            <tr>
+                <th width="30">序号</th>
+                <th width="150">商品编码</th>
+                <th>商品名称</th>
+                <th width="30">单位</th>
+                <th width="60">入库数量</th>
+                <th width="100">库位</th>
+            </tr>
+            {{# layui.each(d.storageItemDTOList, function(index, item){ }}
+            <tr>
+                <td>{{index + 1}}</td>
+                <td>{{item.skuCode}}</td>
+                <td style="text-align: left">{{item.productName}}</td>
+                <td>{{item.productUnit}}</td>
+                <td>{{item.num}}</td>
+                <td>{{item.locationStr}}</td>
+            </tr>
+            {{# }); }}
+        </table>
+    </div>
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        //新增
+        $("#storageInAdd").click(function () {
+            callParent.openTab("storage_in_add", 0, "编辑入库单", "admin/storage/storage_in_add.html", true);
+        });
+
+        //打印
+        var LODOP; //声明为全局变量
+        var varCss = 'h3 {width: 760px;height: 40px;line-height: 40px;text-align: center;}table {table-layout: fixed;border-collapse: collapse;' +
+                'width: 100%;font-size: 14px;text-align: center;}th, td {border: 1px solid #000;overflow: hidden;white-space: nowrap;}' +
+                '.height_30 {height: 30px;}.text_left th, .text_left td {text-align: left;}.text_left td {padding-left: 10px;}';
+
+        function print(varHtml, varSn) {
+            LODOP = getLodop();
+            LODOP.PRINT_INIT("");
+            var strBodyStyle = "<style>" + varCss + "</style>";
+            var strFormHtm1 = strBodyStyle + "<body>" + varHtml + "</body>";
+            LODOP.ADD_PRINT_HTM(20, "2%", "96%", "98%", strFormHtm1);
+            LODOP.ADD_PRINT_BARCODE(12, 520, "56.393mm", "15.756mm", "128A", varSn);
+            LODOP.SET_PRINT_PAGESIZE(2,0,0,"A4");
+            LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);
+            LODOP.PREVIEW();
+            //LOOP.PRINT();
+        }
+
+        $("#pageContent").on('click', '.print', function () {
+            var $this = $(this);
+            var varId = $this.attr("val");
+            var varSn = $this.attr("sn");
+            var count = $this.attr("count");
+            var mes = "";
+            if (count == 0) {
+                mes = "是否打印？";
+            } else {
+                mes = "已打印" + count + "次，是否继续？";
+            }
+            layer.confirm(mes, {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/storage/print.json?id=" + varId, function (dataJson) {
+                    $this.attr("count", dataJson.result.printCount);
+                    var getTpl = $("#tplPrint").html();
+                    laytpl(getTpl).render(dataJson.result, function (html) {
+                        print(html, varSn);
+                    });
+                    layer.close(index);
+                });
+            });
+        });
+
+        function printSn(vProSn, vSku, vProName, vBatchNo, vSn,vNum) {
+            LODOP = getLodop();
+            LODOP.PRINT_INIT("");
+            var html = '<div class="" style="width: 150px;text-align: center">'
+                    + '<div style="padding-top: 45px;width: 100%;margin: 0;font-size: 0">'
+                    + '<span style="font-size: 10px;display: block;line-height: 1">' + vProName + '</span>'
+                    + '<span style="display: block;font-size: 10px">批次码:' + vBatchNo
+                    + '</span> <span style="display: block;font-size: 10px">单据号:' + vSn + '</span>'
+                    + '</div>'
+                    + '</div>';
+           for(var i=0;i<vNum;i++){
+               LODOP.SET_PRINT_PAGESIZE(1, '40mm', '30mm', "");
+               LODOP.NewPage();
+               LODOP.ADD_PRINT_HTM(2, "2%", "96%", '100%', html);
+               LODOP.ADD_PRINT_BARCODE(1, "3mm", "35mm", "10.44mm", "128Auto", vProSn);
+               LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+           }
+            LODOP.PREVIEW();
+        }
+
+        $("#pageContent").on('click', '.printSn', function () {
+            var $this = $(this);
+            var vProSn = $this.attr("proSn");
+            var vSku = $this.attr("sku");
+            var vProName = $this.attr("proName");
+            var vBatchNo = $this.attr("batchNo");
+            var vSn = $this.attr("sn");
+            layer.confirm('是否打印？请输入数量：<input type="text" class="layui-input" id="txtPrintNum" />', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                var vNum = $('#txtPrintNum').val();
+                if (/^\d+$/.test(vNum)) {
+                    printSn(vProSn, vSku, vProName, vBatchNo, vSn,vNum);
+                    layer.close(index);
+                } else {
+                    layer.msg('请填写打印数量');
+                }
+            });
+        });
+
+        //确认入库
+        $("#pageContent").on("click", ".sureIn", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认完成入库吗?', {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/storage/confirm.json?id=" + varId, function (dataJson) {
+                    refresh();
+                    layer.msg('入库成功');
+                });
+            });
+        });
+
+        //编辑
+        $("#pageContent").on("click", ".update", function () {
+            var varId = $(this).attr('val');
+            callParent.openTab("storage_in_add", 0, "编辑入库单", "admin/storage/storage_in_add.html?storageInId=" + varId, true);
+        });
+
+        //删除
+        $("#pageContent").on("click", ".delete", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认删除吗?', {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/storage/delete.json?id=" + varId, function (dataJson) {
+                    var refPage = $("#pageNum").find(".layui-laypage-skip");
+                    if (refPage.length > 0) {
+                        var pNo = refPage.val();
+                        if ($("#pageContent").find("tr").length == 1) {
+                            pNo = pNo - 1;
+                        }
+                        myAjax.ajaxPage('/storage/list.json', 'pageNum', 'pageContent', 'pageTpl', $.extend($("#frmStorageIn").serializeJson(), {'pageNo': pNo, "params_order_name": "confirmed_time", "params_order_type": "0"}));
+                    } else {
+                        $('#btnSearch').click();
+                    }
+                    layer.msg('删除成功');
+                });
+            });
+        });
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            if (!Utils.isNotNull(data)) {
+                data = {"params_order_name": "confirmed_time", "params_order_type": "0"};
+            }
+            myAjax.ajaxPage('/storage/list.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        $(".page_size_value").change(function(){
+            $("#btnSearch").click();
+        });
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            $.extend(vSeaData, {"params_order_name": "confirmed_time", "params_order_type": "0"});
+            pageOrder(vSeaData);
+            return false;
+        });
+        pageOrder();
+
+        //明细
+        $("#pageContent").on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            var varCon = $("#storageItemContent");
+            if (varCon.length == 0) {
+                varThis.parent('tr').after('<tr id="storageItemContent" val="' + varId + '"></tr>');
+                varThis.parent().addClass('bg');
+                myAjax.ajaxTpl("/storage/findItems.json?storageId=" + varId, 'storageItemContent', 'tplStorageItem');
+            } else {
+                varCon.remove();
+                varThis.parent().removeClass('bg')
+                if (varCon.attr('val') != varId) {
+                    varThis.parent().siblings('tr.bg').removeClass('bg')
+                    varThis.parent().addClass('bg');
+                    varThis.parent('tr').after('<tr id="storageItemContent" val="' + varId + '"></tr>');
+                    myAjax.ajaxTpl("/storage/findItems.json?storageId=" + varId, 'storageItemContent', 'tplStorageItem');
+                }
+            }
+        });
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg');
+
+        //获取状态
+        myAjax.ajaxTpl("/storage/status.json", 'slcStatus', 'slcOption');
+
+        //获取入库类型
+        myAjax.ajaxTpl("/storage/operTypeIn.json", 'slcOperType', 'slcOptionType');
+
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier');
+
+        callParent.isLoadEnd("storage_in_list");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

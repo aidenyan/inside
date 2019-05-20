@@ -1,0 +1,87 @@
+﻿
+/**pager**/
+*{
+    padding: 0;
+    margin: 0;
+}
+#pager {
+    padding: 20px 20px 20px 0;
+    float: right;
+    font-size: 12px;
+}
+
+    #pager span {
+        display: block;
+        float: left;
+        height: 22px;
+        line-height: 22px;
+        border: 1px solid #cbd1d6;
+        margin-right: 5px;
+        padding: 0 7px;
+        border-radius: 1px;;
+        color: #666666;
+    }
+
+        #pager span.current {
+            background: #009cff;
+            color: #fff;
+            border: solid 1px #009cff;
+        }
+
+        #pager span.disenable {
+            color: #666;
+            background: #fff;
+            border: solid 1px #cbd1d6;
+        }
+    #pager a {
+        display: block;
+        float: left;
+        height: 22px;
+        line-height: 22px;
+        padding: 0 10px;
+        margin-right: 5px;
+        text-decoration: none;
+        border: solid 1px #cbd1d6;
+        color: #565c6a;
+        border-radius: 1px;
+    }
+
+        #pager a:hover {
+            border: solid 1px #009cff;
+            color: #009cff;
+        }
+
+    #pager input[type=text] {
+        border: solid 1px #AAE;
+        width: 28px;
+        height: 22px;
+        line-height: 22px;
+        float: left;
+        margin-right: 5px;
+        text-align: center;
+    }
+
+    #pager button {
+        cursor: pointer;
+        border: solid 1px #cbd1d6;
+        height: 24px;
+        line-height: 18px;
+        float: left;
+        margin-right: 5px;
+        width: 46px;
+        color: #565c6a;
+        background: white;
+        border-radius: 1px;
+        padding: 0;
+    }
+
+        #pager button:hover {
+            border: solid 1px #009cff;
+        }
+
+    #pager .select_float{
+        float: left;
+    }
+#pager select{
+    height: 24px;
+}

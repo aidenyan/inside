@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>波次选择</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    
+</head>
+<body>
+<div class="container-wrap">
+    <div class="title">
+        <p>波次选择</p>
+    </div>
+    <div class="container-list layui-form" id="statusList">
+        <div class="container-item input-wrap">
+            <input type="radio" name="status" value=0 title="未发货" lay-filter="statusFilter">
+        </div>
+        <div class="container-item input-wrap">
+            <input type="radio" name="status" value="" title="全部" lay-filter="statusFilter">
+        </div>
+    </div>
+
+    <div class="tab-wrap">
+        <table class="ui-table">
+            <tr>
+                <td class="wid35 paddL">波次单号</td>
+                <td class="wid20 tex-c">数量</td>
+                <td class="wid25 tex-c">创建时间</td>
+
+                <td class="wid20 tex-c">状态</td>
+            </tr>
+            <tbody id="page_tbody">
+
+            </tbody>
+        </table>
+    </div>
+    <div id="pageNum" class="text-r"></div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../js/bcScan.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    {{#  if(item.bcCode!=null&&item.bcCode!=""){ }}
+    <tr bcCode="{{item.bcCode}}" onclick="bcDetail('{{item.bcCode}}')">
+        <td class="trDetail"><div class="datagrid-cell break-all datagrid-cell-c1-order_num">{{item.bcCode||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-store_name">{{item.countOrder||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{changeStatus(item)}}</div></td>
+    </tr>
+    {{#  } }}
+	 {{#  if(item.bcCode==null||item.bcCode==""){ }}
+   		 <td colspan="4">
+           <div class="null-show"></div>
+       </td>
+    {{#  } }}
+    {{#  }); }}
+    {{#  if(d.result==null||d.result.length == 0){ }}
+    	<td colspan="4">
+           <div class="null-show"></div>
+       </td>
+    {{#  } }}
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章分类管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <script type="text/javascript" src="../admin.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <!--搜索条件-->
+    <div class="content-search layui-form">
+        <div class=" layui-form-item dialog_form_item">
+            <div class="layui-inline button-w70">
+                <a href="javascript:;" class="layui-btn layui-btn-small article_save" id="add_article" authority_code="article_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加文章</a>
+            </div>
+
+            <div class="layui-inline dialog_input_inline">
+                <select id="categoryId"><option value="">请选择</option></select>
+            </div>
+            <div class="layui-inline">
+                <input type="text" id="title" required lay-verify="required" placeholder="标题"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" id="search_btn">搜索</button>
+            </div>
+        </div>
+    </div>
+<!--table 内容-->
+    <div class="table_box">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <td width="5%"><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></td>
+                <td width="5% ">id</td>
+				<td width="21% ">标题</td>
+                <td width="21%">文章类型</td>
+                <td width="9%">是否发布</td>
+                <td width="15%">创建时间</td>
+                <td width="9%">操作</td>
+            </tr>
+            </thead>
+            <tbody id="articleTbody">
+
+            </tbody>
+        </table>
+    </div>
+    <!--table 分页-->
+    <div class="cf">
+        <div id="pager" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/html" id="articleList">
+    {{# layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="checkbox" lay-skin="primary" type="checkbox" value="{{item.id}}"></td>
+		<td class="text_left">{{item.id}}</td>
+        <td class="text_left">{{item.title}}</td>
+        <td class="text_left">{{d.categoryMap.get(item.categoryId)}}</td>
+        <td class="text_left">{{item.isPublication==true?'是':'否'}}</td>
+        <td class="text_left">{{laydate.now(item.createTime,"YYYY-MM-DD hh:mm:ss")}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class=" update" title="编辑" value="{{item.id}}">
+                    <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.result.length === 0){ }}
+    <tr>
+        <td colspan="6" style="text-align: center;"><div class="null-show"></div></td>
+    </tr>
+    {{# } }}
+</script>
+<script type="text/html" id="categoryOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">
+	{{#
+		function showGrade(grade){
+			var tmpNb = '';
+			var i=1;
+			while(i<=grade){
+			tmpNb+='&nbsp;';
+				i++;
+			}
+			return tmpNb;
+		}
+	}}
+	{{= showGrade(item.grade)}}
+	{{item.name}}</option>
+    {{#  }); }}
+</script>
+
+
+<script>
+    $(window).ready(function () {
+        layui.use(['form', 'laypage', 'layedit','laytpl', 'laydate'], function () {
+        	var form = layui.form();
+            var layer = layui.layer,
+                    laypage = layui.laypage;
+            var laytpl = layui.laytpl;
+            var currPageNo;
+            var categoryMap=new Map();;
+            
+            $("#search_btn").click(function () {
+                search();
+            })
+            
+            $("#add_article").click(function () {
+                callParent.openTab("article_add", 0, "新增文章", "admin/marketing/add_article.html", true);
+            });
+            
+            $("#articleTbody").on("click",".update", function() {
+            	callParent.openTab("article_update", 0, "修改文章", "admin/marketing/add_article.html?id="+$(this).val(), true);
+            })
+            
+            var orderObj = new Order(function (obj) {
+                search();
+            });
+
+            function search(pageNo) {
+                if (!Utils.isNotNull(pageNo)) {
+                    pageNo = 1;
+                }
+                currPageNo = pageNo;
+                var pageSize = 10;
+                var option = {pageNo: pageNo, pageSize: pageSize,categoryId: $("#categoryId").val(),title:$("#title").val()};
+                option = orderObj.setOption(option);
+                ajaxsend(option, "/admin/article/list.json", function (dataJson) {
+                    dataJson.result.categoryMap=categoryMap;
+                    laytpl($("#articleList").html()).render(dataJson.result, function (html) {
+                        $("#articleTbody").html(html);
+                        form.render()
+                    });
+                    //var data = dataJson;
+                    //checkLocalAuthority(data);
+                    form.render('checkbox'); //
+                    laypage({
+                        cont: "pager",
+                        curr: dataJson.result.pageNo
+                        , pages: dataJson.result.totalPage
+                        , skip: true
+                        , jump: function (jumpObj, first) {
+                            if (!first) {
+                                search(jumpObj.curr);
+                            }
+                        }
+                    })
+                })
+            }
+            
+            
+            ajaxsend("","/admin/article/category/list.json", function (dataJson) {
+                if(dataJson.code=="0"){
+                	for (var i in dataJson.result) {
+                        categoryMap.push(dataJson.result[i].id, dataJson.result[i].name);
+                    }
+                    laytpl($("#categoryOption").html()).render(dataJson.result, function (html) {
+                       $("#categoryId").append(html);
+                       form.render()
+                       search();
+                   });
+                }
+            })
+            form.on('checkbox(allChoose)', function(data){
+                var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            
+            callParent.isLoadEnd("article_list");
+            callParent.register(function () {
+            	search();
+            }, "search");
+        })
+    })
+</script>
+</body>
+</html>

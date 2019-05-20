@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理系统 </title>
+    <link rel="stylesheet" href="common/css/sccl.css">
+    <link rel="stylesheet" href="common/css/login.css">
+    <link rel="stylesheet" href="common/css/font-style.css">
+    <link rel="shortcut icon" href="common/image/favicon.png">
+    <script type="text/javascript" src="common/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="common/js/layer/layer.js"></script>
+</head>
+<body>
+<div class="home cf">
+    <div class="logo">
+        <!--<i class="icon-logo" style="font-size: 50px;color:#0498ff"></i>-->
+    </div>
+    <!--<h1>仓储配送管理平台</h1>-->
+    <!--<div class="h1-title"></div>-->
+</div>
+<div class="banner">
+    <div class="login">
+        <!-- <div class="login-title">登录</div>-->
+        <div class="login_border">
+            <div class="login_content">
+                <p class="login_content-title userSelect"></p>
+                <form id="login_form" style="padding-top: 116px;text-align: center">
+                    <div class="userName">
+                        <i class="iconfont">&#xe8e9;</i>
+                        <input type="text" maxlength="20" name="name" id="userName" placeholder="请输入用户名"
+                               autocomplete="off">
+                    </div>
+                    <div class="passWord">
+                        <!--<span>密&nbsp;&nbsp;&nbsp;码:</span>-->
+                        <i class="iconfont">&#xe8f2;</i>
+                        <input type="password" maxlength="20" name="password" id="passWord" placeholder="请输入密码"
+                               autocomplete="off">
+                    </div>
+                    <div class="login_button">
+                        <input type="button" value="登录" class="btn" id="btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="footer">
+    <p class="noselect"> <!--中策橡胶集团有限公司出品-->   中策云仓储配送管理系统
+        <small>Copyright©2017 浙ICP备17029150号-1</small>
+    </p>
+</div>
+<script type="text/javascript" src="common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="common/js/jquery.util.js"></script>
+<script type="text/javascript" src="common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="common/lib/jsrender.js"></script>
+<script type="text/javascript" src="common/js/common/ajaxsend.js"></script>
+<script type="text/javascript" src="common/js/common/map.js"></script>
+<script type="text/javascript" src="common/js/common/utils.js"></script>
+<script type="text/javascript" src="common/js/common/authority.js"></script>
+<script type="text/javascript" src="common/js/common/order.js"></script>
+<script type="text/javascript" src="common/js/layer/layer.js"></script>
+<script type="text/javascript" src="common/js/common/dialog.js"></script>
+<script type="text/javascript" src="common/lib/ajaxfileupload.js"></script>
+<script type="text/javascript" src="common/js/child.js"></script>
+<script type="text/javascript" src="layui/layui.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('body').on('keyup', function (e) {
+            var theEvent = e || window.event;
+            var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+            if (code === 13) {
+                $('#btn').click();
+            }
+        })
+        $("#btn").click(function () {
+
+            ajaxsend($("#login_form").serialize(), "/api/login/in", function (dataJson) {
+                window.location.href = "./index.html";
+            })
+        });
+    });
+
+    $().ready(function () {
+        // 设置禁止弹出浏览器本身的联想输入
+        $('input[type=text]').attr({
+            'autocomplete': 'off',
+            'x-webkit-speech': '',
+            'x-webkit-grammar': 'builtin:translate',
+            'role': 'combobox',
+            'aria-haspopup': 'true',
+        });
+    });
+</script>
+</body>
+</html>

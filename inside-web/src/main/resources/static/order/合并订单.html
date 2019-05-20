@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>合并订单</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../layui/layui.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list">
+    <!--分割线-->
+    <h2 class="title2">
+        <span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>
+        共有以下可合并的订单
+    </h2>
+
+    <!--订单列表-->
+    <div class="table_box layui-form">
+        <table class="layui-table text_left">
+            <thead>
+            <tr>
+                <td width="5%" class="paddl3">
+                    <input type="checkbox" lay-skin="primary" name="">
+                </td>
+                <td width="15%">订单编号</td>
+                <td width="15%">收货人</td>
+                <td width="25%">会员账号</td>
+                <td width="15%">发货仓库</td>
+                <td width="15%">状态</td>
+                <td width="10%">创建日期</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-c">
+                    <input type="checkbox" lay-skin="primary" name="">
+                </td>
+                <td onclick="Public.openAndClose(this)" class="cursor_p userSelect">51343353</td>
+                <td>张三</td>
+                <td>ow-4051343353</td>
+                <td>杭州总仓</td>
+                <td>待发货</td>
+                <td>05-15</td>
+            </tr>
+
+            <tr>
+                <td colspan="7" class="detail">
+                    <!--订单详细-->
+                    <div class="togetherList">
+                        <div class="listHeader">
+                            <div class="wp15">SKU编码</div>
+                            <div class="wp24">商品名称</div>
+                            <div class="wp15">品牌</div>
+                            <div class="wp5">单位</div>
+                            <div class="wp15">商品分类</div>
+                            <div class="wp8">销售单价</div>
+                            <div class="wp8">下单数量</div>
+                            <div class="wp10">小计</div>
+                        </div>
+                        <ul class="listBody">
+                            <li>
+                                <div class="wp15">9847654768</div>
+                                <div class="wp24">商品名称</div>
+                                <div class="wp15">品牌</div>
+                                <div class="wp5">单位</div>
+                                <div class="wp15">商品分类</div>
+                                <div class="wp8">￥200</div>
+                                <div class="wp8">300</div>
+                                <div class="wp10">200000</div>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="layui-table text_left">
+            <thead>
+            <tr>
+                <td width="5%" class="paddl3">
+                    <input type="checkbox" lay-skin="primary" name="">
+                </td>
+                <td width="15%">订单编号</td>
+                <td width="15%">收货人</td>
+                <td width="25%">会员账号</td>
+                <td width="15%">发货仓库</td>
+                <td width="15%">状态</td>
+                <td width="10%">创建日期</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-c">
+                    <input type="checkbox" lay-skin="primary" name="">
+                </td>
+                <td onclick="Public.openAndClose(this)" class="cursor_p userSelect">51343353</td>
+                <td>张三</td>
+                <td>ow-4051343353</td>
+                <td>杭州总仓</td>
+                <td>待发货</td>
+                <td>05-15</td>
+            </tr>
+
+            <tr>
+                <td colspan="7" class="detail">
+                    <!--订单详细-->
+                    <div class="togetherList">
+                        <div class="listHeader">
+                            <div class="wp15">SKU编码</div>
+                            <div class="wp24">商品名称</div>
+                            <div class="wp15">品牌</div>
+                            <div class="wp5">单位</div>
+                            <div class="wp15">商品分类</div>
+                            <div class="wp8">销售单价</div>
+                            <div class="wp8">下单数量</div>
+                            <div class="wp10">小计</div>
+                        </div>
+                        <ul class="listBody">
+                            <li>
+                                <div class="wp15">9847654768123456789</div>
+                                <div class="wp24" title="商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称">商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</div>
+                                <div class="wp15">品牌</div>
+                                <div class="wp5">单位</div>
+                                <div class="wp15">商品分类</div>
+                                <div class="wp8">￥200</div>
+                                <div class="wp8">300</div>
+                                <div class="wp10 break_all">20000.000,000</div>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+        })
+    })
+</script>
+<script>
+    (function ($, window) {
+        var Public = {
+            editAddress: function (parent) {
+                var $this = $(parent), $address = $this.parent().siblings('.address');
+                if (this.isOpen) {
+                    $this.removeClass('open')
+                    $address.slideUp('fast');
+                    this.isOpen = false
+                    $this.html('&#xE611')
+                } else {
+                    $address.slideDown('fast');
+                    this.isOpen = true
+                    $this.html('&#xE614')
+                    $this.addClass('open')
+                }
+            },
+            editNum: function (parent) {
+                var $this = $(parent);
+                var cunt = 0;
+                if (!$this.is('.input')) {
+                    $this.addClass('input').html('<input type="text" value="' + $(this).text() + '" />').find('input').focus().blur(function () {
+                        if ($(this).val() > 5) {
+                            layer.tips('最大数值为5', $(this))
+                            $(this).parent().removeClass('input').html(5);
+                            $(this).val(5)
+                        }
+                        else {
+                            $(this).parent().removeClass('input').html($(this).val() || 0);
+                        }
+                        var price = $this.parent().find('.advertisePrice').html();
+                        $this.parent().find('.heji').html(price * $(this).val())
+                        console.log($this.parent().find('.advertisePrice').html())
+                    });
+                }
+            },
+
+            openAndClose: function (parent) {
+                var $this=$(parent),$target=$this.parent('tr').next().children('td');
+                if(!this.isOpen){
+                    $target.slideUp('fast');
+                    this.isOpen = true
+                }else {
+                    $target.slideDown('fast');
+                    this.isOpen=false
+                }
+            }
+        }
+        window.Public = Public
+    })(jQuery, window)
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <link rel="stylesheet" href="../../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list cf">
+       <div class="userCenter_left">
+            <div class="userCenter_name">
+                <p>组织架构</p>
+            </div>
+            <div class="">
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="输入组织名称进行搜索"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" style="width: 250px" id="treeSearch">
+                    <ul id="searchList"></ul>
+                </div>
+                <ul id="companyTree" class="ztree">
+                </ul>
+            </div>
+        </div>
+       <div class="userCenter_right">
+            <!--条件搜索部分-->
+            <div class="layui-inline mizone-padding-botton">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_position"> <i class="layui-icon" style="vertical-align: middle">
+                    &#xe61f;</i>新增岗位</a>
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="岗位名称"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" id="searchParam">
+                    <button class="layui-btn layui-btn-small" id="searchPosition">搜索</button>
+                </div>
+            </div>
+        <div class="layui-form">
+            <table class="layui-table " id="checkTba">
+                <thead>
+                <tr>
+                	<th class="checked width30"><input type="checkbox" id="selectAllCheckBox" lay-filter="selectAllCheckBox" lay-skin="primary"></th>
+                    <th class="width50">序号</th>
+                    <th>岗位名称</th>
+                    <th>岗位描述</th>
+                    <th>所属组织</th>
+                    <th class="sort width150" name="p.create_time">创建时间</th>
+                    <th class="width120">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+            <div id="pageNum" class="text-r"></div>
+    </div>
+    </div>
+
+</div>
+
+<form id="companyPositionForm" action=""  class="companyPositionForm" style="display: none">
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>岗位名称</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入岗位名称" class="layui-input" id="positionName" name="positionName" lay-verify="positionName">
+        </div>
+    </div>
+	
+	<div class="layui-form-item">
+        <label class="layui-form-label padd_top">岗位描述</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入岗位描述" class="layui-input" id="positionDesc" name="positionDesc">
+        </div>
+    </div>
+    
+</form>
+</div>
+</body>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script src="../../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script type="text/javascript" src="../../common/ztree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../../common/ztree/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="../../common/js/userCenter/companyPosition.js"></script>
+<script type="text/javascript" src="../../common/js/userCenter/companyCommon.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/js/child.js"></script>
+<script type="text/javascript" src="../../common/js/common/ajaxsend.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></i></td>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td>{{item.positionName==null?'-':item.positionName}}</td>
+        <td>{{item.positionDesc==null?'-':item.positionDesc}}</td>
+        <td>{{item.companyName==null?'-':item.companyName}}</td>
+        <td>{{item.createTime==null?'-':laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class=" update" value="{{item.id}}" onclick="updatePosition({{item.id}})">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class="delete" value="{{item.id}}" onclick="deletePosition({{item.id}})">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+    	<tr aglin='center'><td colspan="7">无数据</td></tr>
+    {{#  } }}
+</script>
+</html>

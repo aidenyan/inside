@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../common/css/bootstrap.css">-->
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_tag" class="layui-btn layui-btn-small marketing_tag_save"
+                       authority_code="marketing_tag_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加标签</a>
+                    <a href="javascript:void(-1);" id="add_common_tag"
+                       class="layui-btn layui-btn-small marketing_tag_common_save"
+                       authority_code="marketing_tag_common_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加公共标签</a>
+                    <button class="layui-btn layui-btn-small marketing_tag_deleted" id="tag_deleted"
+                            authority_code="marketing_tag_deleted">删除
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <colgroup>
+                    <col width="30">
+                    <col width="160">
+                    <col width="100">
+                    <col width="290">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="checked"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku sort" name="brand.name">标签名称</th>
+                    <th class="tab_img ">代码</th>
+                    <th class="tab_img ">说明</th>
+                    <th class="tab_pinpai sort" name="brand.order_num"><a href="javascript:;" style="color: #646976">类型</a></th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td class="checked"><input type="checkbox" class="{{if isCommon}}common{{/if}}" lay-skin="primary" id="{{:id}}"></td>
+    <td>{{:name}}</td>
+    <td>{{:code}}</td>
+    <td>{{:tagDesc}}</td>
+    <td>{{:tagTypeName}}</td>
+    <td class="state_uhandle">
+                <a  tag="{{:id}}" class=" update marketing_tag_save" {{if isCommon}}authority_code="marketing_tag_common_save"{{else}}authority_code="marketing_tag_save"{{/if}}  title="编辑">
+                    <i class="icon-bianji"></i>
+                </a>
+                {{if !isCommon}}
+                <a class="delete marketing_tag_deleted"  title="删除"  tag="{{:id}}" authority_code="marketing_tag_deleted">
+                       <i class="icon-delete"></i>
+                </a>
+                {{/if}}
+                 <a class=" update marketing_tag_info"  title="查看"    tag="{{:id}}" authority_code="marketing_tag_info" {{if isCommon}}n_authority_code="marketing_tag_common_save"{{else}}n_authority_code="marketing_tag_save"{{/if}}  >
+                       <i class="icon-search"></i>
+                </a>
+
+    </td>
+</tr>
+{{/for}}
+
+
+</script>
+<script type="x-jsrender" id="j-edit-content">
+<form class="layui-form dialog" id="form1" style="display: none">
+     <input type="hidden" id="form_id" value="{{:id}}" >
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>标签名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input  lay-verify="required" type="tel" id="form_name"  placeholder="请输入标签名称"   maxlength="49"   value="{{:name}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>标签编码</label>
+            <div class="layui-input-inline detailedAddress">
+                <input  lay-verify="required|code" type="tel" id="form_code"  placeholder="请输入标签编码"  maxlength="19"    value="{{:code}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label"><span style="color:red">*</span>类型</label>
+            <div class="layui-input-inline mizo-selectW">
+                <select id="tag_type_id"  lay-verify="required" value={{:type}}>
+                      <option value="">请选择标签类型</option>
+                </select>
+              </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">描述</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea placeholder="请输入标签描述信息" id="form_tag_desc" maxlength="200"  class="layui-textarea">{{:tagDesc}}</textarea>
+        </div>
+    </div>
+      <input type="hidden" id="form_submit" lay-submit lay-filter="form_submit" />
+</div>
+</form>
+
+
+</script>
+<script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:name}}</option>
+    {{/for}}
+
+
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var currPageNo;
+        var tagTypeList;
+        var tagTypeMap;
+        var isCommon;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        form.verify({
+            code: function (value, item) {
+                var result = "";
+                if (Utils.isNotBlack(value)) {
+                    ajaxsend({
+                        code: value,
+                        isCommon:isCommon,
+                        id: $("#form_id").val()
+                    }, "/admin/tag/check.json", function (dataJson) {
+                        if (!dataJson.result) {
+                            result = "编码编码与后台重复！";
+                        }
+                    }, "get", false);
+                }
+                return result;
+            }
+        });
+        $("#add_tag").click(function () {
+            openEditContent("新增标签")
+        });
+        $("#add_common_tag").click(function () {
+            openEditContent("新增公共标签", undefined, undefined, undefined, undefined, "/admin/tag/common_save.json",true);
+        });
+
+        $("#tag_deleted").click(function () {
+            var idList = new Array();
+            var selectCommon=false;
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    if(!$(this).hasClass("common")){
+                    idList.push(checkBox($(this), $(this).attr("id")));}else{
+                        selectCommon=true;
+                    }
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要删除所选标签吗？", {
+                    icon: 3,
+                    title: '提示',
+                    'closeBtn': 0,
+                    area: ['480px', '240px']
+                }, function () {
+                    ajaxsend({ids: idList}, "/admin/tag/deleted.json", function () {
+                        layer.alert("删除成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                if(selectCommon){
+                    layer.alert("所选择的都是公共标签，请选择非公共的标签", function (index) {
+                        layer.close(index);
+                    });
+                }else{
+                    layer.alert("请选择要删除的标签", function (index) {
+                        layer.close(index);
+                    });
+                }
+            }
+
+        });
+        var orderObj = new Order(function (obj) {
+            search();
+        });
+
+        function search(pageNo) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var option = {pageNo: pageNo, pageSize: pageSize};
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/admin/tag/list.json", function (dataJson) {
+                tagTypeList = {result: dataJson.incidental};
+                tagTypeMap = new Map();
+                for (var i = 0; i < dataJson.incidental.length; i++) {
+                    var incidentalObj = dataJson.incidental[i];
+                    tagTypeMap.push(incidentalObj.id, incidentalObj.name);
+                }
+                var data = dataJson;
+                createTableData(data)
+                checkLocalAuthority(data);
+                form.render('checkbox'); //
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+            })
+        }
+
+        function createTableData(data) {
+            for (var i = 0; i < data.result.result.length; i++) {
+                var tagInfo = data.result.result[i];
+                tagInfo.tagTypeName = tagTypeMap.get(tagInfo.type);
+            }
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+            /*绑定数据*/
+                    finalTpl = jsRenderTpl(data.result);
+            $('#page_tbody').html(finalTpl)
+            $("#checkTba").tableCheck('success');
+            checkLocalAuthority(data);
+            bindListButton();
+        }
+
+        function bindListButton() {
+            $("#page_tbody .state_uhandle a").click(function () {
+                var url = "";
+                var data = {}
+                if ($(this).attr("authority_code") == "marketing_tag_deleted") {
+                    url = "/admin/tag/deleted.json";
+                    data.ids = $(this).attr("tag");
+                    layer.confirm("确定要删除该标签吗？", {
+                        icon: 3,
+                        title: '提示',
+                        'closeBtn': 0,
+                        area: ['480px', '240px']
+                    }, function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index)
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_tag_save" || $(this).attr("authority_code") == "marketing_tag_common_save") {
+                    var url= "/admin/tag/save.json";
+                    if($(this).attr("authority_code") == "marketing_tag_common_save"){
+                        url="/admin/tag/common_save.json";
+                    }
+                    openEditContent("修改标签", {id: $(this).attr("tag")}, "/admin/tag/info.json", function (dataJson) {
+                        return dataJson.result;
+                    },undefined,url,$(this).attr("authority_code") == "marketing_tag_common_save");
+                } else if ($(this).attr("authority_code") == "marketing_tag_info") {
+                    openEditContent("标签信息", {id: $(this).attr("tag")}, "/admin/tag/info.json", function (dataJson) {
+                        return dataJson.result;
+                    }, function (dataJson) {
+                        $("#form1 input").attr("disabled", "disabled");
+                        $("#form1 textarea").attr("disabled", "disabled");
+                        return false;
+
+                    })
+                }
+            });
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+        function openEditContent(title, paramter, url, dataDeal, openAfterDeal, updateUrl,isCommon) {
+            isCommon=isCommon;
+            if (Utils.isBlank(updateUrl)) {
+                updateUrl = "/admin/tag/save.json";
+            }
+            var isUpdate = true;
+            dialog.open({
+                paramter: paramter,
+                url: url,
+                dataDeal: dataDeal,
+                id: "j-edit-content",
+                removeId: "form1",
+                bind: function () {
+                    //选择文件显示
+                    var jsRenderTpl = $.templates('#j-option'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl(tagTypeList);
+                    $("#tag_type_id").append(finalTpl);
+                    $("#tag_type_id").val($("#tag_type_id").attr("value"))
+                    form.render(); //
+                },
+                openDilog: function (dataJson) {
+                    if (Utils.isNotNull(openAfterDeal)) {
+                        isUpdate = openAfterDeal.call(this, dataJson);
+                    }
+                    var btn = ["确定", "取消"]
+                    if (!isUpdate) {
+                        btn = ["取消"]
+                    }
+                    layer.open({
+                        title: title
+                        , type: 1
+                        , content: $("#form1")
+                        , area: ["700px", "380px"]
+                        , btn: btn
+                        , closeBtn: 0
+                        , btnAlign: 'r'
+                        , yes: function (indexO, item) {
+                            if (isUpdate) {
+                                form.on("submit(form_submit)", function (index) {
+
+                                    ajaxsend({
+                                        name: $("#form_name").val(),
+                                        code: $("#form_code").val(),
+                                        id: $("#form_id").val(),
+                                        type: $("#tag_type_id").val(),
+                                        tagDesc: $("#form_tag_desc").val()
+                                    }, updateUrl, function (dataJson) {
+                                        layer.alert(title + "成功！", function (alertIndex) {
+                                            layer.close(alertIndex);
+                                            layer.close(indexO);
+                                            search(currPageNo)
+                                        })
+                                    });
+
+                                    return false;
+                                })
+                                $("#form_submit").click();
+                            } else {
+                                layer.close(indexO);
+                            }
+                        },
+                        btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["marketing_tag_info", "marketing_tag_common_save", "marketing_tag_deleted", "marketing_tag_save"]);
+        }
+
+        callParent.isLoadEnd("marketing_tag");
+        callParent.register(function () {
+            search(currPageNo)
+        }, "search");
+        search();
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织成员管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <link rel="stylesheet" href="../../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list cf">
+        <div class="userCenter_left">
+            <div class="userCenter_name">
+                <p>组织架构</p>
+            </div>
+            <div class="">
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="输入组织名称进行搜索"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" style="width: 250px" id="treeSearch">
+                    <ul id="searchList"></ul>
+                </div>
+                <ul id="companyTree" class="ztree">
+                </ul>
+            </div>
+        </div>
+        <div class="userCenter_right">
+            <!--条件搜索部分-->
+            <div class="layui-inline mizone-padding-botton">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_use"> <i class="layui-icon" style="vertical-align: middle">
+                    &#xe61f;</i>新增成员</a>
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="姓名/账号"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" id="searchParam">
+                    <button class="layui-btn layui-btn-small" id="searchAccount">搜索</button>
+                </div>
+            </div>
+
+            <!--表格数据填充部分-->
+            <div class="layui-form">
+                <table class="layui-table" id="" style="table-layout: fixed">
+                    <thead>
+                    <tr>
+                		<th class="checked width30"><input type="checkbox" id="selectAllCheckBox" lay-filter="selectAllCheckBox" lay-skin="primary"></th>
+                        <th class="width40">序号</th>
+                        <th class="sort width70" name="m1.personName">姓名</th>
+                        <th class="sort width80" name="m1.name">账号</th>
+                        <th class="width80">工作岗位</th>
+                        <th class="width120">联系邮箱</th>
+                        <th class="width100">联系电话</th>
+                       <!-- <th style="min-width: 100px">联系地址</th>-->
+                        <th class="width100">所属组织</th>
+                        <th class="sort width40" name="m1.status">状态</th>
+                        <th class="sort width100" name="m1.createTime">创建时间</th>
+                        <th class="action-items">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="page_tbody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+
+    </div>
+    <div id="form_addUse" style="display: none">
+        <div class="layui-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">账户管理</li>
+                <li>权限设置</li>
+                <li>成员信息</li>
+            </ul>
+            <div class="layui-tab-content" id="formAddUse">
+                <div class="layui-tab-item layui-show" id="showFormAccount">
+                </div>
+                <div class="layui-tab-item" id="showFormAuthority" name="authorityStyle">
+                </div>
+                <div class="layui-tab-item" id="showFormPerson">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div id="form_account" style="display: none">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label"><span style="color:red">*</span>账号</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="accountName" id="accountName" lay-verify="accountName" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline" id="prompt_show">
+                                <label class="layui-form-label"><span style="color:red">*</span>登录密码</label>
+                                <div class="layui-input-inline">
+                                    <input type="password" name="password" id="password" lay-verify="password" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label"><span style="color:red">*</span>重复密码</label>
+                                <div class="layui-input-inline">
+                                    <input type="password" name="recheckpassword" id="recheckpassword" lay-verify="recheckpassword" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否启用</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="status" id="status" lay-skin="primary" checked="" value="0">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">销售账户</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="sellerFlag" id="sellerFlag" lay-skin="primary" lay-filter="sellerFlag">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="display: none" id="sellerAreaHtml">
+                            <label class="layui-form-label">区域选择</label>
+                            <div class="layui-input-inline">
+                                <select id="sellerAreaList">
+                                <option value="-1">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    
+     <div id="form_authority" style="display: none">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color:red">*</span>选择平台</label>
+                            <div class="layui-input-block" id="platformList" lay-verify="platformList">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <table class="layui-table" style="table-layout: fixed">
+
+                                <thead>
+                                <tr>
+                                    <th class="wp40">选择仓库</th>
+                                    <th class="wp60">选择角色</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="layui-form">
+                                    <td>
+                                        <div class="mizo-width">
+                                            <div class="layui-input-inline mizo-width-left" id="warehouseList">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+										<div class="mizon-dialog-add_use-chooseRol"> 
+											<div class="mizo-width">
+												<div class="layui-input-inline mizo-width-right" id="roleList">
+													<div class="mizon-dialog-add_use-chooseRol"> 
+													</div>
+												</div>
+											</div>
+										</div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+     </div>
+     
+    <div id="form_person" style="display: none">
+                    <div class="layui-form">
+                        <div class="layui-form-item form-item-margButtom5">
+                            <div class="layui-inline">
+                                <label class="layui-form-label padd_top"><span style="color:red">*</span>姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="personName"  id="personName" lay-verify="required" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                              <div class="layui-inline">
+                                <label class="layui-form-label padd_top">联系邮箱</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="email" id="email" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="layui-form-item form-item-margButtom5">
+                            <div class="layui-inline">
+                                <label class="layui-form-label padd_top">联系电话</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="contactTel" id="contactTel" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label padd_top">手机号码</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="contactPhone" id="contactPhone" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item form-item-margButtom5">
+                            <label class="layui-form-label padd_top">工作岗位</label>
+                            <div class="layui-input-inline">
+                                <select id="positionList" lay-verify="positionList">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item form-item-margButtom5" lay-verify="sysarea">
+                            <label class="layui-form-label padd_top">所在地区</label>
+                            <div class="layui-input-inline" id="proviceList">
+                                <select id="province" lay-filter="provinceFilter">
+                                    <option value="">请选择省</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="display: none" id="cityList">
+                                <select id="city" lay-filter="cityFilter">
+                                    <option value="">请选择市</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="display: none" id="areaList">
+                                <select id="sysarea">
+                                    <option value="">请选择县/区</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item form-item-margButtom5">
+                            <div class="layui-inline">
+                                <label class="layui-form-label padd_top">详细地址</label>
+                                <div class="layui-input-inline detailedAddress">
+                                    <input type="tel" name="address" id="address" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+     </div>
+     
+    <div id="form_accountEdit" style="display: none">
+    	 <div class="layui-tab-content">
+    	  <div class="layui-tab-item layui-show" id="form_accountEditHtml">
+          </div>
+         </div>
+    </div>
+    
+     <div id="form_personEdit" style="display: none">
+    	 <div class="layui-tab-content">
+    	  <div class="layui-tab-item layui-show" id="form_personEditHtml">
+          </div>
+         </div>
+    </div>
+    <div id="form_authorityEdit" style="display: none">
+    	 <div class="layui-tab-content">
+    	  <div class="layui-tab-item layui-show" id="form_authorityEditHtml" name="authorityStyle">
+          </div>
+         </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script type="text/javascript" src="../../common/ztree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../../common/ztree/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="../../common/js/userCenter/companyAccount.js"></script>
+<script type="text/javascript" src="../../common/js/userCenter/companyCommon.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/js/child.js"></script>
+<script type="text/javascript" src="../../common/js/common/ajaxsend.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></i></td>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td class='over_show'>{{item.personName==null||item.personName==''?'-':item.personName}}</td>
+        <td>{{item.name==null||item.name==''?'':item.name}}</td>
+        <td class='over_show'>{{item.positionName==null||item.positionName==''?'-':item.positionName}}</td>
+        <td class='over_show'>{{item.email==null||item.email==''?'-':item.email}}</td>
+        <td>{{item.contactTel||'-'}}</td>
+        <!--<td class='over_show'>{{item.address==null||item.address==''?'-':item.address}}</td>-->
+        <td class='over_show'>{{item.orgName==null||item.orgName==''?'-':item.orgName}}</td>
+        <td>{{getStatusMsg(item.status)}}</td>
+        <td>{{item.createTime==null?'-':laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+        <td class="user_list_operation state_uhandle">
+            <div class="">
+                <button class="" title="账户管理" value="{{item.name}}" onclick="updateAccount({{item.id}},this,{{item.status}},{{item.sellerFlag}},{{item.categoryId}})">
+                    <i class="icon-zhangHao"></i>
+                </button>
+				<button class="" title="用户编辑" value="{{item.id}}" onclick="updatePerson({{item.personId}})">
+                    <i class="icon-bianji"></i>
+                </button>
+				<button class="" title="权限设置" value="{{item.id}}" onclick="updateAuthority({{item.id}})">
+                    <i class="icon-shezhi1" ></i>
+                </button>
+                <button class="" title="删除" value="{{item.id}}" onclick="deleteAccount({{item.id}})">
+                    <i class="icon-delete" ></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+    	<tr aglin='center'><td colspan="12">无数据</td></tr>
+    {{#  } }}
+</script>
+<script id="sellerAreaListTpl" type="text/html">
+    <option value="-1">选择区域</option>
+    {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+
+</head>
+<body>
+<div class="content-wrapper">
+    <div class="list">
+        <!-- header -->
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_role" class="layui-btn layui-btn-small role_save"
+                       authority_code="role_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加角色</a>
+                    <button class="layui-btn layui-btn-small role_deleted" authority_code="role_deleted"
+                            id="role_deleted">删除
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <colgroup>
+                    <col width="30">
+                    <col width="160">
+                    <col width="200">
+                    <col width="165">
+                    <!--<col width="180">-->
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                    <th class="tab_sku sort" name="name">角色名称</th>
+                    <th class="tab_desc sort" name="role_desc">角色描述</th>
+                    <th class="tab_desc sort" name="create_time">创建时间</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><input  lay-skin="primary" type="checkbox" id="{{:id}}"></td>
+    <td>{{:name}}</td>
+    <td>{{:roleDesc}}</td>
+    <td>{{converDate:createTime}}</td>
+    <td class="state_uhandle">
+
+                <a  role="{{:id}}" title="编辑" class=" update role_save"  authority_code="role_save">
+                      <i class="icon-bianji"></i>
+                </a>
+                <a role="{{:id}}" title="删除"   class=" delete role_deleted"  authority_code="role_deleted">
+                               <i class="icon-delete"></i>
+                </a>
+                 <a  role="{{:id}}"  title="查看"  class=" update role_info"  authority_code="role_info"  n_authority_code="role_save">
+                    <i class="icon-search"></i>
+                </a>
+    </td>
+</tr>
+{{/for}}
+
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var currPageNo;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        $.views.converters("converDate", function (val) {
+            return Utils.formatTime(Utils.createTimeByLong(val), "YYYY-MM-DD HH:ms:ss")
+        });
+        //打开新的Tab页面
+        $("#add_role").click(function () {
+            callParent.openTab("sys_role_add", 0, "新增角色", "admin/system/sys_role_add.html", true);
+        });
+        $("#role_deleted").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    idList.push(checkBox($(this), $(this).attr("id")));
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要删除所选的角色吗？", function () {
+                    ajaxsend({ids: idList}, "/api/admin/sys/role/deleted", function () {
+                        layer.alert("删除成功", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+                    })
+                })
+            }else {
+                layer.alert("请选择要删除的角色", function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        var orderObj = new Order(function (obj) {
+            search();
+        });
+
+        function search(pageNo, data) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var option = {pageNo: pageNo, pageSize: pageSize};
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/api/admin/sys/role/page", function (dataJson) {
+                var data = dataJson;
+                createTableData(data)
+                checkAuthority(data.authorityCodeList, ["role_deleted", "role_save", "role_info"]);
+                form.render('checkbox'); //
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+            })
+        }
+
+        function createTableData(data) {
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+            /*绑定数据*/
+                    finalTpl = jsRenderTpl(data.result);
+            $('#page_tbody').html(finalTpl)
+            $("#checkTba").tableCheck('success');
+            checkAuthority(data.authorityCodeList, ["role_deleted", "role_save", "role_info"]);
+            bind();
+        }
+
+        function bind() {
+            $("#page_tbody .state_uhandle a").click(function () {
+                var url = "";
+                var data = {}
+                if ($(this).attr("authority_code") == "role_deleted") {
+                    url = "/api/admin/sys/role/deleted";
+                    data.ids = $(this).attr("role");
+                    layer.confirm("确定要删除该角色吗？", function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("删除成功", function (index) {
+                                layer.close(index);
+                                search(currPageNo);
+                            });
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "role_save") {
+                    callParent.openTab("sys_role_add", 0, "编辑角色", "admin/system/sys_role_add.html?id=" + $(this).attr("role"), true);
+                } else if ($(this).attr("authority_code") == "role_info") {
+                    callParent.openTab("sys_role_add", 0, "编辑角色", "admin/system/sys_role_add.html?id=" + $(this).attr("role"), true);
+                }
+            });
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+        search();
+        callParent.isLoadEnd("role_page");
+        callParent.register(function () {
+            search(currPageNo)
+        }, "search");
+    })
+</script>
+</body>
+</html>

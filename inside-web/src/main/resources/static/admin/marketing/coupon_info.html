@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>促销管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <form>
+    <ul class="invoiceMsg promotions" id="coupon_content_ul">
+
+    </ul>
+    <div class="btnBottom " style="text-align: center">
+        <button class="layui-btn layui-btn-norma form_submit" lay-submit lay-filter="form_submit">确定</button>
+        <button class="layui-btn layui-btn-primary" id="cancel">取消</button>
+
+    </div>
+    </form>
+</div>
+<div id="select_category" style="display: none"></div>
+<div id="select_brand" style="display: none"></div>
+<script type="x-jsrender" id="edit_content">
+      <input type="hidden" class="layui-input" id="form_coupon_id"value="{{:id}}">
+     <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>标题：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" id="form_name" lay-verify="required" maxlength="35" value="{{:name}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">说明：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" id="form_remark"  maxlength="255" value="{{:remark}}" >
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>消费金额：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" id="form_minAmount" lay-verify="price|required"  maxlength="11"  value="{{:minAmountFormat}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>优惠金额：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" id="form_couponAmount" lay-verify="price|required"  maxlength="11"  value="{{:couponAmountFormat}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>有效开始时间：</div>
+            <div class="wp32 ">
+                <input class="layui-input" placeholder="开始日"  lay-verify="required"  maxlength="20" id="form_start_time"  value="{{:effectiveStartDateFormat}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">有效结束时间：</div>
+            <div class="wp32">
+                <input class="layui-input" placeholder="截止日"    maxlength="20" id="form_end_time"  value="{{:effectiveEndDateFormat}}">
+            </div>
+        </li>
+
+        <li>
+            <div class="wp14 text_right">允许使用积分：</div>
+            <div class="wp32 ">
+                <input type="checkbox" id="form_user_point" {{if usePoint}}checked="checked"{{/if}} title="" lay-skin="primary">
+            </div>
+        </li>
+          <li>
+            <div class="wp14 text_right">是否可退回：</div>
+            <div class="wp32 ">
+                <input type="checkbox" id="form_cancel_back" {{if cancelBack}}checked="checked"{{/if}} title="" lay-skin="primary">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">所在品台：</div>
+            <div class="wp32 " id="platform_id">
+                <input type="checkbox" name="" value="" title="全选"  lay-filter="platform_id_all" lay-skin="primary">
+            </div>
+        </li>
+
+        <li>
+            <div class="wp14 text_right">允许参加商品分类：</div>
+            <div class="wp80 ">
+                <span class="cursor_p" id="select_category_list">点击选择商品分类</span>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right" >允许参加商品品牌：</div>
+            <div class="wp80 ">
+                <span class="cursor_p" id="select_brand_list">点击选择商品品牌</span>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">使用规则：</div>
+            <div class="wp80 ">
+                <textarea placeholder="此介绍，不对外展示，仅对本次促销作说明，方便其他同事查看。" class="layui-textarea">
+                    1、单笔订单满5000元-50元，直接在支付时扣减。2、每个会员享受一次促销机会。3、仅允许白金会员参与。
+                </textarea>
+            </div>
+        </li>
+</script>
+<script type="x-jsrender" id="select_brand_category">
+        <ul class="layui-form form-box ">
+            {{if list.length>0 }}
+            {{for list}}
+            <li>
+                {{if level }}
+                 <div class="layui-inline paddL5{{:level}}">
+                    <input type="checkbox" name="" parent_id="{{:parentId}}" lay-filter="selectChose" value="{{:id}}" {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}" class="">
+                </div>
+                {{else}}
+                <div class="layui-inline">
+                    <input type="checkbox" name="" value="{{:id}}" parent_id="{{:parentId}}" lay-filter="selectChose"  {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}"
+                           class="">
+                </div>
+
+                {{/if }}
+            </li>
+            {{/for}}
+            {{else }}
+            无数据
+            {{/if }}
+        </ul>
+
+</script>
+<script type="x-jsrender" id="j-platform-list">
+        {{for result}}
+             <input type="checkbox"  {{if checked}}checked="checked"{{/if}} name="like1[write]" value="{{:id}}" lay-skin="primary" title="{{:name}}">
+        {{/for}}
+ </script>
+<script type="text/javascript" src="../admin.js"></script>
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+            var categoryArrayList, categoryList, couponDetailInfo,brandList,platformList;
+            var id = Utils.getHrefValue("id");
+            var start = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+
+            var end = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+            form.verify({
+                price: function (value, item) {
+                    var message = $(item).attr("message")
+                    if (!Utils.isNotNull(message)) {
+                        message = "";
+                    }
+                    if ($.trim(value).length>0&&!/^(([1-9][0-9]+)|([0-9]+\.[0-9]{1,2}))$/.test($.trim(value))) {
+                        return message + '价格格式不正确';
+                    }
+                }
+            });
+            $("#cancel").click(function(){
+                callParent.openTab("marketing_coupon");
+                callParent.closeTab("marketing_coupon_add");
+            });
+
+            form.on("submit(form_submit)", function () {
+                var data={couponInfo:{}};
+                data.couponId=$("#form_coupon_id").val();
+                data.couponInfo={name:$("#form_name").val(),remark:$("#form_remark").val(),minAmount:$("#form_minAmount").val(),couponAmount:$("#form_couponAmount").val(),
+                    effectiveStartDate:$("#form_start_time").val(),effectiveEndDate:$("#form_end_time").val(),usePoint:Utils.checkBox($("#form_user_point"),true,false)
+                ,cancelBack:Utils.checkBox($("#form_cancel_back"),true,false)
+                };
+                data.couponBrandIdSet=new Array();
+                $("#select_brand input[type='checkbox']").each(function(){
+                    if(Utils.checkBox($(this),true,false)){
+                        data.couponBrandIdSet.push($(this).val());
+                    }
+                });
+                data.couponPlatformIdSet = new Array();
+                $("#platform_id input[type='checkbox']").each(function(){
+                    if (Utils.checkBox($(this), true, false)) {
+                        data.couponPlatformIdSet.push($(this).val());
+                    }
+                });
+                data.couponCategoryIdSet=new Array();
+                $("#select_category input[type='checkbox']").each(function(){
+                    if(Utils.checkBox($(this),true,false)){
+                        data.couponCategoryIdSet.push($(this).val());
+                    }
+                });
+                ajaxsend(data, "/admin/marketing/coupon/save.json", function (dataJson) {
+                    if($.trim($("#form_coupon_id").val())==""){
+                        layer.alert("新增成功", {}, function () {
+                            callParent.parentUse("marketing_coupon", "search");
+                            callParent.openTab("marketing_coupon");
+                            callParent.closeTab("marketing_coupon_add");
+                        });
+                    }else{
+                        layer.alert("修改成功", {}, function (index) {
+                            callParent.parentUse("marketing_coupon", "search");
+                            layer.close(index)
+                        });
+                    }
+                }, "post");
+                return false;
+            });
+            function closeUpdate() {
+                if (Utils.isNotNull(couponDetailInfo)&&Utils.isNotNull(couponDetailInfo.couponInfo)&&Utils.isNotNull(couponDetailInfo.couponInfo.couldUpdate)&&Utils.isNotNull(couponDetailInfo.couponInfo.couldUpdate)&&!couponDetailInfo.couponInfo.couldUpdate) {
+                    $("input").attr("disabled", "disabled")
+                    $(".form_submit").hide();
+                }
+            }
+            function loadInitData() {
+                if(Utils.isNotBlack(id)){
+                    ajaxsend({couponId: id}, "/admin/marketing/coupon/info.json", function (dataJson) {
+                        couponDetailInfo=dataJson.result;
+                        couponDetailInfo.couponInfo.effectiveEndDateFormat=Utils.formatTime(Utils.createTimeByLong(couponDetailInfo.couponInfo.effectiveEndDate),"YYYY-MM-DD");
+                        couponDetailInfo.couponInfo.effectiveStartDateFormat=Utils.formatTime(Utils.createTimeByLong(couponDetailInfo.couponInfo.effectiveStartDate),"YYYY-MM-DD");
+                        couponDetailInfo.couponInfo.minAmountFormat=Utils.formatPrice(couponDetailInfo.couponInfo.minAmount);
+                        couponDetailInfo.couponInfo.couponAmountFormat=Utils.formatPrice(couponDetailInfo.couponInfo.couponAmount);
+                        var jsRenderTpl = $.templates('#edit_content'),
+                        /*绑定数据*/
+                          finalTpl = jsRenderTpl(couponDetailInfo.couponInfo);
+                        $("#coupon_content_ul").html(finalTpl);
+                        form.render();
+                        closeUpdate()
+                    }, undefined, false);
+                }else{
+                    var jsRenderTpl = $.templates('#edit_content'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({});
+                    $("#coupon_content_ul").html(finalTpl);
+                    form.render();
+                }
+                if (!(Utils.isNotNull(categoryList) && categoryList.length > 0)) {
+                    ajaxsend("", "/admin/common/category/list.json", function (dataJson) {
+                        categoryList = dataJson.result;
+                        appendCategory();
+                    }, undefined, false);
+                }
+                if (!(Utils.isNotNull(brandList) && brandList.length > 0)) {
+                    ajaxsend("", "/admin/common/brand/list.json", function (dataJson) {
+                        brandList = dataJson.result;
+                        appendBrand()
+                    }, undefined, false);
+                }
+                if (!(Utils.isNotNull(platformList) && platformList.length > 0)) {
+                    ajaxsend("", "/admin/common/platform/list.json", function (dataJson) {
+                        platformList = dataJson.result;
+                        appendPlatform();
+                    }, undefined, false);
+                }
+                bindEvent();
+            }
+            function appendPlatform() {
+                if (Utils.isNotNull(platformList) && platformList.length > 0) {
+                    for (var i = 0; i < platformList.length; i++) {
+                        var platformObj = platformList[i];
+                        platformObj.checked = false;
+                        if (Utils.isNotNull(couponDetailInfo) && Utils.isNotNull(couponDetailInfo.couponPlatformIdSet) && couponDetailInfo.couponPlatformIdSet.length > 0) {
+                            if (Utils.isContain(couponDetailInfo.couponPlatformIdSet, platformObj.id)) {
+                                platformObj.checked = true;
+                            }
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#j-platform-list'),
+                    /*绑定数据*/
+                  finalTpl = jsRenderTpl({result: platformList});
+
+                    $("#platform_id").append(finalTpl);
+                    $("#platform_id").find("input[type='checkbox']").each(function(){
+                       if(!Utils.isNotBlack($(this).attr("lay-filter"))){
+                       $(this).attr("lay-filter","platform_id_check");
+                       }
+                    })
+                    closeUpdate()
+                    form.render();
+                }
+            }
+            function selectChildId(id, checked) {
+                $("#select_category input[type='checkbox']").each(function () {
+                    var parentId = $(this).attr("parent_id");
+                    if (Utils.isNotBlack(parentId) && parentId.length > 0) {
+                        if (parentId == id) {
+                            if (checked) {
+                                if (!this.checked) {
+                                    $(this).click();
+                                }
+
+                            } else {
+                                $(this).removeAttr("checked");
+                            }
+                            selectChildId($(this).val(), checked);
+                        }
+                    }
+                })
+            }
+
+            function getCategoryLevel(categoryMap, categoryObj) {
+                if (!Utils.isNotNull(categoryObj.parentId)) {
+                    return 0;
+                } else {
+                    var parentCategoryObj = categoryMap.get(categoryObj.parentId);
+                    if (!Utils.isNotNull(parentCategoryObj.level)) {
+                        return getCategoryLevel(categoryMap, parentCategoryObj)
+                    } else {
+                        return parentCategoryObj.level + 1;
+                    }
+                }
+            }
+            function selectParentId(parentId, checked) {
+                $("#select_category input[type='checkbox']").each(function () {
+                    var id = $(this).val();
+                    if (Utils.isNotBlack(id) && id.length > 0) {
+                        if (parentId == id) {
+                            if (!checked) {
+                                $(this).removeAttr("checked");
+                            }
+                            selectParentId($(this).attr("parentId"), checked);
+                        }
+                    }
+                })
+
+            }
+            function addCategory(category) {
+                var categoryList = new Array();
+                categoryList.push(category);
+                if (Utils.isNotNull(category.children) && category.children.length > 0) {
+                    for (var i = 0; i < category.children.length; i++) {
+                        var childCategory = category.children[i];
+                        categoryList = categoryList.concat(addCategory(childCategory));
+                    }
+                }
+                return categoryList;
+            }
+
+            function bindEvent() {
+                form.on('checkbox(platform_id_all)',function(data){
+                    var child = $("#platform_id").find('input[type="checkbox"]');
+                    child.each(function (index, item) {
+                        item.checked = data.elem.checked;
+                    });
+                    form.render('checkbox');
+                });
+                form.on('checkbox(platform_id_check)',function(data){
+                    $("#platform_id input[type='checkbox']").each(function(index,item){
+                        if($(this).attr("lay-filter")=="platform_id_all"){
+                            if(!data.elem.checked){
+                                item.checked=false;
+                            }
+                        }
+                    })
+                    form.render('checkbox');
+                });
+
+                $('#form_start_time').click(function () {
+                    start.elem = this;
+                    laydate(start);
+                });
+                $('#form_end_time').click(function () {
+                    end.elem = this;
+                    laydate(end)
+                });
+                $('#select_category_list').on('click', function () {
+                    layer.open({
+                        title: "选择分类",
+                        type: 1
+                        , content: $("#select_category")            //弹窗内容
+                        , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                        , btn: ["确定", "取消"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'c',
+                        yes: function (index, item) {
+                            $("#select_category input[type='checkbox']").each(function () {
+                                if (!Utils.isNotNull(couponDetailInfo)) {
+                                    couponDetailInfo = {};
+                                }
+                                couponDetailInfo.couponCategoryIdSet = new Array();
+                                if (Utils.checkBox($(this), true, false)) {
+                                    couponDetailInfo.couponCategoryIdSet.push($(this).val());
+                                }
+                            });
+                            layer.close(index);
+                        },
+                        btn2: function () {
+                            $("#select_category").hide();
+                        }
+                    })
+                });
+                $('#select_brand_list').on('click', function () {
+                    layer.open({
+                        title: "选择品牌",
+                        type: 1
+                        , content: $("#select_brand")            //弹窗内容
+                        , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                        , btn: ["确定", "取消"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'c',
+                        yes: function (index, item) {
+                            $("#select_brand input[type='checkbox']").each(function () {
+                                if (!Utils.isNotNull(couponDetailInfo)) {
+                                    couponDetailInfo = {};
+                                }
+                                couponDetailInfo.couponBrandIdSet = new Array();
+                                if (Utils.checkBox($(this), true, false)) {
+                                    couponDetailInfo.couponBrandIdSet.push($(this).val());
+                                }
+                            });
+                            layer.close(index);
+                        },
+                        btn2: function () {
+                            $("#select_brand").hide();
+                        }
+                    })
+
+                });
+            }
+
+            function appendBrand() {
+                if (Utils.isNotNull(brandList) && brandList.length > 0) {
+                    if (Utils.isNotNull(couponDetailInfo) && Utils.isNotNull(couponDetailInfo.couponBrandIdSet) &&     couponDetailInfo.couponBrandIdSet.length > 0) {
+                        for (var i = 0; i < brandList.length; i++) {
+                            var brandObj = brandList[i];
+                            brandObj.checked = Utils.isContain(couponDetailInfo.couponBrandIdSet, brandObj.id)
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#select_brand_category'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({code: "0", list: brandList});
+                    $("#select_brand").html(finalTpl);
+                    closeUpdate()
+                    form.render();
+                }
+            }
+            function appendCategory() {
+                if (Utils.isNotNull(categoryList) && categoryList.length > 0) {
+                    if (!(Utils.isNotNull(categoryArrayList) && categoryArrayList.length > 0)) {
+                        var categoryMap = new Map();
+                        var tempCategoryArrayList = new Array();
+                        for (var i = 0; i < categoryList.length; i++) {
+                            var categoryObj = categoryList[i];
+                            if (!Utils.isNotNull(categoryObj.parentId)) {
+                                categoryObj.level = 0;
+                            }
+                            categoryObj.children = new Array();
+                            categoryMap.push(categoryObj.id, categoryObj);
+                        }
+                        for (var i = 0; i < categoryList.length; i++) {
+                            var categoryObj = categoryList[i];
+                            categoryObj.level = getCategoryLevel(categoryMap, categoryObj);
+                            if (!Utils.isNotNull(categoryObj.parentId)) {
+                                tempCategoryArrayList.push(categoryObj);
+                            } else {
+                                categoryMap.get(categoryObj.parentId).children.push(categoryObj);
+                            }
+                        }
+                        categoryArrayList = new Array();
+                        for (var i = 0; i < tempCategoryArrayList.length; i++) {
+                            categoryArrayList = categoryArrayList.concat(addCategory(tempCategoryArrayList[i]));
+                        }
+                    }
+                    if (Utils.isNotNull(couponDetailInfo) && Utils.isNotNull(couponDetailInfo.couponCategoryIdSet) && couponDetailInfo.couponCategoryIdSet.length > 0) {
+                        for (var i = 0; i < categoryArrayList.length; i++) {
+                            var categoryArrayObj = categoryArrayList[i];
+                            categoryArrayObj.checked = Utils.isContain(couponDetailInfo.couponCategoryIdSet, categoryArrayObj.id)
+                        }
+                    }
+
+                    var jsRenderTpl = $.templates('#select_brand_category'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({code: "0", list: categoryArrayList});
+                    $("#select_category").html(finalTpl);
+                    closeUpdate()
+                    form.on('checkbox(selectChose)', function (data) {
+                        selectChildId(data.value, data.elem.checked);
+                        var parentId = null;
+                        $("#select_category input[type='checkbox']").each(function () {
+                            if ($(this).val() == data.value) {
+                                parentId = $(this).attr("parent_id");
+                            }
+                        });
+                        selectParentId(parentId, data.elem.checked);
+                        form.render();
+                    });
+                    form.render();
+                }
+            }
+            loadInitData();
+
+        })
+    })
+</script>
+</body>
+</html>

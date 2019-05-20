@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../common/css/bootstrap.css">-->
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_brand"
+                       class="layui-btn layui-btn-small marketing_reg_save"
+                       authority_code="marketing_reg_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加用户筛选规则</a>
+                    <button class="layui-btn layui-btn-small marketing_reg_deleted"
+                            authority_code="marketing_reg_deleted" id="marketing_reg_deleted">删除
+                    </button>
+                    <button class="layui-btn layui-btn-small marketing_reg_stop"
+                            authority_code="marketing_reg_stop" id="marketing_reg_stop">停止
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <colgroup>
+                    <col width="30">
+                    <col width="160">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="checked"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku sort" name="brand.name">规则名称</th>
+                    <th class="tab_img ">是否启用</th>
+                    <th class="tab_img ">创建时间</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+    </div>
+</div>
+<div id="reg_list" style="">
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td class="checked"><input type="checkbox" lay-skin="primary" id="{{:id}}"></td>
+    <td>{{:regName}}</td>
+    <td>{{if enabled}}启用{{else}}停止{{/if}}</td>
+    <td>{{:createDate}}</td>
+    <td class="state_uhandle">
+
+                <a  reg="{{:id}}" class=" update marketing_reg_save" title="编辑" authority_code="marketing_reg_save">
+                      <i class="icon-bianji"></i>
+                </a>
+                <a class=" delete marketing_reg_deleted" title="删除"  reg="{{:id}}" authority_code="marketing_reg_deleted">
+                    <i class="icon-delete"></i>
+                </a>
+                 <a class=" update marketing_reg_info" title="查看"   reg="{{:id}}" authority_code="marketing_reg_info"  n_authority_code="marketing_reg_save">
+        　　　　　      <i class="icon-search"></i>
+                </a>
+                {{if enabled}}
+                 <a class=" update marketing_reg_stop" title="禁止"  reg="{{:id}}" authority_code="marketing_reg_stop"  >
+                     <i class="icon-uniE617"></i>
+                </a>
+                {{/if}}
+                {{if type==0}}
+                  <a class="  update marketing_reg_send_list"  title="已经分配用户信息"  reg="{{:id}}" authority_code="marketing_reg_send_list"  >
+                          <i class="icon-uniE606"></i>
+                </a>
+               {{/if}}
+    </td>
+</tr>
+{{/for}}
+
+
+
+
+
+
+
+
+
+
+</script>
+<script type="x-jsrender" id="j-edit-content">
+<form class="layui-form dialog" id="form1" style="display: none">
+     <input type="hidden" id="form_id" value="{{:id}}" >
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>规则名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input  lay-verify="required" type="tel" id="form_name"   maxlength="49" placeholder="请输入规则名称"   value="{{:regName}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>规则内容</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea placeholder="请输入规则内容的sql"lay-verify="required|sqlContent" id="form_tag_desc" class="layui-textarea">{{:regContent}}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label "><span style="color:red">*</span>规则选择</label>
+        <div class="layui-input-block">
+              <input type="radio" name="type" value="0" title="优惠券" id="type_check_coupon" {{if type==0 || type!=1}}checked=""{{/if}}>
+              <input type="radio" name="type" value="1" title="消息信息" id="type_check_message"  {{if type==1}}checked=""{{/if}}>
+        </div>
+    </div>
+      <input type="hidden" id="form_submit" lay-submit lay-filter="form_submit" />
+</div>
+</form>
+
+
+
+
+
+</script>
+<script type="x-jsrender" id="j-code-send-list">
+  <div class="layui-form" id="reg_code_send_list">
+            <table class="layui-table" id="checkTba">
+                <colgroup>
+                    <col width="160">
+                    <col width="180">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                   <th class="tab_sku ">发送名称</th>
+                   <th class="tab_sku sort" >优惠券名称</th>
+                 <th class="tab_sku sort" >状态</th>
+                    <th class="tab_img ">创建时间</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="code_send_page_body">
+
+                </tbody>
+            </table>
+        </div>
+
+
+
+</script>
+<script type="x-jsrender" id="j-code-send-tr">
+    {{for result}}
+    <tr>
+    <td>{{:sendName}}</td>
+    <td>{{:couponName}}</td>
+    <td  >{{if status==1}}已经终止发放{{else}}已发放{{/if}} </td>
+    <td>{{:createDate}}</td>
+    <td >
+    <div class="layui-btn-group">
+     {{if status!=1}}
+     <a  grant_id="{{:id}}" class="layui-btn-small update marketing_reg_save"disabled="disabled" title="终止发放" authority_code="marketing_reg_save">
+          <i class="icon-uniE617"></i>
+    </a>
+     {{/if}}
+    </div>
+    </td>
+    </td>
+    {{/for}}
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var currPageNo;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        form.verify({
+            sqlContent: function (value, item) {
+                result = "";
+                if (Utils.isNotBlack(value)) {
+                    ajaxsend({
+                        sqlContent: value
+                    }, "/admin/marketing/reg/check.json", function (dataJson) {
+                        if (!dataJson.result) {
+                            result = "规则内容无法执行";
+                        }
+                    }, "get", false);
+                }
+                return result;
+            }
+        });
+        $("#add_brand").click(function () {
+            openEditContent("新增用户筛选")
+        });
+        $("#marketing_reg_deleted").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    idList.push(checkBox($(this), $(this).attr("id")));
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要删除所选用户筛选规则吗？", {
+                    icon: 3,
+                    title: '提示',
+                    'closeBtn': 0,
+                    area: ['480px', '240px']
+                }, function () {
+                    ajaxsend({couponIds: idList}, "/admin/marketing/reg/deleted.json", function () {
+                        layer.alert("删除成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                layer.alert("请选择要删除的用户筛选规则", function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        $("#marketing_reg_stop").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    idList.push(checkBox($(this), $(this).attr("id")));
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要停止所选用户筛选规则吗？", {
+                    icon: 3,
+                    title: '提示',
+                    'closeBtn': 0,
+                    area: ['480px', '240px']
+                }, function () {
+                    ajaxsend({couponIds: idList}, "/admin/marketing/reg/stop.json", function () {
+                        layer.alert("停止成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                layer.alert("请选择要停止的用户筛选规则", function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+
+        var orderObj = new Order(function (obj) {
+            search();
+        });
+
+        function search(pageNo) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var option = {pageNo: pageNo, pageSize: pageSize};
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/admin/marketing/reg/list.json", function (dataJson) {
+                for (var i = 0; i < dataJson.result.result.length; i++) {
+                    var regInfo = dataJson.result.result[i];
+                    regInfo.createDate = Utils.formatTime(Utils.createTimeByLong(regInfo.createTime), "YYYY-MM-DD HH:MS:SS")
+                }
+                var data = dataJson;
+                createTableData(data);
+                checkLocalAuthority(data);
+                form.render('checkbox'); //
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+                bindListButton();
+            })
+        }
+
+        function createTableData(data) {
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+            /*绑定数据*/
+                    finalTpl = jsRenderTpl(data.result);
+            $('#page_tbody').html(finalTpl)
+
+        }
+
+        function bindListButton() {
+            $("#page_tbody .state_uhandle  a").click(function () {
+                var url = "";
+                var data = {id: $(this).attr("coupon")}
+                if ($(this).attr("authority_code") == "marketing_reg_deleted") {
+                    url = "/admin/marketing/reg/deleted.json";
+                    data.regIds = $(this).attr("reg");
+                    layer.confirm("确定要删除该用户筛选规则吗？", {
+                        icon: 3,
+                        title: '提示',
+                        'closeBtn': 0,
+                        area: ['480px', '240px']
+                    }, function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index);
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_reg_save") {
+                    openEditContent("修改用户筛选规则", {regId: $(this).attr("reg")}, "/admin/marketing/reg/info.json", function (dataJson) {
+                        return dataJson.result;
+                    }, function (dataJson) {
+                        if (Utils.isNotNull(dataJson.result) && Utils.isNotNull(dataJson.result.used) && dataJson.result.used) {
+                            return false;
+                        }
+                        return true;
+                    });
+                } else if ($(this).attr("authority_code") == "marketing_reg_info") {
+                    openEditContent("用户筛选规则查看", {
+                        regId: $(this).attr("reg"),
+                        type: "look"
+                    }, "/admin/marketing/reg/info.json", function (dataJson) {
+                        return dataJson.result;
+                    });
+                } else if ($(this).attr("authority_code") == "marketing_reg_stop") {
+                    url = "/admin/marketing/reg/stop.json";
+                    data.regIds = $(this).attr("reg");
+                    layer.confirm("确定要停止该用户筛选吗？", {
+                        icon: 3,
+                        title: '提示',
+                        'closeBtn': 0,
+                        area: ['480px', '240px']
+                    }, function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index);
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_reg_send_list") {
+                    dealRegList($(this), true)
+                }
+            });
+        }
+
+        function dealRegList(that, isOpen) {
+            var data = {};
+            data.regId = that.attr("reg");
+            dealSendList(data, "/admin/marketing/reg/send_list.json", function (dataJson) {
+                if (Utils.isNotNull(dataJson) && Utils.isNotNull(dataJson.result) && dataJson.result.length > 0) {
+                    for (var i = 0; i < dataJson.result.length; i++) {
+                        var regCodeInfo = dataJson.result[i];
+                        regCodeInfo.createDate = Utils.formatTime(Utils.createTimeByLong(regCodeInfo.createTime), "YYYY-MM-DD HH:MS:SS")
+                    }
+                }
+                var jsRenderTpl, finalTpl;
+                if (isOpen) {
+                    jsRenderTpl = $.templates('#j-code-send-list');
+                    finalTpl = jsRenderTpl(dataJson);
+                }
+                $("#reg_list").html(finalTpl);
+                jsRenderTpl = $.templates('#j-code-send-tr');
+                /*绑定数据*/
+                finalTpl = jsRenderTpl(dataJson);
+                $("#code_send_page_body").html(finalTpl);
+                if (isOpen) {
+                    layer.open({
+                        title: "已经分配的信息"
+                        , type: 1
+                        , content: $("#reg_code_send_list")
+                        , area: ["763px", "380px"]
+                        , btn: ["确定"]
+                        , closeBtn: 0
+                        , btnAlign: 'r'
+                        , yes: function (index, item) {
+                            layer.close(index);
+                            $("#reg_code_send_list").remove();
+                        }
+                    });
+                }
+                $("#reg_code_send_list .layui-btn-group a").click(function () {
+                    var grantId = $(this).attr("grant_id");
+                    ajaxsend({couponCodeSendId: grantId}, "/admin/marketing/reg/code_send_stop.json", function (dataJson) {
+                        layer.alert("操作成功", function (index) {
+                            layer.close(index);
+                            dealRegList(that, false);
+                        })
+                    });
+                });
+            });
+        }
+
+        function dealSendList(data, url, deal) {
+            ajaxsend(data, "/admin/marketing/reg/send_list.json", function (dataJson) {
+                deal.call(this, dataJson);
+            })
+
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+        function openEditContent(title, paramter, url, dataDeal, openAfterDeal) {
+            var isUpdate = true;
+            var btn = ["确定", "取消"];
+            dialog.open({
+                paramter: paramter,
+                url: url,
+                dataDeal: dataDeal,
+                id: "j-edit-content",
+                removeId: "form1",
+                bind: function () {
+                    //选择文件显示
+                },
+                openDilog: function (dataJson) {
+                    if (Utils.isNotNull(openAfterDeal)) {
+                        isUpdate = openAfterDeal.call(this, dataJson);
+                        if (!isUpdate) {
+                            btn = ["确定"];
+                            $("#form1").find("input").attr("disabled", "disabled")
+                            $("#form1").find("textarea").attr("disabled", "disabled")
+                        }
+                    }
+                    layer.open({
+                        title: title
+                        , type: 1
+                        , content: $("#form1")
+                        , area: ["763px", "380px"]
+                        , btn: btn
+                        , closeBtn: 0
+                        , btnAlign: 'r',
+                        success: function () {
+                            form.render();
+                        }
+                        , yes: function (index, item) {
+                            if (isUpdate) {
+                                form.on("submit(form_submit)", function () {
+                                    if (isUpdate) {
+                                        ajaxsend({
+                                            regName: $("#form_name").val(),
+                                            id: $("#form_id").val(),
+                                            type: Utils.checkBox($("#type_check_coupon"), 0, 1),
+                                            regContent: $("#form_tag_desc").val()
+                                        }, "/admin/marketing/reg/save.json", function (dataJson) {
+                                            layer.alert(title + "成功！", function (alertIndex) {
+                                                layer.close(alertIndex);
+                                                layer.close(index);
+                                                $("#form1").remove();
+                                                search(currPageNo)
+                                            })
+                                        }, "post");
+                                    } else {
+                                        layer.close(index);
+                                    }
+                                    return false;
+                                })
+                                $("#form_submit").click();
+                            } else {
+                                layer.close(index);
+                            }
+                        },
+                        btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["marketing_reg_deleted", "marketing_reg_stop", "marketing_reg_save", "marketing_reg_info"]);
+        }
+
+        callParent.isLoadEnd("marketing_reg_manage");
+        callParent.register(function () {
+            search(currPageNo)
+        }, "search");
+        search();
+    })
+</script>
+</body>
+</html>

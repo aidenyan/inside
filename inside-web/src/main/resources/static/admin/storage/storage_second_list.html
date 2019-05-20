@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>出库管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmStorageOut">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline">
+                        <a href="javascript:;" id="storageOutAdd" class="layui-btn layui-btn-small"> <i
+                                class="layui-icon"
+                                style="vertical-align: middle">
+                            &#xe61f;</i>新增出库单</a>
+                        <input id="btnExport" class="layui-btn layui-btn-small" type="button" value="导出">
+                    </div>
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="出库单号/操作人/SKU"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId">
+                                <option value="-1">选择出库仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcInWarehouse" name="inWarehouseId">
+                                <option value="-1">选择调拨仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcOperType" name="operType">
+                                <option value="-1">选择出库类型</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="s.storage_out_in_no">出库单号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num">关联单号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " >出库类型</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="s.rev_warehouse_name">收货单位</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80 sort" name="l.con_name">联系人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80 sort" name="l.phone">联系电话</div>
+                            </td>
+                           <!-- <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="l.tracking_name">物流方式</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="tracking_no">运单号</div>
+                            </td>-->
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="s.warehouse_name">出库仓库</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">初审人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">初审时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">终审人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">终审时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">操作人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time sort" name="s.modify_time">维护时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " >出库状态</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70" >操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value"  lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/print/print.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <!--<td><input name="" lay-skin="primary" type="checkbox"></td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.storageOutInNo}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.relationNo || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.operTypeStr}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.revWarehouseName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.conName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.conTel || ''}}</div></td>
+        <!--<td class="trDetail">{{item.trackingName || ''}}</td>-->
+        <!--<td class="trDetail">{{item.trackingNo || ''}}</td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.firstName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.firstTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.secondName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.secondTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.confirmedName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.modifyTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.statusStr}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+            {{# if(item.status == 4){ }}
+                <button class="pass" val="{{item.id}}" title="终审通过">
+                    <i class="icon-zhenque"></i>
+                </button>
+                <button class="reject" val="{{item.id}}" title="终审拒绝">
+                    <i class="icon-uniE617"></i>
+                </button>
+            {{# } }}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length === 0){ }}
+    <tr>
+        <td colspan="11" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplStorageItem" type="text/html">
+    <td colspan="15" class="purchaseItemContent">
+        <div>
+            <p class="trDetail-title">出库明细</p>
+        </div>
+        <div>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商品编码</th>
+                    <th>品牌</th>
+                    <th>商品名称</th>
+                    <th>单位</th>
+                    <th>出库数量</th>
+                    <th>出库库位</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d.storageItemDTOList, function(index, item){ }}
+                <tr>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.brandName}}</td>
+                    <td>{{item.productName}}</td>
+                    <td>{{item.productUnit}}</td>
+                    <td>{{item.num}}</td>
+                    <td>{{item.locationStr}}</td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <td>备注</td>
+                    <td colspan="13">{{d.remark || ''}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+<script id="tplPrint" type="text/html">
+    <input id="hidPrintCount" type="hidden" value="{{d.printCount}}"/>
+    <div class="box">
+        <div class="header">
+            <div><h3>杭州中策车空间汽车服务有限公司出库单</h3></div>
+            <div style="font-size: 14px">
+                <ul class="cf">
+                    <li><h4 style="font-size: 18px">{{d.conName}}</h4></li>
+                    <li><h4>{{d.conTel}}</h4></li>
+                </ul>
+                <ul class="cf">
+                    <li style="width: 550px;"><i>收货地址:</i><span>{{d.address}}</span></li>
+                </ul>
+                <ul class="cf">
+                    <li><i>出库单号:</i><span>{{d.storageOutInNo}}</span></li>
+                    <li><i>打印日期:</i><span>{{laydate.now()}}</span></li>
+                    <li><i>总重量:</i><span>{{d.weight}}kg</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="content">
+            <table>
+                <tr class="bot">
+                    <th width="30">序号</th>
+                    <th width="150">SKU编码</th>
+                    <th width="380">商品名称</th>
+                    <th width="100">库位编码</th>
+                    <th width="40">数量</th>
+                    <th width="60">包装数量</th>
+                </tr>
+                {{# layui.each(d.storageItemDTOList, function(index, item){ }}
+                <tr rowspan="2">
+                    <th>{{index + 1}}</th>
+                    <td>{{item.skuCode}}</td>
+                    <td style="text-align: left;">{{item.productName}}</td>
+                    <td>{{# layui.each(item.locationList, function(index1, item1){ }}{{item1.locationNo}}({{item1.num}})<br>{{# }); }}</td>
+                    <td>{{item.num}}{{item.productUnit}}</td>
+                    <td>{{item.packQuantity}}</td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <th class="total" colspan="6">总计{{d.storageItemDTOList.length}}件</th>
+                </tr>
+                {{# if (d.remark != null && d.remark != '') { }}
+                <tr>
+                    <th class="message" colspan="6">备注:{{d.remark}}</th>
+                </tr>
+                {{# } }}
+            </table>
+        </div>
+    </div>
+</script>
+<script id="tplLogis" type="text/html">
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>物流单号</th>
+                <th>物流名称</th>
+                <th>联系人</th>
+                <th>联系电话</th>
+                <th>地址</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#  layui.each(d, function(index, item){ }}
+            <tr>
+                <td>{{item.trackingNo}}</td>
+                <td>{{item.trackingName}}</td>
+                <td>{{item.conName}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{item.fullAddress}}</td>
+            </tr>
+            {{#  }); }}
+            </tbody>
+        </table>
+    </div>
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        //通过
+        $("#pageContent").on("click", ".pass", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认通过吗?', {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/storage/secondPass.json?id=" + varId, function (dataJson) {
+                    refresh();
+                    layer.msg('终审通过');
+                });
+                layer.close(index);
+            });
+        });
+
+        //拒绝
+        $("#pageContent").on("click", ".reject", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认拒绝吗?请输入原因：<input type="text" class="layui-input" id="txtAR" />', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                myAjax.ajaxSend("/storage/secondReject.json?id=" + varId + '&approvalRemark=' + $("#txtAR").val(), function (dataJson) {
+                    refresh();
+                    layer.msg('终审拒绝');
+                });
+                layer.close(index);
+            });
+        });
+
+        $(".page_size_value").change(function(){
+            $("#btnSearch").click();
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            if(!Utils.isNotNull(data)){
+                data = {"params_order_name":"modify_time","params_order_type":"0"};
+            }
+            myAjax.ajaxPage('/storage/outList.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            $.extend(vSeaData,{"params_order_name":"modify_time","params_order_type":"0"});
+            pageOrder(vSeaData);
+            return false;
+        });
+        pageOrder();
+
+        //明细
+        $(document).on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            var varCon = $("#storageItemContent");
+            if (varCon.length == 0) {
+                varThis.parent('tr').after('<tr id="storageItemContent" val="' + varId + '"></tr>');
+                varThis.parent().addClass('bg');
+                myAjax.ajaxTpl("/storage/findItems.json?storageId=" + varId, 'storageItemContent', 'tplStorageItem');
+            } else {
+                varCon.remove();
+                varThis.parent().removeClass('bg');
+                if (varCon.attr('val') != varId) {
+                    varThis.parent().siblings('tr.bg').removeClass('bg')
+                    varThis.parent().addClass('bg');
+                    varThis.parent('tr').after('<tr id="storageItemContent" val="' + varId + '"></tr>');
+                    myAjax.ajaxTpl("/storage/findItems.json?storageId=" + varId, 'storageItemContent', 'tplStorageItem');
+                }
+            }
+        });
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg', true);
+
+        //获取调拨仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcInWarehouse', 'slcOptionOrg', true);
+
+        //获取出库类型
+        myAjax.ajaxTpl("/storage/operTypeOut.json", 'slcOperType', 'slcOption', true);
+
+        callParent.isLoadEnd("storage_out_second");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+<!--<script type="text/javascript">
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

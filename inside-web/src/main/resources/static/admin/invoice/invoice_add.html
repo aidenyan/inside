@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新增开票</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        .infor-show {
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ebebeb;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+  <div class="list">
+    <form class="layui-form" action="">
+      <input id="userId" type="hidden" name="userId" value="123456"/>
+      <input id="state" type="hidden" name="state" value="0"/>
+
+      <div class="infor-show">
+          <i class="icon-gongsisvgtubiaozongji22"
+             style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+          <span>开票资料</span>
+      </div>
+
+      <div class="layui-form mizone-form">
+            <div id="taxpayerType" class="layui-form-item mizone-form-item">
+              <div class="layui-form-item">
+                  <label for="" class="layui-form-label mizone-form-lable padd_top">
+                      <span style="color: red">*</span>
+                      纳税人类型
+                  </label>
+                  <div class="layui-input-block ">
+                      <input id="normalType" type="radio" name="taxpayerType" value="2" title="企业普通发票(小规模纳税人)" lay-filter="type" checked>
+                      <input id="professionalType" type="radio" name="taxpayerType" value="1" title="企业增值税专票(一般纳税人)" lay-filter="type">
+                      <input id="personType" type="radio" name="taxpayerType" value="3" title="个人普通发票" lay-filter="type">
+                  </div>
+              </div>              
+          </div>
+        <div class="layui-form-item mizone-form-item" id="temp">
+            <!--<div class="layui-inline">
+                <label for="" class="layui-form-label mizone-form-lable padd_top">
+                    <span style="color: red">*</span>
+                    开票公司名称
+                </label>
+                <div class="layui-input-inline mizone-input-inline">
+                    <input name="invoiceCompanyName" id="invoiceCompanyName" type="text" lay-verify="required|invoiceCompanyName" class="layui-input" placeholder="请输入开票公司名称">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label for="" class="layui-form-label mizone-form-lable padd_top">
+                    <span style="color: red">*</span>
+                    纳税人识别号
+                </label>
+                <div class="layui-input-inline mizone-input-inline">
+                    <input name="taxpayerIdentificationNo" id="taxpayerIdentificationNo" type="text" lay-verify="required" class="layui-input">
+                </div>
+            </div> 
+            <div class="layui-form-item">
+                <label for="" class="layui-form-label mizone-form-lable padd_top">
+                    关联组织
+                </label>
+                <div class="layui-input-inline mizone-input-inline">
+                <input name="storeName" id="storeName" type="text" class="layui-input" list="companyOrgList" autocomplete="off">
+                    <datalist id="companyOrgList">
+                    </datalist>
+                </div>
+            </div>-->
+        </div>
+
+      <div id="uploadImg">
+        <div class="infor-show" id="product_img_list">
+        <input type="hidden" name="productInfo.urlPath" id="product_img_url_path">
+        <i class="icon-gongsisvgtubiaozongji22"
+            style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+        <span>上传资料</span>
+        </div>
+
+        <div class="layui-form billing_upload">
+            <div class="mizone-upload-case" id="upload_send_img">
+                <div class="mizone-upload" id="mizone-upload-case">
+                    <div class="mizone-upload-drag">
+                        <i class="layui-icon">&#xe654;</i>
+                        <input type="file" id="update_img_data" lay-verify="productImg"
+                                lay-filter="mizone-upload-drag" name="file">
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>  
+
+      <div class="layui-inline">
+       <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="save">保存并关闭</button>
+       <button id="saveAndContinue" class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveAndContinue">保存并新增</button>
+       <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+     </div>
+     <div style="display: none">
+        <input type="file" id="update_hiden_data" name="file">
+        <input type="text" id="state" name="state" value="1">
+     </div>
+  </form>
+  </div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+<script type="text/javascript" src="../../common/lib/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../../common/lib/jsrender.js"></script>
+<script type="x-jsrender" id="j-img">
+       <div class="mizone-upload-list">
+            <img src="{{:src}}" alt="">
+            <input type="hidden" class="img" name="img" value="{{:src}}">
+            <div class="mizone-upload-list-cover">
+                <i class="icon-zoomin see"></i>
+                <i class="layui-icon update">&#xe642;</i>
+                <i class="layui-icon deleted">&#xe640;</i>
+            </div>
+     </div>
+</script>
+<script type="x-jsrender" id="j-type-normal">
+    <div class="layui-form-item mizone-form-item" id="temp">
+        <div class="layui-inline">
+            <label for="" class="layui-form-label mizone-form-lable padd_top">
+                <span style="color: red">*</span>
+                开票公司名称
+            </label>
+            <div class="layui-input-inline mizone-input-inline">
+                <input name="invoiceCompanyName" id="invoiceCompanyName" type="text" lay-verify="required|invoiceCompanyName" class="layui-input" placeholder="请输入开票公司名称">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label for="" class="layui-form-label mizone-form-lable padd_top">
+                <span style="color: red">*</span>
+                纳税人识别号
+            </label>
+            <div class="layui-input-inline mizone-input-inline">
+                <input name="taxpayerIdentificationNo" id="taxpayerIdentificationNo" type="text" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="" class="layui-form-label mizone-form-lable padd_top">
+                关联组织
+            </label>
+            <div class="layui-input-inline mizone-input-inline">
+                <input name="storeId" id="storeName" type="text" class="layui-input" list="companyOrgList" autocomplete="off">
+                    <datalist id="companyOrgList">
+                    </datalist>
+            </div>
+        </div>  
+    </div>
+</script>
+<script type="x-jsrender" id="j-type-person">
+    <div class="layui-form-item mizone-form-item" id="temp">
+        <div class="layui-inline">
+            <label for="" class="layui-form-label mizone-form-lable padd_top">
+                <span style="color: red">*</span>
+                个人名称
+            </label>
+            <div class="layui-input-inline mizone-input-inline">
+                <input name="invoiceCompanyName" id="invoiceCompanyName" type="text" lay-verify="required|invoiceCompanyName" class="layui-input" placeholder="请输入个人名称">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label for="" class="layui-form-label mizone-form-lable padd_top">
+                关联组织
+            </label>
+            <div class="layui-input-inline mizone-input-inline">
+                <input name="storeId" id="storeName" type="text" class="layui-input" list="companyOrgList" autocomplete="off">
+                    <datalist id="companyOrgList">
+                    </datalist>
+            </div>
+        </div> 
+    </div>
+</script>       
+<script type="x-jsrender" id="j-radio">
+    <div id="radioType">
+            <div class="layui-form-item mizone-form-item">
+            <div class="layui-inline">
+                <label for="" class="layui-form-label mizone-form-lable padd_top">
+                    <span style="color: red">*</span>
+                    开票公司名称
+                </label>
+                <div class="layui-input-inline mizone-input-inline">
+                    <input name="invoiceCompanyName" id="invoiceCompanyName" type="text" lay-verify="required|invoiceCompanyName" class="layui-input" placeholder="请输入开票公司名称">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label for="" class="layui-form-label mizone-form-lable padd_top">
+                    <span style="color: red">*</span>
+                    纳税人识别号
+                </label>
+                <div class="layui-input-inline mizone-input-inline">
+                    <input name="taxpayerIdentificationNo" id="taxpayerIdentificationNo" type="text" lay-verify="required" class="layui-input">
+                </div>
+            </div>                
+             <div class="layui-form-item mizone-form-item">
+              <div class="layui-inline">
+                  <label for="" class="mizone-form-lable layui-form-label padd_top">
+                      <span style="color: red">*</span>
+                      开户行
+                  </label>
+                  <div class="layui-input-inline mizone-input-inline">
+                      <input name="openBank" id="openBank" type="text" lay-verify="required|openBank" class="layui-input">
+                  </div>
+              </div>
+              <div class="layui-inline">
+                  <label for="" class="mizone-form-lable layui-form-label padd_top">
+                      <span style="color: red">*</span>
+                      账号
+                  </label>
+                  <div class="layui-input-inline mizone-input-inline">
+                      <input name="account" id="account" type="text" lay-verify="required|account" class="layui-input">
+                  </div>
+              </div>
+             </div>
+          </div>
+          <div class="layui-form-item mizone-form-item" lay-verify="sysarea">
+              <div class="layui-inline mizone-inline">
+                  <label for="" class="layui-form-label mizone-form-lable padd_top">
+                      <span style="color: red">*</span>
+                      注册地区
+                  </label>
+                  <div class="layui-input-inline linkageSelection" id="proviceList">
+                       <select id="province" lay-filter="provinceFilter" lay-verify="required">
+                                <option value="">请选择省</option>
+                      </select>
+                  </div>
+                  <div class="layui-input-inline linkageSelection" style="display: none" id="cityList">
+                      <select id="city" lay-filter="cityFilter" lay-verify="required">
+                              <option value="">请选择市</option>
+                      </select>
+                  </div>
+                  <div class="layui-input-inline linkageSelection" style="display: none" id="areaList">
+                      <select id="sysarea" lay-verify="required">
+                              <option value="">请选择县/区</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="layui-inline">
+                  <label for="" class="mizone-form-lable layui-form-label padd_top">
+                      <span style="color: red">*</span>
+                      详细地址
+                  </label>
+                  <div class="layui-input-inline mizone-input-inline">
+                      <input name="detailAddress" id="detailAddress" type="text" lay-verify="required|detailAddress" class="layui-input">
+                  </div>
+              </div> 
+          </div>
+          <div class="layui-form-item mizone-form-item">
+              <div class="layui-inline">
+                  <label for="" class="mizone-form-lable layui-form-label padd_top">
+                      <span style="color: red">*</span>
+                      注册电话
+                  </label>
+                  <div class="layui-input-inline mizone-input-inline">
+                      <input name="registerTel" id="registerTel" type="text" lay-verify="required|phone" class="layui-input">
+                  </div>
+              </div>
+               <div class="layui-inline">
+                  <label for="" class="mizone-form-lable layui-form-label padd_top">
+                      备注
+                  </label>
+                  <div class="layui-input-inline mizone-input-inline">
+                      <input name="remark" id="remark" type="text" class="layui-input">
+                  </div>
+              </div>
+            <div class="layui-form-item">
+                <label for="" class="layui-form-label mizone-form-lable padd_top">
+                    关联组织
+                </label>
+                <div class="layui-input-inline mizone-input-inline">
+                    <input name="storeId" id="storeName" type="text" class="layui-input" list="companyOrgList" autocomplete="off">
+                        <datalist id="companyOrgList">
+                        </datalist>
+                </div>
+            </div> 
+      </div>
+    </div>        
+</script>
+<script>
+  var form;
+  layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+    var updateImg;
+    //纳税人识别号组
+    var tIdNList = new Array();
+    var radioVar = 2;
+    form = layui.form();
+    var layer = layui.layer
+            , $ = layui.jquery
+            , laytpl = layui.laytpl
+            , myAjax = layui.myAjax;
+    var radioRenderTpl = $.templates('#j-radio');
+    radioTpl = radioRenderTpl();
+    var personRenderTpl = $.templates('#j-type-person');
+    personTpl = personRenderTpl();
+    var normalRenderTpl = $.templates('#j-type-normal');
+    noramlTpl = normalRenderTpl();
+            //保存
+            form.on('submit(save)', function (data) {
+            //   if($.inArray($('#storeName').val(), storeNames) != -1){
+            //     layer.confirm('该门店已有开票信息，如需更改请先找到对应的门店', {icon: 3, title: '提示','closeBtn':0,area: ['430px', '240px']}, function (index) {
+            //         layer.close(index);
+            //     });
+            //   } else {
+                 if ((invoiceId != null && invoiceId!=undefined) || $.inArray(data.field.taxpayerIdentificationNo, tIdNList)!=-1) {
+                     myAjax.ajaxSend('/admin/invoice/update.json', function () {
+                      callParent.openTab('invoice_list', 0, '开票资料', 'admin/invoice/invoice_list.html', true);
+                      callParent.parentUse("invoice_list", "refresh");
+                      callParent.closeTab('invoice_add');
+                  },  $.extend(data.field, {'registerAddress': getselectAreaId(), 'id':invoiceId}), 'post', false);
+                } else {
+                  myAjax.ajaxSend('/admin/invoice/save.json', function () {
+                      callParent.openTab('invoice_list', 0, '开票资料', 'admin/invoice/invoice_list.html', true);
+                      callParent.parentUse("invoice_list", "refresh");
+                      callParent.closeTab('invoice_add');
+                  },  $.extend(data.field, {'registerAddress': getselectAreaId()}, {'openBank':$.trim(data.field.openBank)}), 'post', false);
+                }
+              });
+            //   return false;
+          //});
+
+         //纳税人类别选择:1.一般纳税人2.小规模纳税人3.个人纳税人 radioVar用来记录是从那个类型点过来的
+         form.on('radio(type)', function(data) {
+
+             if(data.value == 1){
+                if(radioVar == 2){
+                   $("#temp").remove()
+                   $("#taxpayerType").append(radioTpl)
+                   getAreaSelect(data.registerAddress);
+                }else if(radioVar == 3){
+                    $("#temp").remove();
+                    $("#taxpayerType").append(radioTpl)
+                    $("#uploadImg").show();
+                    getAreaSelect(data.registerAddress);
+                }
+                getCompanyOrgList();
+                radioVar = 1
+             }else if(data.value == 2){
+                 if(radioVar == 1){
+                     //$("#temp").remove();
+                     $("#radioType").remove()
+                     $("#taxpayerType").append(noramlTpl)
+                 } else if(radioVar == 3){
+                    $("#temp").remove();
+                    $("#taxpayerType").append(noramlTpl)
+                    $("#uploadImg").show();
+                 }
+                getCompanyOrgList();
+                radioVar = 2
+             }else if(data.value == 3){
+                 if(radioVar == 1){
+                    //$("#temp").remove();
+                    $("#radioType").remove()
+                    $("#taxpayerType").append(personTpl)
+                 }else if(radioVar == 2){
+                    $("#temp").remove();
+                    $("#taxpayerType").append(personTpl)
+                 }
+                $("#uploadImg").hide();
+                getCompanyOrgList();
+                radioVar = 3
+             }
+             $("#storeName").keyup(function(){
+                getCompanyOrgList($("#storeName").val());
+             })
+             revertImg(); 
+         });
+
+    var invoiceId = params.get('invoiceId');
+
+
+    form.render();
+    init = function(){
+        if(invoiceId != null || invoiceId != undefined){
+            myAjax.ajaxSend("/admin/invoice/list.json?id=" + invoiceId, function (data) {
+                data = data.result.result[0];
+                if(data.taxpayerType == 1){
+                    $('input[title="一般纳税人"]').prop('checked', true);
+                    $("#temp").append(radioTpl);
+                    $("#professionalType").attr("checked",true);
+                    radioVar = 1;
+                }else if(data.taxpayerType == 2){
+                    $('input[title="小规模纳税人"]').prop('checked', true);
+                    $("#radioType").remove()
+                    $("#taxpayerType").append(noramlTpl)
+                    $("#normalType").attr("checked",true);
+                    radioVar = 2;
+                }else{
+                    $('input[title="个人"]').prop('checked', true);
+                    $("#temp").remove();
+                    $("#taxpayerType").append(personTpl)
+                    $("#uploadImg").hide();
+                    $("#personType").attr("checked",true);
+                    radioVar = 3;
+                }
+                $("#invoiceCompanyName").val(data.invoiceCompanyName);
+                $("#taxpayerIdentificationNo").val(data.taxpayerIdentificationNo);
+                $("#openBank").val(data.openBank);
+                $("#account").val(data.account);
+                $("#registerTel").val(data.registerTel);
+                $("#detailAddress").val(data.detailAddress);
+                $("#storeName").val(data.storeId);
+                //$("#taxpayerType").val(data.taxpayerType);
+                $("#remark").val(data.remark);
+                if(data.img1 !=null && data.img1!= ""){
+                var jsRenderTpl = $.templates('#j-img'),
+                        finalTpl = jsRenderTpl({"src":data.img1});
+                $("#mizone-upload-case").before(finalTpl);
+                imgDeal();
+                }
+                if(data.img2 !=null && data.img2!= ""){
+                var jsRenderTpl = $.templates('#j-img'),
+                        finalTpl = jsRenderTpl({"src":data.img2});
+                $("#mizone-upload-case").before(finalTpl);
+                imgDeal();
+                }
+                if(data.img3 !=null && data.img3!= ""){
+                var jsRenderTpl = $.templates('#j-img'),
+                        finalTpl = jsRenderTpl({"src":data.img3});
+                $("#mizone-upload-case").before(finalTpl);
+                imgDeal();
+                }
+                if ($("#upload_send_img .mizone-upload-list img").length == 3) {
+                    $("#mizone-upload-case").hide();
+                }
+                //收货地区
+                if(data.registerAddress!=null && data.registerAddress!=""){
+                    getAreaSelect(data.registerAddress);
+                }
+                getCompanyOrgList();
+                $("#storeName").keyup(function(){
+                getCompanyOrgList($("#storeName").val());
+             }) 
+                $("#saveAndContinue").hide();
+                form.render();
+            });
+        }else{
+            myAjax.ajaxSend("/admin/invoice/list.json", function (data) {
+              for(var i=0;i<data.result.result.length;i++){
+                tIdNList.push(data.result.result[i].taxpayerIdentificationNo);
+              }
+            });
+            clean();
+        }
+    }
+    init(); 
+    getProvinceList();
+    form.on('select(provinceFilter)', function(data){
+        changeProvince(data.value);
+    });
+    form.on('select(cityFilter)', function(data){
+        changeCity(data.value);
+    });
+
+      //获得门店列表
+    //   getStoreNameList=function(){
+    //       $.ajax({
+    //           url : "/admin/invoice/companyOrg/list.json",
+    //           type : "post",
+    //           traditional : true,
+    //           dataType : "json",
+    //           contentType : "application/x-www-form-urlencoded; charset=utf-8",
+    //           success : function(data) {
+    //               storeData = data.result.result;
+    //               var option;
+    //               $.each(storeData, function (k, p) {
+    //                   option+="<option value='"+p.companyName+"'>"+p.companyName+"</option>";
+    //                   //storeNames.push(p.companyName);
+    //               })
+    //               $("#storeNameList").append(option);
+    //               form.render("select");
+
+    //           },
+    //           error:function(message){
+    //               layer.alert(message);
+    //           }
+    //       })
+    //   }  
+    
+    // 获取已有开票资料
+    //       getInvoiceDataList=function(){
+    //       $.ajax({
+    //           url : "/admin/invoice/list.json",
+    //           type : "post",
+    //           traditional : true,
+    //           dataType : "json",
+    //           contentType : "application/x-www-form-urlencoded; charset=utf-8",
+    //           success : function(data) {
+    //               var invoiceData = data.result.result;
+    //               $.each(invoiceData, function (k, p) {
+    //                   storeNames.push(p.storeName)
+    //               })
+    //           },
+    //           error:function(message){
+    //               layer.alert(message);
+    //           }
+    //       })
+    //   } 
+
+    //getStoreNameList();
+   // getInvoiceDataList();
+
+    //保存并新增
+    form.on('submit(saveAndContinue)', function (data) {
+        if ((invoiceId != null && invoiceId!=undefined) || $.inArray(data.field.taxpayerIdentificationNo, tIdNList)!=-1) {
+            myAjax.ajaxSend('/admin/invoice/update.json', function () {
+                callParent.parentUse("invoice_add", "refresh");
+            },  $.extend(data.field, {'registerAddress': getselectAreaId(), 'id':invoiceId}), 'post', false);
+        } else {
+            myAjax.ajaxSend('/admin/invoice/save.json', function () {
+                callParent.parentUse("invoice_add", "refresh");
+            },  $.extend(data.field, {'registerAddress': getselectAreaId()}, {'openBank':$.trim(data.field.openBank)}), 'post', false);
+        }
+        return false;
+    });
+
+    $("#cancel").click(function () {
+        callParent.openTab('invoice_list', 0, '开票资料', 'admin/invoice/invoice_list.html', true);
+        callParent.closeTab('invoice_add');
+    });
+
+    function clean(){ 
+      if ($("#upload_send_img .mizone-upload-list img").length == 3) {
+          $("#mizone-upload-case").show();
+      }
+      $("#invoiceCompanyName").val("");
+      $("#taxpayerIdentificationNo").val("");
+      $("#openBank").val("");
+      $("#account").val("");
+      $("#registerTel").val("");
+      $("#detailAddress").val("");
+      $(".mizone-upload-list").remove();
+      getAreaSelect(null);
+      $("#radioType").remove();
+      $("#temp").remove();
+      $("#taxpayerType").append(noramlTpl)
+      $('input[title="小规模纳税人"]').prop('checked', true);
+      radioVar = 2
+      form.render();
+    }
+
+    function change() {
+        $("#update_img_data").unbind();
+        $("#update_img_data").change(function () {
+            if ($.trim($(this).val()) != "") {
+                var $this = $(this);
+                uploadFile("/admin/product/img/update.json", function (dataJson) {
+                    var jsRenderTpl = $.templates('#j-img'),
+                            finalTpl = jsRenderTpl(dataJson.data);
+                    $("#mizone-upload-case").before(finalTpl);
+                    imgDeal();
+                    $("#update_img_data").val("");
+                    if ($("#upload_send_img .mizone-upload-list img").length == 3) {
+                        $("#mizone-upload-case").hide();
+                    } else {
+                        change();
+                    }
+                    orderImg();
+                }, {fileId: "update_img_data", data: {isThumbnails:false,hasRule:false}});
+            }
+        })
+    }
+
+    function imgDeal() {
+       /* $(".mizone-upload-list-cover .right").unbind();
+        $(".mizone-upload-list-cover .left").unbind();*/
+        $(".mizone-upload-list-cover .see").unbind();
+        $(".mizone-upload-list-cover .update").unbind();
+        $(".mizone-upload-list-cover .deleted").unbind();
+        $(".mizone-upload-list-cover .update").click(function () {
+            updateImg = $(this).parents(".mizone-upload-list");
+            $("#update_hiden_data").click();
+            orderImg();
+        })
+        $(".mizone-upload-list-cover .deleted").click(function () {
+            $(this).parents(".mizone-upload-list").remove();
+            orderImg();
+
+            $("#mizone-upload-case").show();
+            change();
+        })
+      /*  $(".mizone-upload-list-cover .left").click(function () {
+            $(this).parents(".mizone-upload-list").prev().before($(this).parents(".mizone-upload-list"))
+            orderImg();
+            ;
+        })
+        $(".mizone-upload-list-cover .right").click(function () {
+            $(this).parents(".mizone-upload-list").next(".mizone-upload-list").after($(this).parents(".mizone-upload-list"))
+            orderImg();
+        })*/
+      $(".mizone-upload-list-cover .see").click(function () {
+          var src=$(this).parent().prevAll('img').attr('src')
+          layer.open({
+              area:['auto','auto'],
+              content:'<img src="'+src+'" alt="" style="width: 700px;height: 400px">',
+              title:false,
+              btn:0,
+              shadeClose:true
+          })
+      })
+    }
+
+    function revertImg(){
+        $(".mizone-upload-list").remove();
+            orderImg();
+
+        $("#mizone-upload-case").show();
+            change();
+    }
+
+    function orderImg() {
+        var i = 0;
+        $(".mizone-upload-list .num").each(function () {
+            $(this).attr("name", "productImgInfoList[" + i + "].num");
+            $(this).val((i + 1));
+            i++;
+        })
+        i = 1;
+        $(".mizone-upload-list .img").each(function () {
+            $(this).attr("name", "img" + i);
+            if (i == 0) {
+                $("#product_img_url_path").val($(this).val());
+            }
+            i++;
+        })
+        i = 0;
+        $(".mizone-upload-list .id").each(function () {
+            $(this).attr("name", "productImgInfoList[" + i + "].id");
+            i++;
+        })
+    }
+
+          //获得门店列表
+      getCompanyOrgList=function(data){
+          $.ajax({
+              url : "/admin/invoice/companyOrg/list.json",
+              type : "post",
+              data : {
+                "companyName" : data
+              },
+              traditional : true,
+              dataType : "json",
+              contentType : "application/x-www-form-urlencoded; charset=utf-8",
+              success : function(data) {
+                  storeNameList = data;
+                  storeNameRender(storeNameList)
+              },
+              error:function(message){
+                  layer.alert(message);
+              }
+          })
+      }
+    
+    storeNameRender=function(data){
+        var option = "";
+        $("#companyOrgList").empty();
+        $.each(data, function (k, p) {
+            option+="<option value='"+p.id+"'>"+p.companyName+"</option>";
+            //storeNames.push(p.companyName);
+        })
+        $("#companyOrgList").append(option);
+        form.render("select");
+    }
+
+    change();
+    getCompanyOrgList();
+
+      callParent.isLoadEnd("invoice_add");
+      callParent.register(function () {
+          init()
+          clean();
+      }, "refresh");
+
+    //   $("#storeName").blur(function(){
+    //       var storeName = $("#storeName").val();
+    //       if(storeName != null && storeName != "") {
+    //           myAjax.ajaxSend("/admin/invoice/companyOrg/list.json", function (data) {
+    //             if(data.result.result[0]!=null){
+    //               $("#storeName").val(data.result.result[0].companyName);
+    //               $("#storeContact").val(data.result.result[0].legalPerson);
+    //               $("#phone").val(data.result.result[0].contactPhone);
+    //             } else {
+    //                 layer.confirm('该门店不存在', {icon: 3, title: '提示','closeBtn':0,area: ['430px', '240px']}, function (index) {
+    //                     layer.close(index);
+    //                 });
+    //                 $("#storeName").val('');
+    //             }
+    //           }, {"companyName": storeName}, 'post');
+    //       }
+    //   });
+
+      $("#update_hiden_data").change(function () {
+        if ($.trim($(this).val()) != "") {
+            var $this = $(this);
+            uploadFile("/admin/product/img/update.json", function (dataJson) {
+                var jsRenderTpl = $.templates('#j-img'),
+                        finalTpl = jsRenderTpl(dataJson.data);
+                $("#update_hiden_data").val("");
+                updateImg.next().before(finalTpl);
+                updateImg.remove();
+                orderImg();
+                imgDeal();
+            }, {fileId: "update_hiden_data", data: {isThumbnails:false,hasRule:false}});
+        }
+      });
+
+      $("#storeName").keyup(function(){
+        getCompanyOrgList($("#storeName").val());
+      })
+
+        // $('#storeName').bind('input propertychange', function() {
+        //     debugger;
+        //     getCompanyOrgList($("#storeName").val());
+        // });
+
+      form.verify({
+        account: [
+            /^[0-9]*$/,
+            '请输入正确的银行卡号'
+          ],
+        invoiceCompanyName: [
+          /^[\u4e00-\u9fa5]*$/,
+          '开票公司名称仅允许输入中文'
+        ],
+        phone: [
+            /^[0-9\-]{11,13}$/,
+            '请输入正确的注册电话'
+          ],
+        openBank: [
+            /^[\u4e00-\u9fa5\s]{0,60}$/,
+            '请输入正确的开户行'
+          ],
+        detailAddress: [
+            /^[\u4e00-\u9fa50-9]{0,60}$/,
+            '请输入正确的详细地址'
+          ],
+        });
+  });
+</script>
+</body>
+</html>

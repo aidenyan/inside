@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>促销管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        html {
+            color: #646976;
+        }
+
+        .hrLine {
+            vertical-align: middle;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <form>
+        <ul class="invoiceMsg promotions" id="gift_content_ul">
+
+        </ul>
+        <div class="btnBottom " style="text-align: center">
+            <button class="layui-btn layui-btn-norma form_submit" lay-submit lay-filter="form_submit">确定</button>
+            <button class="layui-btn layui-btn-primary" id="cancel">取消</button>
+        </div>
+    </form>
+</div>
+<div id="select_category" style="display: none"></div>
+<div id="select_brand" style="display: none"></div>
+<script type="x-jsrender" id="edit_content">
+      <input type="hidden" class="layui-input" id="form_gift_id"value="{{:id}}">
+     <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>标题：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" id="form_name" lay-verify="required" maxlength="35" value="{{:name}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">说明：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" id="form_remark"  maxlength="255" value="{{:remark}}" >
+            </div>
+        </li>
+        <li class="condition_not_sku">
+            <div class="wp14 text_right"><span style="color:red">*</span>最小消费金额：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" id="form_minAmount" lay-verify="price"  maxlength="8"  value="{{:minAmountFormat}}">
+            </div>
+        </li>
+       <li>
+            <div class="wp14 text_right">最大消费金额：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" id="form_maxAmount" lay-verify="price"  maxlength="8"  value="{{:maxAmountFormat}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>有效开始时间：</div>
+            <div class="wp32 ">
+                <input class="layui-input" placeholder="开始日"   maxlength="20"  lay-verify="required"  id="form_start_time"  value="{{:effectiveStartDateFormat}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">有效结束时间：</div>
+            <div class="wp32">
+                <input class="layui-input" placeholder="截止日"   maxlength="20"  id="form_end_time"  value="{{:effectiveEndDateFormat}}">
+            </div>
+        </li>
+
+        <li style="display: none">
+            <div class="wp14 text_right">是否免运费：</div>
+            <div class="wp32 ">
+                <input type="checkbox" id="form_freight_free" {{if freightFree}}checked="checked"{{/if}} title="" lay-skin="primary">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">是否采用SKU方式：</div>
+            <div class="wp32 ">
+                <input type="checkbox" id="is_used_sku"  lay-filter="skuCode" {{if isUsedSku}}checked="checked"{{/if}} title="" lay-skin="primary">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">所在品台：</div>
+            <div class="wp32 " id="platform_id">
+                <input type="checkbox" name="" value=""  title="全选"  lay-filter="platform_id_all"  lay-skin="primary">
+            </div>
+        </li>
+             <li>
+            <div class="wp14 text_right">会员等级：</div>
+            <div class="wp32 " id="rank_level">
+                <input type="checkbox" name="" value="" title="全选"  lay-filter="rank_level_all"  lay-skin="primary">
+            </div>
+        </li>
+        <li style="display: none">
+            <div class="wp14 text_right">允许参加商品分类：</div>
+            <div class="wp80 ">
+                <span class="cursor_p" id="select_category_list">点击选择商品分类</span>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right" >允许参加商品品牌：</div>
+            <div class="wp80 ">
+                <span class="cursor_p" id="select_brand_list">点击选择商品品牌</span>
+            </div>
+        </li>
+          <li class="condition_sku"><div style=" width:100%; text-align:left; margin-left:15px; margin-right:15px;"> <hr class="hrLine" style="width:45%;"/>  允许参加商品  <hr class="hrLine" style="width:45%;"/></div></li>
+        <li class="condition_product condition_sku">
+             <div class="">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="100">
+                                <col width="300">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="168">
+                                <col width="170">
+                                <col width="120">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="">序号</th>
+                                <th class="">SKU编码/商品名称</th>
+                                <th class="">品牌</th>
+                                <th class="">单位</th>
+                                <th class="">商品分类</th>
+                                <th class="">数量</th>
+                                <th class="">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="gift_product_tbody">
+                            <tr class="gift_add_clone_tr">
+
+                                <input type="hidden" class="child_detail_sku_Id" />
+                               <input type="hidden" class="child_detail_sku_code"/>
+                                <td class="package_order">1</td>
+                                <td class="sku_input_td">
+                                    <div class="mizone-input-number">
+                                        <div class="mizone-input-number-input">
+                                            <input type="text"
+                                                   class="layui-input sku_input no_update gift_show_product_sku" placeholder="请输入SKU编码">
+                                        </div>
+                                        <dl class="mizone-input-up" style="display: none">
+
+                                        </dl>
+                                    </div>
+                                </td>
+                                <td class="brand"></td>
+                                <td class="unit"></td>
+                                <td class="category"></td>
+                                <td>
+                                    <div class="mizone-input-number">
+                                        <div class="mizone-input-number-handler-wrap">
+                                            <i class="layui-icon up_num no_update"
+                                               style="-moz-user-select:none;">&#xe619;</i>
+                                            <i class="layui-icon down_num no_update"
+                                               style="-moz-user-select:none;">&#xe61a;</i>
+                                        </div>
+                                        <div class="mizone-input-number-input">
+                                            <input type="text" name="productPackageList[0].productNum" value="1"
+                                                   class="layui-input gift_product_num gift_show_product_num">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="state_uhandle">
+                                    <div class="">
+                                        <button class=" update gift_add_clone no_update">
+                                            <i class="icon-plus2"></i>
+                                        </button>
+                                        <button class=" delete gift_delete_clone no_update">
+                                            <i class="icon-delete"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+        </li>
+            <li><div style=" width:100%; text-align:left; margin-left:15px; margin-right:15px;"> <hr class="hrLine" style="width:45%;"/>赠送商品<hr class="hrLine" style="width:45%;"/></div></li>
+        <li class="gift_product">
+             <div class="">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="100">
+                                <col width="300">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="168">
+                                <col width="170">
+                                <col width="120">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="">序号</th>
+                                <th class="">SKU编码/商品名称</th>
+                                <th class="">品牌</th>
+                                <th class="">单位</th>
+                                <th class="">商品分类</th>
+                                <th class="">数量</th>
+                                <th class="">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="gift_product_tbody">
+                            <tr class="gift_add_clone_tr">
+
+                                <input type="hidden" class="child_detail_sku_Id"/>
+                                  <input type="hidden" class="child_detail_sku_code"/>
+                                <td class="package_order">1</td>
+                                <td class="sku_input_td">
+                                    <div class="mizone-input-number">
+                                        <div class="mizone-input-number-input">
+                                            <input type="text"
+                                                   class="layui-input sku_input no_update" lay-verify="required" placeholder="请输入SKU编码">
+                                        </div>
+                                        <dl class="mizone-input-up" style="display: none">
+
+                                        </dl>
+                                    </div>
+                                </td>
+                                <td class="brand"></td>
+                                <td class="unit"></td>
+                                <td class="category"></td>
+                                <td>
+                                    <div class="mizone-input-number">
+                                        <div class="mizone-input-number-handler-wrap">
+                                            <i class="layui-icon up_num no_update"
+                                               style="-moz-user-select:none;">&#xe619;</i>
+                                            <i class="layui-icon down_num no_update"
+                                               style="-moz-user-select:none;">&#xe61a;</i>
+                                        </div>
+                                        <div class="mizone-input-number-input">
+                                            <input type="text" value="1"
+                                                   class="layui-input gift_product_num" lay-verify="required|num">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="state_uhandle">
+                                    <div class="">
+                                        <button class=" update gift_add_clone no_update">
+                                            <i class="icon-plus2"></i>
+                                        </button>
+                                        <button class=" delete gift_delete_clone no_update">
+                                            <i class="icon-delete"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">使用规则：</div>
+            <div class="wp80 ">
+                <textarea disabled="disabled" class="layui-textarea">
+1）满金额送赠品：
+不勾选按SKU方式，设定最小消费金额和最大消费金额，（最小消费金额=订单商品总金额-促销+运费），可设置多品牌的商品参加，不可设置SKU；最大消费金额不设置视不无最大消费金额；
+订单应付总金额在大于等于最小消费金额且小于等于最大消费的，并且含有活动任意商品的，送所有赠品一次，单个订单仅送一次，多个订单多次送；
+如：设置W品牌实付金额在100元-1000送毛巾一条，1001元以上送毛巾两条，订单实付金额100元且含任意活动商品送毛巾一条；订单实付金额1001元及以上送毛巾两条；99元及以下不送赠品；
+2）满SKU数量送赠品：
+勾选按SKU方式，不可设置最小消费金额，可设置多品牌的商品参加，可设置SKU；SKU如有品牌的商品重叠以SKU数量为条件；
+单笔订单中含有任意活动商品的，活动SKU满足数量送所有赠品一次，单个SKU仅送一次，多SKU多次送，多个订单多次数，同商品多个促销的再叠加；
+如：设置W品牌参加活动，且设置SKU-A2个、B2个、C2个，赠品毛巾1条，假设只有AB属于W品牌；买A4个+B3个+C1个送毛巾2条；买A4条+B3+D1条（D是活动外商品），送毛巾2条；
+3）中策云店APP中的商城为小车商城且勾选有效；会员等级选中有效，全不选是会员和非会员全部参加；未设置结束时间视为无结束时间；
+4）相同SKU允许参加多个相同或不相同的营销活动，赠品按各自规则各送各的；
+5）活动一旦生效，不可编辑，只能禁止删除；
+                </textarea>
+            </div>
+        </li>
+
+
+
+
+
+
+
+</script>
+<script type="x-jsrender" id="select_brand_category">
+        <ul class="layui-form form-box ">
+            {{if list.length>0 }}
+            {{for list}}
+            <li>
+                {{if level }}
+                 <div class="layui-inline paddL5{{:level}}">
+                    <input type="checkbox" name="" parent_id="{{:parentId}}" lay-filter="selectChose" value="{{:id}}" {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}" class="">
+                </div>
+                {{else}}
+                <div class="layui-inline">
+                    <input type="checkbox" name="" value="{{:id}}" parent_id="{{:parentId}}" lay-filter="selectChose"  {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}"
+                           class="">
+                </div>
+
+                {{/if }}
+            </li>
+            {{/for}}
+            {{else }}
+            无数据
+            {{/if }}
+        </ul>
+
+
+
+
+
+
+
+
+</script>
+<script type="x-jsrender" id="j-platform-list">
+        {{for result}}
+             <input type="checkbox" {{if checked}}checked="checked"{{/if}} name="like1[write]" value="{{:id}}" lay-skin="primary" title="{{:name}}">
+        {{/for}}
+
+
+
+
+
+
+
+</script>
+<script type="x-jsrender" id="j-sku-td">
+  {{for result}}
+      <dd data-id="{{:id}}" class="sku_dd">{{if fullName!=null}}{{:fullName}}{{else}}{{:name}}{{/if}}({{:skuCode}})</dd>
+
+  {{/for}}
+
+
+
+
+
+
+</script>
+<script type="text/javascript" src="../admin.js"></script>
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+            var categoryArrayList, categoryList, giftActiveDetailInfo, brandList, platformList, rankLevelList;
+            var id = Utils.getHrefValue("id");
+            var start = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+
+            var end = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+
+            function selectUsedSku(bool){
+                if(bool){
+                    $(".condition_sku").show();
+                    $(".condition_not_sku").hide();
+                }else{
+                    $(".condition_sku").hide();
+                    $(".condition_not_sku").show();
+                }
+            }
+
+            form.verify({
+                price: function (value, item) {
+                    var message = $(item).attr("message")
+                    if (!Utils.isNotNull(message)) {
+                        message = "";
+                    }
+                    if ($.trim(value).length > 0 && !/^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/.test($.trim(value))) {
+                        return message + '价格格式不正确';
+                    }
+                }
+            });
+            $("#cancel").click(function () {
+                callParent.openTab("marketing_gifts");
+                callParent.closeTab("marketing_gift_add");
+            });
+
+            form.on("submit(form_submit)", function () {
+                var data = {};
+                data.giftActiveId = $("#form_gift_id").val();
+                data.giftActiveInfo = {
+                    name: $("#form_name").val(),
+                    remark: $("#form_remark").val(),
+                    minAmount: $("#form_minAmount").val(),
+                    maxAmount: $("#form_maxAmount").val(),
+                    startDate: $("#form_start_time").val(),
+                    endDate: $("#form_end_time").val(),
+                    freightFree: Utils.checkBox($("#form_freight_free"), true, false),
+                    isUsedSku: Utils.checkBox($("#is_used_sku"), true, false)
+                };
+                data.giftActiveBrandIdSet = new Array();
+                $("#select_brand input[type='checkbox']").each(function () {
+                    if (Utils.checkBox($(this), true, false)) {
+                        data.giftActiveBrandIdSet.push($(this).val());
+                    }
+                });
+                data.giftActivePlatformIdSet = new Array();
+                $("#platform_id input[type='checkbox']").each(function () {
+                    if (Utils.checkBox($(this), true, false) && Utils.isNotBlack($(this).val())) {
+                        data.giftActivePlatformIdSet.push($(this).val());
+                    }
+                });
+                data.giftActiveCategoryIdSet = new Array();
+                // 去掉允许参加商品分类的选择,不提交分类数据
+                /*$("#select_category input[type='checkbox']").each(function () {
+                    if (Utils.checkBox($(this), true, false)) {
+                        data.giftActiveCategoryIdSet.push($(this).val());
+                    }
+                });*/
+                data.giftActiveRankLevelIdSet = new Array();
+                $("#rank_level input[type='checkbox']").each(function () {
+                    if (Utils.checkBox($(this), true, false)) {
+                        if (Utils.isNotBlack($(this).val())) {
+                            data.giftActiveRankLevelIdSet.push($(this).val());
+                        }
+
+                    }
+                });
+                data.giftActiveProductSet = new Array();
+                // sku方式时不设置最小订单金额,反之不传sku商品
+                if(data.giftActiveInfo.isUsedSku) {
+                    data.giftActiveInfo.minAmount = null;
+                    $(".condition_product .gift_add_clone_tr").each(function () {
+                        if (Utils.isNotBlack($(this).find(".child_detail_sku_Id").val())) {
+                            var giftActiveProduct = {};
+                            giftActiveProduct.productDetailId = $(this).find(".child_detail_sku_Id").val();
+                            giftActiveProduct.skuCode = $(this).find(".child_detail_sku_code").val();
+                            giftActiveProduct.type = 0;
+                            giftActiveProduct.productNum = $(this).find(".gift_product_num").val();
+                            data.giftActiveProductSet.push(giftActiveProduct);
+                        }
+                    });
+                }
+                data.giftActiveProductGiftSet = new Array();
+                $(".gift_product .gift_add_clone_tr").each(function () {
+                    var giftActiveProduct = {};
+                    giftActiveProduct.productDetailId = $(this).find(".child_detail_sku_Id").val();
+                    giftActiveProduct.skuCode = $(this).find(".child_detail_sku_code").val();
+                    giftActiveProduct.type = 1;
+                    giftActiveProduct.productNum = $(this).find(".gift_product_num").val();
+                    data.giftActiveProductGiftSet.push(giftActiveProduct);
+                });
+                ajaxsend(data, "/admin/marketing/gift/save.json", function (dataJson) {
+                    if ($.trim($("#form_gift_id").val()) == "") {
+                        layer.alert("新增成功", {}, function () {
+                            callParent.parentUse("marketing_gifts", "search");
+                            callParent.openTab("marketing_gifts");
+                            callParent.closeTab("marketing_gift_add");
+                        });
+                    } else {
+                        layer.alert("修改成功", {}, function (index) {
+                            callParent.parentUse("marketing_gifts", "search");
+                            layer.close(index)
+                        });
+                    }
+                }, "post");
+                return false;
+            });
+            function selectSkuCodeCheck(){
+                selectUsedSku(Utils.checkBox($("#is_used_sku"), true, false));
+                $(".gift_show_product_num").removeAttr("lay-verify");
+                $(".gift_show_product_sku").removeAttr("lay-verify");
+                $("#form_minAmount").removeAttr("lay-verify");
+                if(Utils.checkBox($("#is_used_sku"), true, false)){
+                    $(".gift_show_product_num").attr("lay-verify","required|num");
+                    $(".gift_show_product_sku").attr("lay-verify","required");
+                }else{
+                    $("#form_minAmount").attr("lay-verify","required|price");
+                }
+            }
+            form.on('checkbox(skuCode)',function(){
+                selectSkuCodeCheck();
+            });
+            function loadInitData() {
+                if (Utils.isNotBlack(id)) {
+                    ajaxsend({giftActiveId: id}, "/admin/marketing/gift/info.json", function (dataJson) {
+                        giftActiveDetailInfo = dataJson.result;
+                        giftActiveDetailInfo.giftActiveInfo.effectiveEndDateFormat = Utils.formatTime(Utils.createTimeByLong(giftActiveDetailInfo.giftActiveInfo.endDate), "YYYY-MM-DD");
+                        giftActiveDetailInfo.giftActiveInfo.effectiveStartDateFormat = Utils.formatTime(Utils.createTimeByLong(giftActiveDetailInfo.giftActiveInfo.startDate), "YYYY-MM-DD");
+                        giftActiveDetailInfo.giftActiveInfo.minAmountFormat = Utils.formatPrice(giftActiveDetailInfo.giftActiveInfo.minAmount);
+                        giftActiveDetailInfo.giftActiveInfo.maxAmountFormat = Utils.formatPrice(giftActiveDetailInfo.giftActiveInfo.maxAmount);
+                        var jsRenderTpl = $.templates('#edit_content'),
+                        /*绑定数据*/
+                                finalTpl = jsRenderTpl(giftActiveDetailInfo.giftActiveInfo);
+                        $("#gift_content_ul").html(finalTpl);
+                        closeUpdate();
+                        var productIdList = new Array();
+                        if (Utils.isNotNull(giftActiveDetailInfo.giftActiveProductSet) && giftActiveDetailInfo.giftActiveProductSet.length > 0) {
+                            for (var i = 0; i < giftActiveDetailInfo.giftActiveProductSet.length; i++) {
+                                var giftProductInfo = giftActiveDetailInfo.giftActiveProductSet[i];
+                                productIdList.push(giftProductInfo.productDetailId);
+                                if (i != 0) {
+                                    cloneGift( $(".condition_product"));
+
+                                }
+                                var trObj = $(".condition_product .gift_add_clone_tr:eq(" + i + ")");
+                                trObj.find(".child_detail_sku_Id").val(giftProductInfo.productDetailId);
+                                trObj.find(".child_detail_sku_code").val(giftProductInfo.skuCode);
+                                trObj.find(".gift_product_num").val(giftProductInfo.productNum);
+                            }
+                        }
+                        if (Utils.isNotNull(giftActiveDetailInfo.giftActiveProductGiftSet) && giftActiveDetailInfo.giftActiveProductGiftSet.length > 0) {
+                            for (var i = 0; i < giftActiveDetailInfo.giftActiveProductGiftSet.length; i++) {
+                                var giftProductInfo = giftActiveDetailInfo.giftActiveProductGiftSet[i];
+                                productIdList.push(giftProductInfo.productDetailId);
+                                if (i != 0) {
+                                    cloneGift( $(".gift_product"));
+                                }
+                                var trObj = $(".gift_product .gift_add_clone_tr:eq(" + i + ")");
+                                trObj.find(".child_detail_sku_Id").val(giftProductInfo.productDetailId);
+                                trObj.find(".child_detail_sku_code").val(giftProductInfo.skuCode);
+                                trObj.find(".gift_product_num").val(giftProductInfo.productNum);
+                            }
+                        }
+                        if(Utils.isNotNull(productIdList)&&productIdList.length>0){
+                        Utils.getList("/admin/marketing/gift/product/list/by_id.json", function (productJson) {
+                            var productMap = new Map();
+                            for (var i = 0; i < productJson.result.length; i++) {
+                                productMap.push(productJson.result[i].id,productJson.result[i]);
+                            }
+
+                                $(".gift_add_clone_tr").each(function () {
+                                    var productIdSukId =   $(this).find(".child_detail_sku_Id").val();
+                                    if(Utils.isNotNull(productMap.get(productIdSukId))){
+                                    writePackageDatail( $(this),productMap.get(productIdSukId));}
+                                })
+                            form.render();
+                        }, undefined, {detailIdList: productIdList});
+                        }
+                        form.render();
+                        selectUsedSku(Utils.checkBox($("#is_used_sku"), true, false));
+                    }, undefined, false);
+                } else {
+                    var jsRenderTpl = $.templates('#edit_content'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({isUsedSku:true});
+                    $("#gift_content_ul").html(finalTpl);
+                    form.render();
+                    selectUsedSku(Utils.checkBox($("#is_used_sku"), true, false));
+                }
+                if (!(Utils.isNotNull(categoryList) && categoryList.length > 0)) {
+                    ajaxsend("", "/admin/common/category/list.json", function (dataJson) {
+                        categoryList = dataJson.result;
+                        appendCategory();
+                    }, undefined, false);
+                }
+                if (!(Utils.isNotNull(brandList) && brandList.length > 0)) {
+                    ajaxsend("", "/admin/common/brand/list.json", function (dataJson) {
+                        brandList = dataJson.result;
+                        appendBrand()
+                    }, undefined, false);
+                }
+                if (!(Utils.isNotNull(platformList) && platformList.length > 0)) {
+                    ajaxsend("", "/admin/common/platform/list.json", function (dataJson) {
+                        platformList = dataJson.result;
+                        appendPlatform();
+                    }, undefined, false);
+                }
+                if (!(Utils.isNotNull(rankLevelList) && rankLevelList.length > 0)) {
+                    ajaxsend("", "/admin/common/rank_level/list.json", function (dataJson) {
+                        rankLevelList = dataJson.result;
+                        appendRankLevel()
+                    }, undefined, false);
+                }
+
+                bindEvent();
+                bindProduct();
+                selectSkuCodeCheck();
+            }
+
+            /**
+             * 写入选择的子类对象数据格式如下{id:id,unit:unit;name:productName,skuCode:skuCode,brandId:brandId,categoryId:categoryId,productNum:productNum}
+             * @param that
+             * @param dataObj
+             */
+            function writePackageDatail(trObj, dataObj) {
+                var name=dataObj.fullName;
+                if(!Utils.isNotNull(dataObj.fullName)){
+                    name=dataObj.name;
+                }
+                trObj.find(".child_detail_sku_Id").val(dataObj.id);
+                trObj.find(".child_detail_sku_code").val(dataObj.skuCode);
+                trObj.find(".unit").html(dataObj.unit);
+                trObj.find(".sku_input").val(name + "(" + dataObj.skuCode + ")");
+                Utils.getList("/admin/common/brand/list.json", function (brandJson) {
+                    var brandReusult = brandJson.result;
+                    for (var j = 0; j < brandReusult.length; j++) {
+                        if (brandReusult[j].id == dataObj.brandId) {
+                            trObj.find(".brand").html(brandReusult[j].name);
+                            break;
+                        }
+                    }
+                }, brandList);
+                Utils.getList("/admin/common/category/list.json", function (categoryJson) {
+                    var categoryResult = categoryJson.result;
+                    for (var j = 0; j < categoryResult.length; j++) {
+                        if (categoryResult[j].id == dataObj.categoryId) {
+                            trObj.find(".category").html(categoryResult[j].name);
+                            break;
+                        }
+                    }
+                }, categoryList);
+                if (Utils.isNotNull(dataObj.productNum)) {
+                    trObj.find(".gift_product_num").val(dataObj.productNum)
+                }
+
+            }
+
+            function bindProduct() {
+                $(".sku_input").unbind();
+                $(".sku_input").keyup(function () {
+                    var skuCode = $(this).val();
+                    var that = $(this);
+                    var liObj = $(this).parents("li");
+                    if (Utils.isNotBlack($.trim(skuCode))) {
+                        var detailIdList = new Array();
+                        liObj.find(".child_detail_sku_Id").each(function () {
+                            var detailId = $(this).val();
+                            if (Utils.isNotBlack(detailId)) {
+                                detailIdList.push(detailId);
+                            }
+                        })
+                        if (detailIdList.length == 0) {
+                            detailIdList = undefined;
+                        }
+                        ajaxsend({
+                            skuCode: $.trim(skuCode),
+                            detailIdList: detailIdList
+                        }, "/admin/product/list.json", function (dataJson) {
+                            if (dataJson.result.length > 0) {
+                                var jsRenderTpl = $.templates('#j-sku-td'),
+                                        finalTpl = jsRenderTpl(dataJson);
+                                that.parents(".mizone-input-number").find(".mizone-input-up").html(finalTpl);
+                                that.parents(".mizone-input-number").find(".mizone-input-up").show();
+                                that.parents(".mizone-input-number").find(".mizone-input-up").find(".sku_dd").click(function () {
+                                    var id = $(this).attr("data-id")
+                                    $(this).parents(".mizone-input-up").hide();
+                                    for (var i = 0; i < dataJson.result.length; i++) {
+                                        var dataObj = dataJson.result[i];
+                                        if (dataObj.id == id) {
+                                            var trObj = $(this).parents(".gift_add_clone_tr");
+                                            writePackageDatail(trObj, dataObj);
+                                            break;
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        $(".mizone-input-up").hide();
+                    }
+                });
+                $(".up_num").unbind();
+                $(".up_num").click(function () {
+                    var numObj = $(this).parents(".mizone-input-number").find(".gift_product_num");
+                    if (Utils.isNotNull($.trim(numObj.val()))) {
+                        numObj.val(numObj.val() - 0 + 1);
+                    }
+                })
+                $(".down_num").unbind();
+                $(".down_num").click(function () {
+                    var numObj = $(this).parents(".mizone-input-number").find(".gift_product_num");
+                    if (Utils.isNotNull($.trim(numObj.val())) && $.trim(numObj.val()) > 1) {
+                        numObj.val(numObj.val() - 1);
+                    }
+                });
+                $(".gift_delete_clone").unbind();
+                $(".gift_delete_clone").click(function () {
+                    if ($(this).parents("li").hasClass("gift_product")) {
+                        if ($(".gift_product .gift_add_clone_tr").length > 1) {
+                            $(this).parents(".gift_add_clone_tr").remove();
+                        }
+                    } else {
+                        if ($(".condition_product .gift_add_clone_tr").length > 1) {
+                            $(this).parents(".gift_add_clone_tr").remove();
+                        }
+                    }
+                    return false;
+                });
+                $(".gift_add_clone").unbind();
+                $(".gift_add_clone").click(function () {
+                    var liObj = $(this).parents("li");
+                    cloneGift(liObj)
+                    return false;
+                });
+            }
+            function cloneGift(liObj){
+                var trAddClone = $(liObj.find(".gift_add_clone_tr")[0]).clone();
+                $(trAddClone).find("select").val("");
+                $(trAddClone).find("input").val("");
+                $(trAddClone).find(".brand").html("");
+                $(trAddClone).find(".unit").html("");
+                $(trAddClone).find(".category").html("");
+                $(trAddClone).find(".mizone-input-up").html("");
+                $(trAddClone).find(".gift_product_num").val(1);
+                liObj.find(".gift_product_tbody").append(trAddClone);
+                form.render();
+                bindProduct();
+            }
+
+            function appendPlatform() {
+                if (Utils.isNotNull(platformList) && platformList.length > 0) {
+                    for (var i = 0; i < platformList.length; i++) {
+                        var platformObj = platformList[i];
+                        platformObj.checked = false;
+                        if (Utils.isNotNull(giftActiveDetailInfo) && Utils.isNotNull(giftActiveDetailInfo.giftActivePlatformIdSet) && giftActiveDetailInfo.giftActivePlatformIdSet.length > 0) {
+                            if (Utils.isContain(giftActiveDetailInfo.giftActivePlatformIdSet, platformObj.id)) {
+                                platformObj.checked = true;
+                            }
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#j-platform-list'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({result: platformList});
+                    $("#platform_id").append(finalTpl);
+                    $("#platform_id").find("input[type='checkbox']").each(function () {
+                        if (!Utils.isNotBlack($(this).attr("lay-filter"))) {
+                            $(this).attr("lay-filter", "platform_id_check");
+                        }
+                    })
+                    closeUpdate();
+                    form.render();
+                }
+            }
+
+            function appendRankLevel() {
+                if (Utils.isNotNull(rankLevelList) && rankLevelList.length > 0) {
+                    for (var i = 0; i < rankLevelList.length; i++) {
+                        var rankLevelObj = rankLevelList[i];
+                        rankLevelObj.checked = false;
+                        if (Utils.isNotNull(giftActiveDetailInfo) && Utils.isNotNull(giftActiveDetailInfo.giftActiveRankLevelIdSet) && giftActiveDetailInfo.giftActiveRankLevelIdSet.length > 0) {
+                            if (Utils.isContain(giftActiveDetailInfo.giftActiveRankLevelIdSet, rankLevelObj.id)) {
+                                rankLevelObj.checked = true;
+                            }
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#j-platform-list'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({result: rankLevelList});
+                    $("#rank_level").append(finalTpl);
+                    $("#rank_level").find("input[type='checkbox']").each(function () {
+                        if (!Utils.isNotBlack($(this).attr("lay-filter"))) {
+                            $(this).attr("lay-filter", "rank_level_check");
+                        }
+                    })
+                    closeUpdate();
+                    form.render();
+                }
+            }
+
+            function selectChildId(id, checked) {
+                $("#select_category input[type='checkbox']").each(function () {
+                    var parentId = $(this).attr("parent_id");
+                    if (Utils.isNotBlack(parentId) && parentId.length > 0) {
+                        if (parentId == id) {
+                            if (checked) {
+                                if (!this.checked) {
+                                    $(this).click();
+                                }
+
+                            } else {
+                                $(this).removeAttr("checked");
+                            }
+                            selectChildId($(this).val(), checked);
+                        }
+                    }
+                })
+            }
+
+            function getCategoryLevel(categoryMap, categoryObj) {
+                if (!Utils.isNotNull(categoryObj.parentId)) {
+                    return 0;
+                } else {
+                    var parentCategoryObj = categoryMap.get(categoryObj.parentId);
+                    if (!Utils.isNotNull(parentCategoryObj.level)) {
+                        return getCategoryLevel(categoryMap, parentCategoryObj)
+                    } else {
+                        return parentCategoryObj.level + 1;
+                    }
+                }
+            }
+
+            function selectParentId(parentId, checked) {
+                $("#select_category input[type='checkbox']").each(function () {
+                    var id = $(this).val();
+                    if (Utils.isNotBlack(id) && id.length > 0) {
+                        if (parentId == id) {
+                            if (!checked) {
+                                $(this).removeAttr("checked");
+                            }
+                            selectParentId($(this).attr("parentId"), checked);
+                        }
+                    }
+                })
+
+            }
+
+            function addCategory(category) {
+                var categoryList = new Array();
+                categoryList.push(category);
+                if (Utils.isNotNull(category.children) && category.children.length > 0) {
+                    for (var i = 0; i < category.children.length; i++) {
+                        var childCategory = category.children[i];
+                        categoryList = categoryList.concat(addCategory(childCategory));
+                    }
+                }
+                return categoryList;
+            }
+
+            function bindEvent() {
+                form.on('checkbox(platform_id_all)', function (data) {
+                    var child = $("#platform_id").find('input[type="checkbox"]');
+                    child.each(function (index, item) {
+                        item.checked = data.elem.checked;
+                    });
+                    form.render('checkbox');
+                });
+                form.on('checkbox(rank_level_all)', function (data) {
+                    var child = $("#rank_level").find('input[type="checkbox"]');
+                    child.each(function (index, item) {
+                        item.checked = data.elem.checked;
+                    });
+                    form.render('checkbox');
+                });
+                form.on('checkbox(platform_id_check)', function (data) {
+                    $("#platform_id input[type='checkbox']").each(function (index, item) {
+                        if ($(this).attr("lay-filter") == "platform_id_all") {
+                            if (!data.elem.checked) {
+                                item.checked = false;
+                            }
+                        }
+                    })
+                    form.render('checkbox');
+                });
+                form.on('checkbox(rank_level_check)', function (data) {
+                    $("#rank_level input[type='checkbox']").each(function (index, item) {
+                        if ($(this).attr("lay-filter") == "rank_level_all") {
+                            if (!data.elem.checked) {
+                                item.checked = false;
+                            }
+                        }
+                    })
+                    form.render('checkbox');
+                });
+                $('#form_start_time').click(function () {
+                    start.elem = this;
+                    laydate(start);
+                });
+                $('#form_end_time').click(function () {
+                    end.elem = this;
+                    laydate(end)
+                });
+                $('#select_category_list').on('click', function () {
+                    layer.open({
+                        title: "选择分类",
+                        type: 1
+                        , content: $("#select_category")            //弹窗内容
+                        , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                        , btn: ["确定", "取消"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'c',
+                        yes: function (index, item) {
+                            $("#select_category input[type='checkbox']").each(function () {
+                                if (!Utils.isNotNull(giftActiveDetailInfo)) {
+                                    giftActiveDetailInfo = {};
+                                }
+                                giftActiveDetailInfo.giftActiveCategoryIdSet = new Array();
+                                if (Utils.checkBox($(this), true, false)) {
+                                    giftActiveDetailInfo.giftActiveCategoryIdSet.push($(this).val());
+                                }
+                            });
+                            layer.close(index);
+                        },
+                        btn2: function () {
+                            $("#select_category").hide();
+                        }
+                    })
+                });
+                $('#select_brand_list').on('click', function () {
+                    layer.open({
+                        title: "选择品牌",
+                        type: 1
+                        , content: $("#select_brand")            //弹窗内容
+                        , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                        , btn: ["确定", "取消"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'c',
+                        yes: function (index, item) {
+                            $("#select_brand input[type='checkbox']").each(function () {
+                                if (!Utils.isNotNull(giftActiveDetailInfo)) {
+                                    giftActiveDetailInfo = {};
+                                }
+                                giftActiveDetailInfo.giftActiveBrandIdSet = new Array();
+                                if (Utils.checkBox($(this), true, false)) {
+                                    giftActiveDetailInfo.giftActiveBrandIdSet.push($(this).val());
+                                }
+                            });
+                            layer.close(index);
+                        },
+                        btn2: function () {
+                            $("#select_brand").hide();
+                        }
+                    })
+
+                });
+            }
+          function closeUpdate(){
+              if (Utils.isNotNull(giftActiveDetailInfo)&&Utils.isNotNull(giftActiveDetailInfo.giftActiveInfo)&&Utils.isNotNull(giftActiveDetailInfo.giftActiveInfo.couldUpdate)&&!giftActiveDetailInfo.giftActiveInfo.couldUpdate) {
+                  $("input").attr("disabled", "disabled");
+                  $(".form_submit").hide();
+              }
+          }
+            function appendBrand() {
+                if (Utils.isNotNull(brandList) && brandList.length > 0) {
+                    if (Utils.isNotNull(giftActiveDetailInfo) && Utils.isNotNull(giftActiveDetailInfo.giftActiveBrandIdSet) && giftActiveDetailInfo.giftActiveBrandIdSet.length > 0) {
+                        for (var i = 0; i < brandList.length; i++) {
+                            var brandObj = brandList[i];
+                            brandObj.checked = Utils.isContain(giftActiveDetailInfo.giftActiveBrandIdSet, brandObj.id)
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#select_brand_category'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({code: "0", list: brandList});
+                    $("#select_brand").html(finalTpl);
+                    closeUpdate();
+                    form.render();
+                }
+            }
+
+            function appendCategory() {
+                if (Utils.isNotNull(categoryList) && categoryList.length > 0) {
+                    if (!(Utils.isNotNull(categoryArrayList) && categoryArrayList.length > 0)) {
+                        var categoryMap = new Map();
+                        var tempCategoryArrayList = new Array();
+                        for (var i = 0; i < categoryList.length; i++) {
+                            var categoryObj = categoryList[i];
+                            if (!Utils.isNotNull(categoryObj.parentId)) {
+                                categoryObj.level = 0;
+                            }
+                            categoryObj.children = new Array();
+                            categoryMap.push(categoryObj.id, categoryObj);
+                        }
+                        for (var i = 0; i < categoryList.length; i++) {
+                            var categoryObj = categoryList[i];
+                            categoryObj.level = getCategoryLevel(categoryMap, categoryObj);
+                            if (!Utils.isNotNull(categoryObj.parentId)) {
+                                tempCategoryArrayList.push(categoryObj);
+                            } else {
+                                categoryMap.get(categoryObj.parentId).children.push(categoryObj);
+                            }
+                        }
+                        categoryArrayList = new Array();
+                        for (var i = 0; i < tempCategoryArrayList.length; i++) {
+                            categoryArrayList = categoryArrayList.concat(addCategory(tempCategoryArrayList[i]));
+                        }
+                    }
+                    if (Utils.isNotNull(giftActiveDetailInfo) && Utils.isNotNull(giftActiveDetailInfo.giftActiveCategoryIdSet) && giftActiveDetailInfo.giftActiveCategoryIdSet.length > 0) {
+                        for (var i = 0; i < categoryArrayList.length; i++) {
+                            var categoryArrayObj = categoryArrayList[i];
+                            categoryArrayObj.checked = Utils.isContain(giftActiveDetailInfo.giftActiveCategoryIdSet, categoryArrayObj.id)
+                        }
+                    }
+
+                    var jsRenderTpl = $.templates('#select_brand_category'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({code: "0", list: categoryArrayList});
+                    $("#select_category").html(finalTpl);
+                    closeUpdate();
+                    form.on('checkbox(selectChose)', function (data) {
+                        selectChildId(data.value, data.elem.checked);
+                        var parentId = null;
+                        $("#select_category input[type='checkbox']").each(function () {
+                            if ($(this).val() == data.value) {
+                                parentId = $(this).attr("parent_id");
+                            }
+                        });
+                        selectParentId(parentId, data.elem.checked);
+                        form.render();
+                    });
+                    form.render();
+                }
+            }
+
+            loadInitData();
+
+        })
+    })
+</script>
+</body>
+</html>

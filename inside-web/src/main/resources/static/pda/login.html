@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document2017/9/6 0006</title>
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/basic.css">
+</head>
+<body>
+<div class="layout">
+    <div class="main-box">
+        <div class="login-header">
+            <em></em>
+        </div>
+        <div class="login-form">
+            <form  id="login_form">
+                <div class="flied form-user">
+                    <span for="" class="label-box label">
+                        用户名:
+                    </span>
+                    <input type="text" placeholder="请输入账号" maxlength="20"  class="input" name="name"id="userName" >
+                </div>
+                <div class="flied form-password">
+                    <span for="" class="label-box label">密码:</span>
+                    <input type="password" placeholder="请输入密码" maxlength="20" class="input" name="password" id="passWord">
+                </div>
+               <!-- <div class="error_tips">
+                    <i class="icon-cancel2"></i>
+                    <span class="tip_text" id="tip_text">请输入账号</span>
+                </div>-->
+
+            </form>
+            <button class="btnadpt btn-blue">立即登录</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../common/js/jquery.util.js"></script>
+<script type="text/javascript" src="../common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="../common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="../common/lib/jsrender.js"></script>
+<script type="text/javascript" src="../common/js/common/ajaxsend.js"></script>
+<script type="text/javascript" src="../common/js/common/map.js"></script>
+<script type="text/javascript" src="../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../common/js/common/authority.js"></script>
+<script type="text/javascript" src="../common/js/common/order.js"></script>
+<script type="text/javascript" src="../common/js/layer/layer.js"></script>
+<script type="text/javascript" src="../common/js/common/dialog.js"></script>
+<script type="text/javascript" src="../common/lib/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../common/js/child.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('body').on('keyup',function (e) {
+            var theEvent=e||window.event;
+            var code=theEvent.keyCode ||theEvent.which||theEvent.charCode;
+            if(code===13){
+                $('.btnadpt').click();
+            }
+        })
+        $(".btnadpt").click(function(){
+            ajaxsend($("#login_form").serialize(),"/login/in.json",function(dataJson){
+                window.location.href="./index.html";
+            })
+        });
+    });
+</script>
+</body>
+</html>

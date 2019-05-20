@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="http://apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">-->
+    <script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" href="../common/css/sccl.css">
+
+    <style>
+        .content_wrapper {
+            padding-top: 20px;
+            width: 1350px;
+
+            border: 1px solid #eea236;
+        }
+
+        .content_search ul li {
+            float: left;
+            margin-right: 10px;
+            background-color: lightskyblue;
+        }
+
+        .content_search ul li:first-child {
+            padding: 0 25px;
+        }
+
+        .content_search ul.fr li {
+            background-color: #fff;
+        }
+
+        ul.fr li input {
+            border: 0;
+        }
+
+        .content_search ul li a.btn_search {
+            background-color: #7FC764;
+            padding: 7px 10px;
+        }
+
+        .content_search {
+            padding: 20px;
+            line-height: 30px;
+        }
+
+        .content_search ul li a {
+            line-height: 30px;
+            padding: 0 10px 0 10px;
+            color: #fff;
+        }
+
+        .search_width {
+            width: 500px;
+        }
+
+        .search_width .border {
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+
+        .border input {
+            width: 300px;
+            border: 0;
+        }
+
+        .border a {
+            display: block;
+            width: 100px;
+            background-color: lightskyblue;
+            color: #fff;
+            text-align: center;
+        }
+
+        .content_search ul li.select_float, .content_search ul li.search_time, .content_search ul li.search_operation {
+            background-color: #fff;
+        }
+
+        .select_float > div {
+            display: inline-block;
+        }
+
+        .select_float > div > select {
+            height: 30px;
+            width: 110px;
+        }
+
+        .select_float > div > p {
+            padding-right: 20px;
+        }
+
+        .search_time > div {
+            display: inline-block;
+            border: 1px solid #d3d3d3;
+            height: 28px;
+        }
+
+        .search_time > div > input {
+            border: 0;
+        }
+
+        .search_operation lable {
+            font-size: 14px;
+            padding-right: 30px;
+            height: 30px;
+        }
+
+        .search_operation lable input {
+            vertical-align: middle;
+        }
+
+        .ui_htable {
+            table-layout: fixed;
+            font: 12px/1.5 arial, 宋体;
+            width: 100%;
+        }
+
+        .ui_htable th, .ui_htable td {
+            border: 1px solid #e2e2e2;
+            text-align: center;
+        }
+
+        input {
+            vertical-align: middle;
+        }
+
+        th.checked {
+            width: 25px;
+            padding: 0 5px;
+        }
+
+        table tr {
+            height: 32px;
+            line-height: 30px;
+        }
+
+        .pages ul > li {
+            float: left;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #e0e0e0;
+            margin-left: 5px;
+            padding: 0 5px;
+        }
+
+        .pages ul > li:last-child {
+            border: none;
+        }
+
+        div.pages ul {
+            float: right;
+            padding-top: 20px;
+        }
+
+        .pages .num {
+            padding: 0 10px;
+        }
+
+        .pages .active {
+            background-color: #0bc8ff;
+        }
+
+        #dialog {
+            width: 400px;
+            height: 500px;
+display: none;
+        }
+
+        #dialog ul > li {
+            border-bottom: 1px solid #d3d3d3;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        #dialog ul > li > span {
+            width: 90px;
+            display: inline-block;
+            border-right: 1px solid #d3d3d3;
+            text-align: center;
+        }
+        #dialog ul > li i{
+            cursor: pointer;
+        }
+        #dialog ul > li > input {
+            border: 0;
+            width: 70%;
+        }
+        #dialog ul > li > input[type="checkbox"]{
+            height: 12px;
+            width: 30px;
+        }
+
+        .ui-dialog {
+            border: 1px solid #000;
+            border-radius:4px ;
+            background: #fff;
+        }
+
+        .ui-dialog-titlebar {
+            width: 100%;
+            height: 45px;
+            line-height: 45px;
+            cursor: move;
+            background-color: #3c763d;
+        }
+
+        .ui-dialog-title {
+            font-size: 16px;
+            color: #e0e0e0;
+            width: 100%;
+            float: left;
+        }
+
+        .ui-dialog-titlebar-close {
+            border: none;
+            height: 30px;
+            float: right;
+            display: none;
+        }
+
+        .ui-helper-clearfix:before,
+        .ui-helper-clearfix:after {
+            content: "";
+            display: table;
+            border-collapse: collapse;
+        }
+
+        .ui-helper-clearfix:after {
+            clear: both;
+        }
+
+        .ui-helper-clearfix {
+            min-height: 0; /* support: IE7 */
+        }
+
+        .ui-dialog .ui-dialog-title {
+            text-align: center;
+        }
+
+        .ui-dialog-content {
+            margin: 25px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .ui-dialog-buttonset {
+            text-align: center;
+        }
+
+        .ui-dialog-buttonset > button {
+            border: none;
+            margin-right: 60px;
+            padding: 5px 20px;
+            cursor: pointer;
+
+        }
+        input.creat{
+            border: 1px solid #00aadc;
+            height: 28px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="content_wrapper">
+    <!-- header -->
+    <div class="content_search">
+        <ul class="cf">
+            <li class="active"><a href="javascript:;" id="add">新增</a></li>
+            <li><a href="javascript:;">删除</a></li>
+            <li class="select_float">
+                <div>
+                    <p>每页显示</p>
+                </div>
+                <div>
+                    <select name="" id="">
+                        <option value="">20</option>
+                        <option value="">50</option>
+                        <option value="">100</option>
+                        <option value="">300</option>
+                        <option value="">500</option>
+                    </select>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!--table 数据-->
+    <div class="content_table">
+        <table class="ui_htable">
+            <thead>
+            <tr>
+                <th class="checked"><input type="checkbox"></th>
+                <th><a href="">平台名编码</a></th>
+                <th><a href="">平台名称</a></th>
+                <th>描述</th>
+                <th>创建时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>ZC0011</td>
+                <td class="input_box">中策杭州仓</td>
+                <td></td>
+                <td>2016-12-01 12：00</td>
+                <td><span class="istop_icon">启用</span></td>
+                <td class="state_uhandle">
+                    <a href="##">编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!--分页条-->
+    <div class="pages cf">
+        <ul>
+            <li>共3条</li>
+            <li><span>2</span>/<span>3</span></li>
+            <li>首页</li>
+            <li>上一页</li>
+            <li class="num">1</li>
+            <li class="num active">2</li>
+            <li>下一页</li>
+            <li>尾页</li>
+            <li class="select_float">
+                <div>
+                    <p>每页显示</p>
+                </div>
+                <div>
+                    <select name="">
+                        <option value="">20</option>
+                        <option value="">50</option>
+                        <option value="">100</option>
+                        <option value="">300</option>
+                        <option value="">500</option>
+                    </select>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!--dialog-->
+
+</div>
+<div id="dialog" title="新增平台">
+    <form>
+        <ul>
+            <li><span> <i class="icon-font" style="color: red;vertical-align: middle">&#xe8da;</i>平台编号</span> <input type="text" placeholder="请输入平台唯一编码"></li>
+            <li style="position: relative">
+                <span><i class="icon-font" style="color: red;vertical-align: middle">&#xe8da;</i>平台名称</span> <input type="text" placeholder="请输入平台名称">
+            </li>
+            <li><span>描述</span> <input type="text"></li>
+            <li><span>是否启用</span> <input type="checkbox"></li>
+        </ul>
+    </form>
+</div>
+<!--<script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>-->
+
+<script type="text/javascript">
+    $(function () {
+
+        $("#add").click(function () {
+            /*$("#dialog-form").dialog('open');*/
+            /*初始化*/
+            $("#dialog").dialog({
+                autoOpen: false,
+                width: 700,
+                buttons: {
+                    确定: function () {
+                        $(this).dialog("close");
+                    },
+                    取消: function () {
+                        $(this).dialog("close");
+                    }
+                },
+                position:['50%','50%']
+            })
+            $("#dialog").dialog("open")
+        })
+
+        $(".input_box").on("click",tdclick)
+
+        function tdclick() {
+            var td=$(this),tetx=td.text();
+            td.empty();
+
+            var input=$("<input class='creat'>");
+            input.attr("vaule",tetx)
+
+            input.keyup(function (event) {
+                var event=event ||window.event,keyCode=event.keyCode;
+                var inputnode=$(this);
+                if(keyCode==13){
+                    savetext(inputnode)
+                }
+                if(keyCode==27){
+                    var tdNode=inputnode.parent();
+                    tdNode.html(tetx);
+                    tdNode.click(tdclick)
+                }
+            });
+
+            input.blur(function () {
+                savetext($(this))
+            });
+            td.append(input);
+            var inputDom=input.get(0);
+            inputDom.select();
+            td.unbind("click")
+        }
+
+        function savetext(inputnode) {
+            var inputtext=inputnode.val(),tdNode=inputnode.parent();
+            tdNode.html(inputtext);
+            tdNode.click(tdclick)
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>盘点列表</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+</head>
+<body>
+<div class="container-wrap" style="height: 100%">
+    <div class="title">
+        <p>盘点列表</p>
+    </div>
+    <div class="inventory_check_list" id="pageContent">
+    </div>
+    <div id="pageNum" style="text-align:right"></div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <a href="inventory_check.html?checkNo={{item.checkNo}}&status={{item.status}}&type={{item.type}}">
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 2">
+                <p class="bold">当前任务</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">{{item.checkNo}}</p>
+            </div>
+        </div>
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 2">
+                <p class="bold">盘点类型</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">            
+                    {{# if(item.type==1){}}
+                    全盘
+                    {{# }else{}}
+                    动盘
+                    {{#}}}
+                </p>
+            </div>
+        </div>
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 2">
+                <p class="bold">盘点状态</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">
+                    {{# if(item.status==0){}}
+                    初始
+                    {{# }else if(item.status==1){}}
+                    待初审
+                    {{# }else if(item.status==2){}}
+                    初审通过
+                    {{# }else if(item.status==3){}}
+                    初审拒绝
+                    {{# }else if(item.status==4){}}
+                    终审通过
+                    {{# }else if(item.status==5){}}
+                    终审拒绝
+                    {{# }else if(item.status==6){}}
+                    完成
+                    {{# }else if(item.status==7){}}
+                    撤回
+                    {{# }else if(item.status==8){}}
+                    关闭
+                    {{# }else if(item.status==9){}}
+                    初始
+                    {{# }else if(item.status==10){}}
+                    待复盘
+                    {{# }else if(item.status==11){}}
+                    复盘
+                    {{#}}}
+                </p>
+            </div>
+        </div>
+        <div class="inventory-container-list ">
+            <div class="inventory-container-item " style="flex: 2">
+                <p class="bold">创建时间</p>
+            </div>
+            <div class="inventory-container-item  order-check-paddR10" style="flex: 8">
+                <p style="">
+                    {{# if(item.createTime !=null){}}
+                    {{laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}
+                    {{# }else{}}
+                    -
+                    {{#}}}     
+                </p>
+            </div>
+        </div>
+    </a>
+    {{#  }); }}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var myAjax = layui.myAjax;         
+
+    function pageOrder(data) {
+        myAjax.ajaxPage('/inventoryCheck/list.json', 'pageNum', 'pageContent', 'pageTpl', $.extend(data, {status: 0}));
+    }
+
+    pageOrder();
+});    
+</script>
+</body>
+</html>

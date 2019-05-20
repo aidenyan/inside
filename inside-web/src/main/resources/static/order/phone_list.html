@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document2017/6/2 0002</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            /*font-family: "Microsoft Yahei", "微软雅黑";*/
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .togetherList .listHeader:after {
+            display: block;
+            content: "";
+            clear: both;
+        }
+
+        .togetherList li:after {
+            display: block;
+            content: "";
+            clear: both;
+        }
+
+        .togetherList .listHeader div,
+        .togetherList .listBody div {
+            float: left;
+            text-align: left;
+            font-size: 12px;
+            margin: 9px 0;
+            padding-left: 3px;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .togetherList .listBody div[class^="w"] {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .togetherList {
+            width: 100%;
+        }
+
+        .togetherList:before,
+        .togetherList:after {
+            width: 0;
+            height: 0;
+            line-height: 0;
+            font-size: 0;
+            content: '';
+            display: block;
+            position: absolute;
+        }
+
+        .togetherList:before {
+            top: -20px;
+            left: 10px;
+            border: 10px dashed transparent;
+            border-bottom: 10px solid #e0e0e0;
+        }
+
+        .togetherList:after {
+            top: -19px;
+            left: 10px;
+            border: 10px dashed transparent;
+            border-bottom: 10px solid #fff;
+        }
+
+        .togetherList .wp20 {
+            width: 20%;
+        }
+
+        .togetherList .wp50 {
+            width: 50%;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .table {
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .table > thead > tr > th,
+        .table > tbody > tr > th,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > tbody > tr > td,
+        .table > tfoot > tr > td {
+            padding: 8px 0;
+            line-height: 1;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+            text-align: left;
+            padding-left: 3px;
+            box-sizing: border-box;
+
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .table > thead > tr > th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th width="50%">供应商名称</th>
+        <th width="20%">采购金额</th>
+        <th width="15%">采购人</th>
+        <th width="15%">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="clickEle">北京迈克恒通科贸发展有限公司</td>
+        <td class="clickEle">￥17,640,2500.00</td>
+        <td class="clickEle">俞东升</td>
+        <td>
+            <a href="javascript:;">通过</a>
+            <a href="javascript:;">拒绝</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="clickEle">北京迈克恒通科贸发展有限公司</td>
+        <td class="clickEle">￥17,640.00</td>
+        <td class="clickEle">俞东升</td>
+        <td>
+            <a href="javascript:;">通过</a>
+            <a href="javascript:;">拒绝</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="clickEle">北京迈克恒通科贸发展有限公司</td>
+        <td class="clickEle">￥17,640.00</td>
+        <td class="clickEle">俞东升</td>
+        <td>
+            <a href="javascript:;">通过</a>
+            <a href="javascript:;">拒绝</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div id="list" style="display: none">
+        <div CLASS="togetherList">
+            <div class="listHeader">
+                <div class="wp50">商品名称</div>
+                <div class="wp20">采购金额</div>
+                <div class="wp15">采购单价</div>
+                <div class="wp15">合计</div>
+            </div>
+            <ul class="listBody">
+                {{#  layui.each(d.list, function(index, item){ }}
+                <li>
+                    <div class="wp50">{{item.name}}</div>
+                    <div class="wp20">￥:{{item.price}}</div>
+                    <div class="wp15">{{item.num}}</div>
+                    <div class="wp15">{{(item.num)*(item.price)}}</div>
+                </li>
+                {{#  }); }}
+
+                {{#  if(d.list.length === 0){ }}
+                无数据
+                {{#  } }}
+            </ul>
+        </div>
+</div>
+<script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script>
+    layui.use(['laytpl'],function () {
+        laytpl = layui.laytpl;
+            $('tbody tr').on('click', 'td.clickEle', function () {
+            var $this = $(this);
+
+            if (!$('.open').len) {
+                $this.addClass('open');
+                $('#view').remove();
+                $this.parent('tr').after('<tr id="view"><td colspan="4"></td></tr>');
+                var data = {
+                    "list": [{
+                        "name": "壳牌蓝多多混合型OW-40",
+                        "sku": "328749234243244",
+                        "price": "200.00",
+                        "num": "8"
+                    }, {}]
+                }
+                var getTpl = $('#list').html();
+                laytpl(getTpl).render(data, function (html) {
+                    $('#view td').html(html)
+                });
+            } else {
+                $('#view').remove()
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

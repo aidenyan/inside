@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../common/css/bootstrap.css">-->
+    <link rel="stylesheet" href="../../layui/css/layui.css?v=2.12">
+    <link rel="stylesheet" href="../../common/css/common.css?v=2.12">
+    <link rel="stylesheet" href="../../common/css/font-style.css?v=2.12">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_category" class="layui-btn layui-btn-small category_save"
+                       authority_code="category_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加分类</a>
+                    <a href="javascript:void(-1);" id="add_common_category"
+                       class="layui-btn layui-btn-small category_common_save"
+                       authority_code="category_common_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加公共分类</a>
+                    <button class="layui-btn layui-btn-small category_delete" authority_code="category_delete"
+                            id="category_deleted">删除
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <!--<div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <thead>
+                <tr>
+                    <th class="checked width30"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku sort Width300" name="name">分类名称</th>
+                    <th class="tab_img width80">分类图片</th>
+                    <th class="tab_sku sort width100" name="order_num">排序</th>
+                    <th class="setting ">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-checkbox" style="">
+                                    <input type="checkbox" lay-skin="primary" lay-filter="allChoose">
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="name" style="">分类名称
+                                </div>
+                            </td>
+
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-w100" style="">分类图片</div>
+                            </td>
+                            <!--   <td rowspan="1" colspan="1" field="name7">
+                                   <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="category_num">编码</div>
+                               </td>-->
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="order_num">排序</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num " style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><div class="datagrid-cell datagrid-cell-c1-checkbox" style=""><input type="checkbox" class="{{if isCommon}}common{{/if}}"  lay-skin="primary"  id="{{:id}}"></div></td>
+    <td style="text-align:left;"><div class="datagrid-cell datagrid-cell-c1-order_num " >{{:name}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w100"  style="">{{if urlPath}}
+    <img src="{{:urlPath}}"   style="width:30px;"/>
+    {{/if}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w50 ">{{:orderNum}}</div></td>
+    <td class="state_uhandle">
+    <div class="datagrid-cell datagrid-cell-c1-order_num " style="">
+                <a  category="{{:id}}" class=" update category_save category_common_save"   {{if isCommon}}authority_code="category_common_save"{{else}}authority_code="category_save"{{/if}}   title="编辑">
+                      <i class="icon-bianji"></i>
+                </a>
+              {{if !isCommon}}
+                <a class=" delete category_delete"   category="{{:id}}" authority_code="category_delete"   title="删除">
+                   <i class="icon-delete"></i>
+                </a>
+                {{/if}}
+                 <a class="  update category_save"   category="{{:id}}" authority_code="brand_info"  title="查看"  {{if isCommon}}n_authority_code="category_common_save"{{else}}n_authority_code="category_save"{{/if}} >
+                   <i class="icon-search"></i>
+                </a>
+                </div>
+    </td>
+</tr>
+{{/for}}
+
+</script>
+<script type="x-jsrender" id="j-edit-content">
+  <form id="form_edit" action="" class="layui-form dialog" style="display:none" >
+      <input type="hidden" id="form_id" value="{{:id}}" >
+      <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">上级分类</label>
+            <div class="layui-input-inline mizo-selectW">
+                <select id="parent_category_id"   lay-filter="parent_category_select">
+                      <option value="">请选择</option>
+                </select>
+            </div>
+       </div>
+    </div>
+        <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>分类名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="text"  lay-verify="required|categoryName"  maxlength="49"  placeholder="请输入分类名称" id="form_name"name="name"  value="{{:name}}" class="layui-input">
+            </div>
+        </div>
+       </div>
+         <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">分类图片</label>
+            <div class="layui-input-inline detailedAddress">
+                <!--<input type="file" name="file" class="layui-upload-file">-->
+                <a href="javascript:;" class="file" id="select_file_a">
+                    选择上传文件
+                    <input type="file" name="file"   id="category_url_id">
+                      <span  class="showFileName" id="select_img"></span>
+                </a>
+                  {{if urlPath!=null && urlPath.length>0}}
+                   <a href="{{:urlPath}}" target="_blank" class="file">
+                    <span class="showFileName"  file_url='{{:urlPath}}'>已上传的图片</span>
+                    </a>
+                  {{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">排序</label>
+            <div class="layui-input-inline detailedAddress">
+                 <input type="text" placeholder="请输入排序"  maxlength="5"   lay-verify="num" value="{{:orderNum}}" id="form_order_num" name="orderNum" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="form_submit" lay-submit lay-filter="form_submit" />
+  </form>
+
+</script>
+
+<script type="x-jsrender" id="j-option">
+     <option value="{{:id}}">{{:name}}</option>
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var isCommon = false;
+        var layer = layui.layer,
+            laypage = layui.laypage;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $('.datagrid-body').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        form.verify({
+            num: function (value, item) {
+                var message = $(item).attr("message")
+                if (!Utils.isNotNull(message)) {
+                    message = "";
+                }
+                if (Utils.isNotBlack(value)) {
+                    if (!/^(([0-9])|([1-9][0-9]+))$/.test(value)) {
+                        return message + '必须为正整数';
+                    }
+                }
+            },
+            categoryName: function (value, item) {
+                value = $.trim(value);
+                var result = "";
+                ajaxsend({
+                    categoryId: $("#form_id").val(),
+                    categoryName: value,
+                    isCommon: isCommon
+                }, "/admin/category/checkCategoryName.json", function (dataJson) {
+                    formDateTime = new Date().getTime();
+                    if (!dataJson.result) {
+                        result = "分类名称与后台重复！";
+                    }
+                }, "get", false);
+                if (Utils.isNotBlack(result)) {
+                    return result;
+                }
+
+            },
+            categoryNum: function (value, item) {
+                var categoryId = $("#parent_category_id").val();
+                if (Utils.isBlank(categoryId)) {
+                    if (Utils.isBlank(value)) {
+                        return "顶级分类必须填写分类编码";
+                    } else if (!/^[0-9]{2}$/.test(value)) {
+                        return "分类编码必须为2位数的数字";
+                    } else {
+                        var result = "";
+                        ajaxsend({
+                            categoryId: $("#form_id").val(),
+                            categoryNum: value,
+                            isCommon: isCommon
+                        }, "/admin/category/checkCategoryNum.json", function (dataJson) {
+                            formDateTime = new Date().getTime();
+                            if (!dataJson.result) {
+                                result = "分类编码与后台重复！";
+                            }
+                        }, "get", false);
+                        if (Utils.isNotBlack(result)) {
+                            return result;
+                        }
+                    }
+                }
+            }
+        })
+        $("#category_deleted").click(function () {
+            var idList = new Array();
+            var selectCommon = false;
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    if (!$(this).hasClass("common")) {
+                        idList.push(checkBox($(this), $(this).attr("id")));
+                    } else {
+                        selectCommon = true;
+                    }
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要删除所选分类吗？", {
+                    icon: 3,
+                    title: '提示',
+                    'closeBtn': 0,
+                    area: ['430px', '240px']
+                }, function () {
+                    ajaxsend({ids: idList}, "/admin/category/deleted.json", function () {
+                        layer.alert("删除成功", function (index) {
+                            layer.close(index);
+                            search();
+                        });
+
+                    })
+                })
+            } else {
+                if (selectCommon) {
+                    layer.alert("您所选择的都是公共分类，请选择非公共分类！", function (index) {
+                        layer.close(index);
+                    });
+                } else {
+                    layer.alert("请选择要删除的非公共分类！", function (index) {
+                        layer.close(index);
+                    });
+                }
+            }
+        });
+        $("#add_category").click(function () {
+            openEditContent("新增分类")
+        });
+        $("#add_common_category").click(function () {
+            openEditContent("新增分类", undefined, undefined, undefined, undefined, undefined, "/admin/category/common/save/update.json")
+        });
+
+        function search(is) {
+            ajaxsend("", "/admin/category/list.json",
+                function (dataJson) {
+                    var data = dataJson;
+                    /***
+                     * 进账属性结构的处理
+                     **/
+                    data.result = addBlanck(data.result);
+                    createTableData(data)
+                    if (is) {
+                        layer.msg('已刷新为最新数据！！', {
+                            time: 300
+                        })
+                    }
+                    form.render('checkbox'); //
+                });
+        }
+
+        function addBlanck(result) {
+            var resultMap = new Map();
+            for (var i = 0; i < result.length; i++) {
+                resultMap.push(result[i].id, {category: result[i], child: new Array()});
+            }
+            var categoryList = new Array();
+            var resultList = new Array();
+            for (var i = 0; i < resultMap.key().length; i++) {
+                var key = resultMap.key()[i];
+                var category = resultMap.get(key);
+                if (Utils.isNotNull(category.category.parentId)) {
+                    var parentCategory = resultMap.get(category.category.parentId)
+                    parentCategory.child.push(category);
+                } else {
+                    resultList.push(category)
+                }
+            }
+            return addChildBlankMark(resultList, "");
+        }
+
+        function addChildBlankMark(resultList, mark) {
+            var categoryList = new Array();
+            for (var i = 0; i < resultList.length; i++) {
+                resultList[i].category.name = mark + resultList[i].category.name
+                categoryList.push(resultList[i].category);
+                if (resultList[i].child.length > 0) {
+                    var tempList = addChildBlankMark(resultList[i].child, mark + "&nbsp;&nbsp;&nbsp;");
+                    for (var j = 0; j < tempList.length; j++) {
+                        categoryList.push(tempList[j]);
+                    }
+
+                }
+            }
+            return categoryList;
+
+        }
+
+        function createTableData(data) {
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+                /*绑定数据*/
+                finalTpl = jsRenderTpl(data);
+            $('#page_tbody').html(finalTpl)
+            $("#checkTba").tableCheck('success');
+            checkLocalAuthority(data)
+            bind();
+        }
+
+        function bind() {
+            $("#page_tbody .state_uhandle a").click(function () {
+                var url = "";
+                var data = {}
+                if ($(this).attr("authority_code") == "category_delete") {
+                    url = "/admin/category/deleted.json";
+                    data.ids = $(this).attr("category");
+                    layer.confirm("确定要删除该分类吗？", {
+                        icon: 3,
+                        title: '提示',
+                        'closeBtn': 0,
+                        area: ['430px', '240px']
+                    }, function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功")
+                            search()
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "category_save" || $(this).attr("authority_code") == "category_common_save") {
+                    var url = "/admin/category/save/update.json";
+                    if ($(this).attr("authority_code") == "category_common_save") {
+                        url = "/admin/category/common/save/update.json"
+                    }
+                    openEditContent("修改分类", {id: $(this).attr("category")}, "/admin/category/info.json", function (dataJson) {
+                        return dataJson.result;
+                    }, function () {
+                        return true;
+                    }, $(this).attr("category"), url);
+                } else if ($(this).attr("authority_code") == "brand_info") {
+                    openEditContent("分类信息", {id: $(this).attr("category")}, "/admin/category/info.json", function (dataJson) {
+                        return dataJson.result;
+                    }, function (dataJson) {
+                        if (!Utils.isContain(dataJson.authorityCodeList, "category_save") || !Utils.isContain(dataJson.authorityCodeList, "category_common_save")) {
+                            $("#form_edit input").attr("disabled", "disabled");
+                            $("#parent_category_id").attr("disabled", "disabled");
+                            return false;
+                        }
+                        return true;
+                    })
+                }
+            });
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+
+        function createOption(resultList, didevId) {
+            var optHtml = "";
+            var jsRenderTpl = $.templates('#j-option');
+            for (var i in resultList) {
+                if (resultList[i].id != didevId && (!Utils.isNotNull(resultList[i].parentTree) || (Utils.isNotNull(resultList[i].parentTree) && resultList[i].parentTree.indexOf("," + didevId + ",") < 0))) {
+                    finalTpl = jsRenderTpl(resultList[i]);
+                    optHtml += finalTpl;
+                    if (Utils.isNotNull(resultList[i].childList) && resultList[i].childList.length > 0) {
+                        optHtml += "<optgroup>";
+                        optHtml += createOption(resultList[i].childList, didevId);
+                        optHtml += "</optgroup>";
+                    }
+                }
+            }
+            return optHtml;
+        }
+
+        function openEditContent(title, paramter, url, dataDeal, openAfterDeal, didevId, updateUrl) {
+            var isUpdate = true;
+            isCommon = undefined;
+            if (Utils.isBlank(updateUrl)) {
+                updateUrl = "/admin/category/save/update.json";
+                isCommon = false;
+            } else {
+                isCommon = true;
+            }
+            dialog.open({
+                paramter: paramter,
+                url: url,
+                dataDeal: dataDeal,
+                id: "j-edit-content",
+                removeId: "form_edit",
+                bind: function () {
+                    //选择文件显示
+                    $("#select_file_a").on("change", "input[type='file']", function () {
+                        var filePath = $(this).val();
+                        if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1) {
+                            var arr = filePath.split('\\');
+                            var fileName = arr[arr.length - 1];
+                            $("#select_img").html("已选择文件" + fileName);
+                        }
+                    })
+                    form.on("select(parent_category_select)", function () {
+                        if (Utils.isBlank($.trim($("#parent_category_id").val()))) {
+                            $("#div_category_num").show();
+                        } else {
+                            $("#div_category_num").hide();
+                        }
+                    })
+
+                },
+                openDilog: function (dataJson) {
+                    ajaxsend({isCommon: isCommon}, "/admin/common/category/list.json", function (categoryDataJson) {
+                        $("#parent_category_id").append(createOption(addBlanck(categoryDataJson.result), didevId));
+                        if (Utils.isNotNull(dataJson.result) && Utils.isNotNull(dataJson.result.parentId)) {
+                            $("#parent_category_id").val(dataJson.result.parentId);
+                        }
+                        if (Utils.isNotNull(dataJson.result) && Utils.isNotNull(dataJson.result.isRevise) && dataJson.result.isRevise) {
+                            $("#form_category_num").attr("disabled", "disabled");
+                            $("#parent_category_id").attr("disabled", "disabled");
+
+                        }
+                        if (Utils.isNotNull(openAfterDeal)) {
+                            isUpdate = openAfterDeal.call(this, dataJson);
+                        }
+                        var btn = ["确定", "取消"]
+                        if (!isUpdate) {
+                            btn = ["取消"]
+                        }
+                        layer.open({
+                            title: title,
+                            type: 1
+                            , content: $("#form_edit")
+                            , btn: btn
+                            , area: ["600px", "380px"]
+                            , closeBtn: 0
+                            , btnAlign: 'r',
+                            success: function () {
+
+                                form.render();
+                            }
+                            , yes: function (index, item) {
+                                if (isUpdate) {
+                                    form.on("submit(form_submit)", function () {
+                                        if (isUpdate) {
+                                            uploadFile(updateUrl, function (dataJson) {
+                                                layer.alert(title + "成功！", function (alertIndex) {
+                                                    layer.close(alertIndex);
+                                                    layer.close(index);
+                                                    search();
+                                                })
+                                            }, {
+                                                fileId: "category_url_id",
+                                                data: {
+                                                    name: $("#form_name").val(),
+                                                    orderNum: $("#form_order_num").val(),
+                                                    id: $("#form_id").val(),
+
+                                                    parentId: $("#parent_category_id").val()
+                                                }
+                                            });
+                                        } else {
+                                            layer.close(index);
+                                        }
+                                    });
+                                    $("#form_submit").click();
+                                } else {
+                                    layer.close(index);
+                                }
+                            }, btn2: function (index) {
+                                layer.close(index);
+                            }
+                        })
+                    })
+                }
+            })
+        }
+
+        search();
+
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["category_delete", "category_save", "category_info", "category_common_save"]);
+        }
+
+        callParent.isLoadEnd("category_list");
+        callParent.register(function () {
+            var isRefresh = true
+            search(isRefresh)
+        }, "search");
+    })
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 160, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

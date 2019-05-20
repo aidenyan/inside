@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header -->
+        <div class="layui-form mizone-add">
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>等级信息</span>
+            </div>
+            <form id="form">
+            <input type="hidden" id="id" name="id">
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>名称:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>优惠比例:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="discountRatio" name="discountRatio" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>消费金额</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  id="consumeAmount" name="consumeAmount" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top">设置</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" id="regularLevel" name="regularLevel" title="是否固定等级">
+                        <input type="checkbox" id="defaulted" name="defaulted" title="是否默认">
+						<input type="checkbox" id="isGrossProfit" name="isGrossProfit" title="是否参加毛利计算">
+                    </div>
+                </div>
+            </div>
+           </form>
+          <div class="layui-inline">
+                <button class="layui-btn layui-btn-small save" lay-submit="" lay-filter="save" style="display:none;">确定</button>
+                <button id="cancel" class="layui-btn layui-btn-small">返回</button>
+          </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script>
+$(window).ready(function () {
+        layui.use(['form', 'layedit','laytpl','laydate'], function () {
+        	var form = layui.form();
+            var layer = layui.layer;
+            var laytpl = layui.laytpl;
+            var layedit = layui.layedit;
+            var id = Utils.getHrefValue("id");
+            if(id){
+                ajaxsend({"id":id},"/admin/rankLevel/info.json", function (dataJson) {
+                    if(dataJson.code=="0"){
+                        $("#id").val(dataJson.result.id);
+                        $("#name").val(dataJson.result.name);
+                        $("#discountRatio").val(dataJson.result.discountRatio);
+                        $("#consumeAmount").val(dataJson.result.consumeAmount);
+                        if(dataJson.result.regularLevel){
+                        	$("#regularLevel").attr("checked",'true');
+                        }
+                        if(dataJson.result.defaulted){
+                        	$("#defaulted").attr("checked",'true');
+                        }
+						if(dataJson.result.isGrossProfit){
+                        	$("#isGrossProfit").attr("checked",'true');
+                        }
+                        form.render();
+                        $(".save").show();
+                    }
+                })
+            }
+            form.on('submit(save)',function(data){
+            	if(id){
+            		saveInfo();
+            	}
+            });
+            saveInfo=function(){
+            	ajaxsend($("form").serialize(), "/admin/rankLevel/update.json", function (dataJson) {
+                    if(dataJson.result==true){
+                    	callParent.parentUse("rank_level_page", "refresh");
+                        $("#cancel").click();
+                    }else{
+                    	layer.alert(data.message,{icon: 5});
+                    }
+                }, "postForm");
+            }
+            
+            $("#cancel").click(function(){
+                callParent.openTab("rank_level_page");
+                callParent.closeTab("rank_level_view");
+            })
+        })
+})
+</script>
+</body>
+</html>

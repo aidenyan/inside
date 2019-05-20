@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>订单发货</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript" src="../js/orderCheck.js"></script>
+    <script type="text/javascript" src="../../common/js/common/order.js"></script>
+    <script type="text/javascript" src="../../common/js/common/map.js"></script>
+</head>
+<body>
+<div class="container-wrap">
+    <div class="title">
+        <p>订单发货</p>
+    </div>
+    <div class="container-list order-check-bottom10">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">订单号</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+            <input type="text" class="text-in no1" id="orderCode">
+        </div>
+    </div>
+
+    <!-- <div class="tab-wrap">
+        <div class="bar"></div>
+        <table class="ui-table">
+            <thead>
+            <tr class="ui-thead-bg">
+                <td class="wid35 paddL">订单号</td>
+                <td class="wid25 tex-c">数量</td>
+                <td class="wid20 tex-c">状态</td>
+            </tr>
+            </thead>
+            <tody>
+                <tr>
+                    <td class="paddL"><a href="order_check_list.html">1234567</a> </td>
+                    <td class="tex-c">3 </td>
+                    <td class="tex-c">捡货中</td>
+                </tr>
+            </tody>
+        </table>
+    </div> -->
+</div>
+<script>
+    $(function () {
+        var form,element,layer,laytpl,myAjax,laydate;  
+	    layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], function () {
+            form = layui.form();element = layui.element();layer=layui.layer;laytpl = layui.laytpl;myAjax = layui.myAjax;laydate = layui.laydate;
+            $('.no1').focus();
+            $("#orderCode").keyup(function(event){
+                var orderSn = this.value;
+                if(event.keyCode ==13){
+                    if(orderSn!=null){
+                        myAjax.ajaxSend("/admin/order/orderScanInfo.json?orderSn="+orderSn,function(data){
+                        if(data!=null){
+                            window.location.href="order_check_detail.html?orderSn="+orderSn;
+                        }
+                    })
+                }
+            }
+        });
+        })
+    });
+    // function change1(obj) {
+    //     window.location.href="order_check_detail.html?orderSn="+obj.value;
+    // };
+</script>
+</body>
+</html>

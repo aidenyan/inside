@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>开票资料</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header  搜索条件-->
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="" class="layui-btn layui-btn-small"> <i class="layui-icon"
+                                                                                              style="vertical-align: middle">
+                        &#xe61f;</i>新增开票</a>
+                </div>
+
+                <div class="layui-inline">
+                    <input type="text" name="title" required lay-verify="required" placeholder="商品编码/SKU编码"
+                           autocomplete="off" class="layui-input small mizo-srarch-input">
+                    <button class="layui-btn layui-btn-small">搜索</button>
+                </div>
+            </div>
+        </div>
+
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="">
+                <colgroup>
+                    <col width="30">
+                    <col width="230">
+                    <col width="100">
+                    <col width="120">
+                    <col width="100">
+                    <col width="60">
+                    <col width="120">
+                    <col width="70">
+                    <col width="80">
+                    <col width="60">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                    <th class="">开票公司名称</th>
+                    <th class="">纳税人识别号</th>
+                    <th class="">开户行</th>
+                    <th class="">帐号</th>
+                    <th class="">门店编号</th>
+                    <th class="">门店名称</th>
+                    <th class="">门店联系人</th>
+                    <th class="">手机号码</th>
+                    <th class="">状态</th>
+                    <th class="" style="min-width: 150px">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pager">
+                <tr>
+                    <td><input name="" lay-skin="primary" type="checkbox"></td>
+                    <td>杭州中策门店车空间有限公司</td>
+                    <td>330183828323</td>
+                    <td>杭州银行江城支行</td>
+                    <td>62123838294091933</td>
+                    <td>N0001</td>
+                    <td>下沙旗舰店</td>
+                    <td>黄萍萍</td>
+                    <td>1320494822</td>
+                    <td>未审核</td>
+                    <td class="state_uhandle">
+<div>
+    <button class="" title="审核通过">
+        <i class="icon-checkmark2"></i>
+    </button>
+    <button class="" title="审核拒绝">
+        <i class="icon-cancel2"></i>
+    </button>
+    <button class="" title="详细">
+        <i class="icon-uniE602"></i>
+    </button>
+    <button class="" title="删除">
+        <i class="icon-delete"></i>
+    </button>
+</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../common/lib/jquery-1.11.3.min.js"></script>
+
+<script src="../layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate', 'laytpl'], function () {
+        var form = layui.form(), laydate = layui.laydate, laytpl = layui.laytpl;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>会员列表</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline po-r">
+                        <div class="layui-input-inline">
+                        <select id="searchItem">
+                            <option value="username">用户名</option>
+                        </select>
+                        </div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="levelId">
+                                <option value="">选择等级</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">用户名</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">会员等级</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">创建日期</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70"  style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id=page_tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.username}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{levelMap.get(item.levelId)||""}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.createTime)}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+                <button class=" view" value="{{item.id}}" title="查看"><i class="icon-uniE602"></i></button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr aglin='center'>
+        <td colspan="4" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script>
+    var levelMap;
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax,laytpl = layui.laytpl;
+        
+        
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+        	if(!levelMap){
+        		levelMap=new Map();
+        		ajaxsend("","/admin/common/rank_level/list.json", function (dataJson) {
+                    if(dataJson.code=="0"){
+                        for (var i in dataJson.result) {
+                            levelMap.push(dataJson.result[i].id, dataJson.result[i].name);
+                        }
+                       laytpl($("#slcOption").html()).render(dataJson.result, function (html) {
+                           $("#levelId").append(html);
+                           form.render()
+                       });
+                    }
+                },"GET",false)
+        	}
+            myAjax.ajaxPage('/admin/member/page.json', 'pageNum', 'page_tbody', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function () {
+            var searchItem=$("#searchItem").val();
+            var searchParam=$("#searchParam").val();
+            var levelId=$("#levelId").val();
+            var map=new Map();
+            if(searchItem && searchParam){
+                map.push(searchItem, searchParam);;
+            }
+            if(levelId){
+                map.push("levelId",levelId)
+            }
+            pageOrder(orderObj.setOption(map.mapObj))
+            return false;
+        });
+        pageOrder();
+
+        $("#page_tbody").on("click",".view", function() {
+            callParent.openTab("member_view", 0, "查看会员", "admin/userCenter/member_view.html?id="+$(this).val(), true);
+        })
+
+        callParent.isLoadEnd("member_page");
+        callParent.register(function () {
+        	refresh();
+        }, "refresh");
+
+    });
+</script>
+</body>
+</html>

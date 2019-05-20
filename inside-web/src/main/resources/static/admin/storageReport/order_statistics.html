@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>统计</title>
+    <link rel="stylesheet" href="../../common/css/amazeui.css?v=2.12">
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        .statistics-bottom {
+            text-align: center;
+            font-size: 14px;
+            padding: 5px 0;
+
+        }
+
+        .statistics-bottom span {
+            color: red;
+            font-family: "Microsoft Yahei", "微软雅黑";
+        }
+
+        .statistics-bottom > div {
+            display: inline-block;
+            padding-right: 30px;
+        }
+
+        .statistics-bottom > div:last-child {
+            padding-right: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="time_type_id">
+                                <option value="1">按照支付时间</option>
+                                <option value="0">按照创建时间</option>
+                                <option value="2">按照发货时间</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="date_type_id"  lay-filter="date_type_id">
+                                <option value="0">按照天统计</option>
+                                <option value="1">按照月统计</option>
+                                <option value="2">按照年统计</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="platform_id">
+                                <option value="-2">全部</option>
+                                <option value="-1">内部平台</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                        <div class="am-selected am-dropdown  am-active" id="am-selected" style="width: 135px">
+                            <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                   placeholder="选择品牌">
+                            <i class="edge"></i>
+                            <div class="am-selected-content am-dropdown-content"
+                                 style="min-width: 135px;display: none">
+                                <div class="am-selected-search">
+                                    <input autocomplete="off" class="am-form-field am-input-sm">
+                                </div>
+                                <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto" id="brand_id">
+                                </ul>
+                                <div class="am-selected-hint"></div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="select_category_id">
+                                <option value="">请选择分类</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                        <!--<select name="" lay-filter="change_search" id="category_id">
+                            <option value="">请选择分类</option>
+                        </select>-->
+                        <div class="am-selected am-dropdown  am-active" id="am-selected-category_id"
+                             style="width: 135px">
+                            <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                   placeholder="请选择排除分类">
+                            <i class="edge"></i>
+                            <div class="am-selected-content am-dropdown-content"
+                                 style="min-width: 135px;display: none">
+                                <div class="am-selected-search">
+                                    <input autocomplete="off" class="am-form-field am-input-sm">
+                                </div>
+                                <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto"
+                                    id="exclusion_category_id">
+                                </ul>
+                                <div class="am-selected-hint"></div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                        <!-- <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">查&nbsp;询</button>-->
+                        <a href="javascript:;" id="btnSearch" class="layui-btn layui-btn-small">查&nbsp;询</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div id="main" style="width: 100%;min-height: 300px"></div>
+        <div class="statistics-bottom">
+            <div>
+                订单总金额：
+                <span id="order_total"></span>
+            </div>
+            <div>
+                现金支付总金额：
+                <span id="cash_total"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/javascript" src="../../js/params.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script src="../../js/echarts.min.js"></script>
+<script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:name}}</option>
+    {{/for}}
+</script>
+<script type="x-jsrender" id="j-select-li">
+    {{for result}}
+    <li class="" val="{{:id}}"><span class="am-selected-text">{{:name}}</span> <i class="am-check icon-duigou"></i></li>
+    {{/for}}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+        var laydate = layui.laydate;
+        var start = {
+            max: laydate.now()
+
+            , istoday: false
+            , choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            min: laydate.now()
+            , istoday: false
+            , choose: function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        $('#startDate').click(function () {
+            start.elem = this;
+            laydate(start);
+        });
+        $('#endDate').click(function () {
+            end.elem = this;
+            laydate(end)
+        });
+        $('#am-selected').selectMy({});
+        setHeight()
+        var brandMap;
+        var categoryList;
+        var myChart = echarts.init(document.getElementById('main'));
+
+        function getSelectLiId(id) {
+            var idList = new Array();
+            $("#" + id).find("li").each(function () {
+                if ($(this).hasClass("am-checked")) {
+                    idList.push($(this).attr("val"))
+                }
+            })
+            return idList;
+        }
+        
+        function search() {
+            myChart.showLoading();
+            data = {
+                timeType: $("#time_type_id").val(),
+                dateType: $("#date_type_id").val(),
+                categoryId: $("#select_category_id").val(),
+                exclusionCategoryIds: getSelectLiId("exclusion_category_id"),
+                brandIds: getSelectLiId("brand_id"),
+                startDate: $("#startDate").val(),
+                endDate: $("#endDate").val()
+            };
+            if ($("#platform_id").val() != "-2") {
+                data.source = $("#platform_id").val();
+            }
+
+            ajaxsend(data, "/statistic/report/order/bussiness.json", function (dataJson) {
+                var timeMap = new Map();
+                var minDate;
+                var maxDate;
+                var formate="";
+                if (data.dateType == 0) {
+                    formate="YYYY-MM-DD"
+                    if(Utils.isNotBlack(data.startDate)){
+                        minDate= Utils.createTimeByDate(data.startDate)
+                    }
+                    if(Utils.isNotBlack(data.endDate)){
+                        maxDate= Utils.createTimeByDate(data.endDate)
+                    }
+                } else if (data.dateType == 1) {
+                    formate="YYYY-MM"
+                } else if (data.dateType == 2) {
+                    formate="YYYY"
+                }
+                var orderTotal=0;
+                var cashTotal=0
+                console.log(maxDate)
+
+
+                for (var i = 0; i < dataJson.result.length; i++) {
+                    var resultObj = dataJson.result[i];
+                    orderTotal+=resultObj.receivableAmount;
+                    cashTotal+=(resultObj.receivableAmount-resultObj.pointPaid)
+                    if (data.dateType == 1) {
+                        resultObj.timelong = Utils.createTimeByMonth(resultObj.dateTime)
+                    } else if (data.dateType == 0) {
+                        resultObj.timelong = Utils.createTimeByDate(resultObj.dateTime)
+                    } else if (data.dateType == 2) {
+                        resultObj.timelong = Utils.createTimeByYear(resultObj.dateTime)
+                    }
+                    timeMap.push(Utils.formatTime(resultObj.timelong,formate), resultObj);
+                    if (Utils.isNotNull(minDate)) {
+                        if (minDate.getTime() - resultObj.timelong.getTime() > 0) {
+                            minDate = resultObj.timelong;
+                        }
+                    } else {
+                        minDate = resultObj.timelong;
+                    }
+                    if (Utils.isNotNull(maxDate)) {
+                        if (maxDate.getTime() - resultObj.timelong.getTime() < 0) {
+                            maxDate = resultObj.timelong;
+                        }
+                    } else {
+                        maxDate = resultObj.timelong;
+                    }
+                }
+                var resultJson = {
+                    "code": 0,
+                    "message": "成功", result: {time: new Array(), cash: new Array(), virtual: new Array()}
+                };
+                var isContinue = true;
+                var start = new Date();
+                start.setTime(minDate.getTime())
+
+                while (isContinue) {
+                    var resultObj = timeMap.get(Utils.formatTime(start,formate));
+
+                    if (Utils.isNotNull(resultObj)) {
+                        resultJson.result.time.push(Utils.formatTime(start,formate));
+                        resultJson.result.cash.push(Utils.scale(resultObj.receivableAmount - resultObj.pointPaid,2));
+                        resultJson.result.virtual.push(Utils.scale(resultObj.receivableAmount,2));
+                    }else{
+                        resultJson.result.time.push(Utils.formatTime(start,formate));
+                        resultJson.result.cash.push(0);
+                        resultJson.result.virtual.push(0);
+                    }
+                    if (data.dateType == 0) {
+                        start = Utils.nextDay(start);
+                    } else if (data.dateType == 1) {
+                        start = Utils.nextMonth(start);
+                    } else if (data.dateType == 2) {
+                        start = Utils.nextYear(start);
+                    }
+                    if(!Utils.isNotNull(maxDate)){
+                       maxDate=new Date();
+                    }
+                    isContinue = maxDate.getTime() - start.getTime() >= 0;
+                }
+                createView(resultJson);
+                $("#cash_total").html(Utils.scale(cashTotal,2));
+                $("#order_total").html(Utils.scale(orderTotal,2));
+                $("#statistics-bottom").show();
+            });
+        }
+        function loadDate(){
+            var date=new Date();
+            var month=(date.getMonth()+1);
+            if(month<10){
+                month="0"+month;
+            }
+            var formatDate=date.getFullYear()+"-"+month+"-01";
+            $('#startDate').val(formatDate);
+        }
+        function loadPlatform() {
+            ajaxsend("", "/admin/common/platform/list.json", function (dataJson) {
+                platformList = dataJson.result;
+                var jsRenderTpl = $.templates('#j-option'),
+                        finalTpl = jsRenderTpl(dataJson);
+                $("#platform_id").append(finalTpl);
+                form.render();
+
+            });
+        }
+
+        function loadCategory() {
+            ajaxsend("", "/admin/common/category/list.json", function (dataJson) {
+                categoryList = dataJson.result;
+                var jsRenderTpl = $.templates('#j-option');
+                dataJson.result = addBlanck(dataJson.result);
+                var finalTpl = jsRenderTpl(dataJson);
+                $("#select_category_id").append(finalTpl);
+                
+                var jsRenderTpl = $.templates('#j-select-li');
+                var finalTpl = jsRenderTpl(dataJson);
+                $("#exclusion_category_id").append(finalTpl)
+                form.render();
+
+            })
+        }
+
+        function addBlanck(result) {
+            var resultMap = new Map();
+            for (var i = 0; i < result.length; i++) {
+                resultMap.push(result[i].id, {category: result[i], child: new Array()});
+            }
+            var categoryList = new Array();
+            var resultList = new Array();
+            for (var i = 0; i < resultMap.key().length; i++) {
+                var key = resultMap.key()[i];
+                var category = resultMap.get(key);
+                if (Utils.isNotNull(category.category.parentId)) {
+                    var parentCategory = resultMap.get(category.category.parentId)
+                    parentCategory.child.push(category);
+                } else {
+                    resultList.push(category)
+                }
+            }
+            return addChildBlankMark(resultList, "");
+        }
+
+        function addChildBlankMark(resultList, mark) {
+            var categoryList = new Array();
+            for (var i = 0; i < resultList.length; i++) {
+                resultList[i].category.name = mark + resultList[i].category.name
+                categoryList.push(resultList[i].category);
+                if (resultList[i].child.length > 0) {
+                    var tempList = addChildBlankMark(resultList[i].child, resultList[i].category.name + "/");
+                    for (var j = 0; j < tempList.length; j++) {
+                        categoryList.push(tempList[j]);
+                    }
+
+                }
+            }
+            return categoryList;
+        }
+
+        function loadBrand() {
+            if (!Utils.isNotNull(brandMap)) {
+                ajaxsend("", "/admin/common/brand/list.json", function (dataJson) {
+                    var brandList = dataJson.result;
+                    brandMap = new Map();
+                    for (var i = 0; i < brandList.length; i++) {
+                        brandMap.push(brandList[i].id, brandList[i]);
+                    }
+                    var jsRenderTpl = $.templates('#j-select-li'),
+                    finalTpl = jsRenderTpl(dataJson);
+                    $("#brand_id").append(finalTpl);
+                    form.render();
+                })
+            }
+        }
+
+        function createView(data) {
+            myChart.hideLoading();
+            console.log(data);
+            myChart.setOption({
+                title: {
+                    text: '销售统计表'
+                },
+//            hover显示
+                tooltip: {
+                    trigger: 'axis',
+                },
+                legend: {
+                    data: ['订单金额', '现金金额']
+                },
+//            设置边距
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+//            保存图片
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: data.result.time
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '订单金额',
+                        type: 'line',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'top',
+                                textStyle: {
+                                    color: 'rgba(0, 0, 0, 1)'
+                                }
+                            }
+                        },
+                        data: data.result.virtual
+                    },
+                    {
+                        name: '现金金额',
+                        type: 'line',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'top',
+                                textStyle: {
+                                    color: 'rgba(0, 0, 0, 1)'
+                                }
+                            }
+                        },
+                        data: data.result.cash
+                    },
+                ]
+            })
+        }
+        loadDate();
+        loadCategory();
+        loadBrand();
+        loadPlatform();
+        $('#am-selected-category_id').selectMy({
+            nextFunction: function () {
+                search()
+            }
+        });
+        $("#btnSearch").click(function () {
+            search();
+        })
+        search();
+        
+    })
+    function setHeight() {
+        var mainH = $(document.body).height(), relH = mainH - 165;
+        $('#main').css('height', relH);
+    }
+</script>
+
+</body>
+</html>

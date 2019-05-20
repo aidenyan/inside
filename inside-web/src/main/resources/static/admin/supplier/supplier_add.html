@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新增供应商</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper" id="divBody" style="display: none;">
+    <div class="list">
+        <form class="layui-form" id="frmSupplier" action="">
+            <!--<div class="infor-show">
+                <i class="layui-icon mizone-add-form" style="color:#60be3e;">&#xe620;</i>
+                <span>供应商信息</span>
+            </div>
+            <hr>-->
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>供应商信息</span>
+            </div>
+            <div class="layui-form mizone-add-form" id="supplierContent">
+
+            </div>
+            <!--<div class="infor-show">
+                <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                <span>商品信息</span>
+            </div>
+            <hr>-->
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>商品信息</span>
+            </div>
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_commodity"> <i class="layui-icon"
+                                                                                                style="vertical-align: middle">
+                    &#xe61f;</i>关联商品</a>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th style="min-width: 510px">SKU编码/商品名称</th>
+                        <th width="200px;">品牌</th>
+                        <th width="50px;">单位</th>
+                        <th width="200px;">商品分类</th>
+                        <th class="width50">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="supplierProductContent">
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="save">保存并关闭</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveAdd">保存并新增</button>
+                <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="layui-form dialog" id="form_addCommodity" style="display: none">
+    <form>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label padd_top" style="width: 30px;">品牌</label>
+                <div class="layui-input-inline">
+                    <select id="slcBrand" name="brandId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <label class="layui-form-label padd_top" style="width: 60px;">商品分类</label>
+                <div class="layui-input-inline">
+                    <select id="slcProductType" name="typeId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <input type="text" name="inputStr" placeholder="商品编码/SKU编码" style="width: 250px;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+        </div>
+    </form>
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                <th>SKU编码</th>
+                <th>品牌</th>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>商品分类</th>
+            </tr>
+            </thead>
+            <tbody id="proListContent">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script id="tplProList" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td><input name="skuCodes" lay-skin="primary" type="checkbox" value="{{item.skuCode}}"></td>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+    </tr>
+    {{#  }); }}
+    {{#  if(d.length == 0){ }}
+    <tr>
+        <td colspan="7" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="tplOption" type="text/html">
+    <option value="-1">全部</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+
+<script id="tplSupplier" type="text/html">
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>供应商编号</label>
+            <div class="layui-input-inline">
+                <input id="hidId" type="hidden" name="id" value="{{d.id || ''}}"/>
+                <input id="hidNo" type="hidden" value="{{d.sn || ''}}"/>
+                <input type="text" name="sn" lay-verify="required|enNum|checkNo" class="layui-input"
+                       value="{{d.sn || ''}}" placeholder="编号唯一，限输英文或数字"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>供应商名称</label>
+            <div class="layui-input-inline">
+                <input id="hidName" type="hidden" value="{{d.supplierName || ''}}"/>
+                <input type="text" name="supplierName" lay-verify="required|cnChar|checkName" class="layui-input"
+                       value="{{d.supplierName || ''}}" placeholder="名称唯一，限输中文"/>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>联系人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" lay-verify="required|enChar" class="layui-input"
+                       value="{{d.name || ''}}" placeholder="限输中文或英文"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>联系电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" lay-verify="required|phone" class="layui-input"
+                       value="{{d.phone || ''}}"/>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5" lay-verify="sysarea">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" lay-verify="required|email" class="layui-input"
+                       value="{{d.email || ''}}"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>地区</label>
+            <div class="layui-input-inline mizonbe-input-inline-select" id="proviceList">
+                <select id="province" lay-filter="provinceFilter">
+                    <option value="">请选择省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline mizonbe-input-inline-select" style="display: none" id="cityList">
+                <select id="city" lay-filter="cityFilter" lay-verify="required">
+                    <option value="">请选择市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline mizonbe-input-inline-select" style="display: none" id="areaList">
+                <select id="sysarea">
+                    <option value="">请选择县/区</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="address" class="layui-input"  lay-verify="required"
+                       value="{{d.address || ''}}"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">供货范围</label>
+            <div class="layui-input-inline">
+                <input type="text" name="productType" class="layui-input" value="{{d.productType || ''}}"/>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="orders" class="layui-input" value="{{d.orders || ''}}"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">备注</label>
+            <div class="layui-input-inline">
+                <input type="text" name="remark" class="layui-input" value="{{d.remark || ''}}"/>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">保证金</label>
+            <div class="layui-input-inline">
+                <input type="text" name="bond" class="layui-input" value="{{d.bond || ''}}"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">时间周期</label>
+            <div class="layui-input-inline">
+                <input id="txtActiveTime" class="layui-input" name="activeTime" onclick="layui.laydate({elem: this, min: laydate.now(0)})">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">售后联系人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="afterSaleName" class="layui-input"
+                       value="{{d.afterSaleName || ''}}" />
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">售后联系电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="afterSalePhone" class="layui-input"
+                       value="{{d.afterSalePhone || ''}}"/>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-item-margButtom5">
+        <div class="layui-inline" style="width: 513px;">
+            <label class="layui-form-label padd_top">售后地区</label>
+            <div class="layui-input-inline mizonbe-input-inline-select" id="proviceList1">
+                <select id="province1" lay-filter="provinceFilter1">
+                    <option value="">请选择省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline mizonbe-input-inline-select" style="display: none" id="cityList1">
+                <select id="city1" lay-filter="cityFilter1">
+                    <option value="">请选择市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline mizonbe-input-inline-select" style="display: none" id="areaList1">
+                <select id="sysarea1">
+                    <option value="">请选择县/区</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">售后地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="afterSaleAddress" class="layui-input" value="{{d.afterSaleAddress || ''}}"/>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="tplsupplierProduct" type="text/html">
+    {{#  layui.each(d.productDTOList, function(index, item){ }}
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input class="proSku" type="hidden" name="productItemMap[{{item.skuCode}}].skuCode"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="" placeholder="商品名称/SKU编码" value="{{item.skuCode}} / {{item.name}}"
+                       class="layui-input small mizo-srarch-input productSearch" style="width: 100%"/>
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplAddItems" type="text/html">
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input type="text" name="" placeholder="商品名称/SKU编码" style="width: 100%;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input productSearch">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class=" delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+<script id="tplProductLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li skucode="{{item.skuCode}}">{{item.skuCode}} / {{item.name}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+
+<script>
+    var form;
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        form = layui.form();
+        var layer = layui.layer
+                , $ = layui.jquery
+                , laytpl = layui.laytpl
+                , myAjax = layui.myAjax;
+
+        form.verify({
+            checkNo: function (value) {
+                var message = "";
+                if (value != $("#hidNo").val()) {
+                    myAjax.ajaxSend('/supplier/checkNo.json', function (dataJson) {
+                        message = dataJson.message;
+                    }, {'supplierNo': value}, 'get', false);
+                }
+                return message;
+            }
+            , checkName: function (value) {
+                var message = "";
+                if (value != $("#hidName").val()) {
+                    myAjax.ajaxSend('/supplier/checkName.json', function (dataJson) {
+                        message = dataJson.message;
+                    }, {'supplierName': value}, 'get', false);
+                }
+                return message;
+            }
+            , cnChar: [/^[\u4e00-\u9fa5（）-]+$/, '请输入中文']
+            , enChar: [/^[\u4e00-\u9fa5a-zA-Z]+$/, '请输入中文或英文']
+            , enNum: [/^[a-zA-Z0-9]+$/, '请输入数字或英文']
+        });
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        form.on('select(provinceFilter)', function (data) {
+            changeProvince(data.value);
+        });
+        form.on('select(cityFilter)', function (data) {
+            changeCity(data.value);
+        });
+        form.on('select(provinceFilter1)', function (data) {
+            changeProvince(data.value, 1);
+        });
+        form.on('select(cityFilter1)', function (data) {
+            changeCity(data.value, 1);
+        });
+
+        //保存
+        form.on('submit(save)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/supplier/save.json', function () {
+                    layer.msg('保存成功');
+                    callParent.parentUse("supplier_list", "refresh");
+                    callParent.openTab("supplier_list");
+//                if (varId != null) {
+//                    callParent.closeTab('supplier_update');
+//                } else {
+                    callParent.closeTab('supplier_add');
+//                }
+                }, $.extend(data.field, {'areaId': getselectAreaId(), 'afterSaleAreaId': getselectAreaId(1)}), 'post');
+            }
+            return false;
+        });
+
+        //保存并新增
+        form.on('submit(saveAdd)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/supplier/save.json', function () {
+                    //layer.alert('保存成功');
+                    parent.$("#supplier_add").attr('src', 'admin/supplier/supplier_add.html');
+                }, $.extend(data.field, {'areaId': getselectAreaId(), 'afterSaleAreaId': getselectAreaId(1)}), 'post');
+            }
+            return false;
+        });
+
+        $("#cancel").click(function () {
+            callParent.openTab('supplier_list');
+            if (varId != null) {
+                callParent.closeTab('supplier_update');
+            } else {
+                callParent.closeTab('supplier_add');
+            }
+        });
+
+        form.on('submit(search)', function (data) {
+            var varSku = [];
+            $("#supplierProductContent").find(".proSku").each(function () {
+                varSku.push($(this).val());
+            });
+            myAjax.ajaxTpl('/storage/listProductNoSupplier.json', 'proListContent', 'tplProList', false, null, $.extend(data.field, {"notInSku": varSku}), 'post');
+            return false;
+        });
+
+        $("#supplierProductContent").on('click', '.delete', function () {
+            $(this).closest('tr').remove();
+        });
+
+        var varTr;
+        $(document).on('click', '.change', function () {
+            varTr = $(this).closest("tr");
+            $("#proListContent").html('');
+            $("#form_addCommodity").find('input[type="checkbox"]').attr('checked', false);
+            layer.open({
+                title: "关联商品"
+                , type: 1
+                , content: $("#form_addCommodity")            //弹窗内容
+                , area: ["800px", "500px"]         //设置窗体高度 和宽度
+                , btn: ["确定", "取消"]
+                , closeBtn: 0                      //取消右上角关闭按钮
+                , btnAlign: 'r'
+
+                , success: function (layero, index) {
+                    //获取分类
+                    myAjax.ajaxTpl("/admin/common/category/list.json", 'slcProductType', 'tplOption');
+                    //获取品牌
+                    myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'tplOption');
+
+                    layero.addClass('layui-form');
+                    layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '');
+                    form.render();
+                }
+                , yes: function (index, item) {
+                    myAjax.ajaxTpl('/supplier/getItemDTOList.json', 'supplierProductContent', 'tplsupplierProduct', true, function () {
+                        layer.close(index);
+                        varTr.remove();
+                    }, $(item.selector + " input[name='skuCodes']:enabled:checked").serialize());
+                }
+            });
+            return false;
+        });
+
+        $("#supplierProductContent").on('keyup', '.productSearch', function () {
+            var varThis = $(this);
+            varThis.prev().val('');
+
+            var varSku = [];
+            $("#supplierProductContent").find(".proSku").each(function () {
+                varSku.push($(this).val());
+            });
+            myAjax.ajaxSend('/storage/listProductNoSupplier.json', function (dataJson) {
+                var getTpl = $("#tplProductLi").html();
+                laytpl(getTpl).render(dataJson.result, function (html) {
+                    varThis.parent().children('.proSearchDiv').each(function () {
+                        $(this).remove();
+                    });
+                    var varDivPL = '<div class="proSearchDiv" style="height: auto;">' + html + '</div>';
+                    if (dataJson.result != null && dataJson.result != '') {
+                        varThis.next().after(varDivPL);
+                        varTr = varThis.closest("tr");
+                        $(".proSearchDiv").find('li').click(function () {
+                            var vSkuCode = $(this).attr('skucode');
+                            myAjax.ajaxTpl('/supplier/getItemDTOList.json?skuCodes=' + vSkuCode, 'supplierProductContent', 'tplsupplierProduct', true, function () {
+                                varTr.remove();
+                            });
+                            $(this).closest('div').remove();
+                        });
+                    }
+                });
+            }, {"inputStr": varThis.val(), "notInSku": varSku}, 'post');
+
+        });
+
+        $("#supplierProductContent").on('blur', '.productSearch', function () {
+            var varThis = $(this);
+            var hideSku = varThis.prev().val();
+            if (hideSku == '') {
+                varThis.val('');
+            }
+        });
+
+        var varId = params.get('supplierId');
+        if (varId != null) {
+            myAjax.ajaxSend("/supplier/get.json?supplierId=" + varId, function (data) {
+                myAjax.getTpl('supplierContent', 'tplSupplier', data);
+                //地区
+                getAreaSelect(data.result.areaId);
+                getAreaSelect(data.result.afterSaleAreaId, 1);
+                $("#txtActiveTime").val(laydate.now(data.result.activeTime));
+                //获取关联商品
+                if (data.result.productDTOList.length != 0) {
+                    myAjax.getTpl('supplierProductContent', 'tplsupplierProduct', data);
+                }
+                showBody();
+            });
+        } else {
+            myAjax.getTpl('supplierContent', 'tplSupplier', {'result': []});
+            getProvinceList(1);
+            getProvinceList();
+            showBody();
+        }
+
+        $("#add_commodity").click(function () {
+            myAjax.getTpl('supplierProductContent', 'tplAddItems', {"result": []}, true);
+        });
+    });
+</script>
+
+</body>
+</html>

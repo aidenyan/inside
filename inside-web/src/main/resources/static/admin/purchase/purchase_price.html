@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>采购指导价</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="SKU编码/商品名称"
+                               class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+						<button id="btnExport" class="layui-btn layui-btn-small export_purchase_price">导出
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcProductType" name="typeId">
+                                <option value="-1">选择分类</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcBrand" name="brandId">
+                                <option value="-1">选择品牌</option>
+                            </select>
+                        </div>
+                        <!--<div class="layui-input-inline">
+                            <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-search>
+                                <option value="-1">选择供应商</option>
+                            </select>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- <div class="layui-form">
+             <table class="layui-table">
+                 <thead>
+                 <tr>
+                     <th class="width165">SKU编码</th>
+                     <th class="width150">品牌</th>
+                     <th >商品名称</th>
+                     <th class="width50">单位</th>
+                     <th class="width100">商品分类</th>
+                     <th class="amount width100">销售单价</th>
+                     <th class="amount width100">采购指导价</th>
+                     <th class="width165">供应商名称</th>
+                 </tr>
+                 </thead>
+                 <tbody id="pageContent">
+
+                 </tbody>
+             </table>
+         </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row" id="purchase_price_title">
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num " style="">SKU编码</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-user_name " style="">品牌</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-address " style="">商品名称</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " style="">单位</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-w100" style="">商品分类</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name9">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">销售单价</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">采购指导价</div>
+                            </td>
+							<td rowspan="1" colspan="1" field="name11">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">销售毛利</div>
+                            </td>
+							<td rowspan="1" colspan="1" field="name12">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">销售毛利率</div>
+                            </td>
+                            <!--
+							<td rowspan="1" colspan="1" field="name11">
+                                <div class="datagrid-cell datagrid-cell-c1-w300" style="">供应商名称</div>
+                            </td>
+							-->
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value"  lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-order_num">{{item.skuCode}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-user_name">{{item.brandName}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-address over_hid" title="{{item.name}}">{{item.name}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w50">{{item.unit}}</div>
+        </td>
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w100">{{item.categoryName}}</div>
+        </td>
+        <td class="">
+            <div class="datagrid-cell amount datagrid-cell-c1-w70">{{item.price || 0}}</div>
+        </td>
+        <td class="">
+            <div class="datagrid-cell amount datagrid-cell-c1-w70" >{{item.purchasePrice || 0}}</div>
+        </td>
+		<td class="">
+            <div class="datagrid-cell amount datagrid-cell-c1-w70" >{{item.grossProfit || 0}}</div>
+        </td>
+		<td class="">
+            <div class="datagrid-cell amount datagrid-cell-c1-w70" >{{item.grossProfitRate || 0}}</div>
+        </td>
+		{{# if (typeof(item.memberPrice)!="undefined") { }}  
+		<td class="">
+            <div class="datagrid-cell amount datagrid-cell-c1-w70" >{{item.memberPrice || 0}}</div>
+        </td>
+		{{# } }}  
+        <!--<td>
+            <div class="datagrid-cell datagrid-cell-c1-w300 over_hid" title="{{item.supplierName || ''}}">
+                {{item.supplierName || ''}}
+            </div>
+        </td>
+		-->
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr>
+        <td colspan="8" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="tplOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script id="tplSupplier" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+
+		myAjax.ajaxSend("/purchase/purchasePriceMemberPriceTitle.json", function (dataJson) {
+			if(dataJson.result){
+				var htmlTd = '<td rowspan="1" colspan="1" field="name13"><div class="datagrid-cell datagrid-cell-c1-w70 amount" style="">';
+				htmlTd = htmlTd+dataJson.result+'</div></td>';
+				$("#purchase_price_title").append(htmlTd);
+			}
+		});
+        //监听提交
+        form.on('submit(search)', function (data) {
+            myAjax.ajaxPage('/purchase/purchasePrice.json', 'pageNum', 'pageContent', 'pageTpl', data.field, '', function () {
+                $("#pageContent .amount").each(function () {
+                    $(this).html(Utils.formatPrice($(this).html()));
+                });
+            });
+            return false;
+        });
+
+        $(".page_size_value").change(function(){
+            $("#btnSearch").click();
+        });
+
+        myAjax.ajaxPage('/purchase/purchasePrice.json', 'pageNum', 'pageContent', 'pageTpl', '', '', function () {
+            $("#pageContent .amount").each(function () {
+                $(this).html(Utils.formatPrice($(this).html()));
+            });
+        });
+
+        //获取分类
+        myAjax.ajaxTpl("/admin/common/category/list.json", 'slcProductType', 'tplOption', true);
+        //获取品牌
+        myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'tplOption', true);
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true);
+
+        var varThis;
+        /*$(document).on('dblclick', ".tdCost", function () {
+            if (!$(this).is('.input')) {
+                var varId = $(this).attr('id');
+                $(this).addClass('input').html('<input type="text" class="mizone-edit-input"  value="' + $(this).text() + '" />').find('input').select().blur(function () {
+                    var temp = $(this).val();
+                    if (/^[0-9]*(\.[0-9]{1,2})?$/.test(temp)) {
+                        $(this).parent().removeClass('input').html(temp);
+                        myAjax.ajaxSend('/purchase/updateCost.json', function () {
+                            layer.msg('修改成功！！');
+                            refresh();
+                        }, {'id': varId, 'cost': temp});
+                    } else {
+                        layer.alert('请输入正确的金额');
+                    }
+                });
+            }
+        });*/
+		
+		$("#btnExport").click(function(){
+            var paramStr="";
+            if ($("#slcProductType").val() - 0 > 0) {
+                paramStr+="&typeId="+$("#slcProductType").val()
+
+            }
+            if ($("#slcBrand").val() - 0 > 0) {
+                paramStr+="&brandId="+$("#slcBrand").val();
+            }
+            paramStr+="&inputStr="+ $("input[name=inputStr]").val();
+            window.open("/purchase/purchasePrice/export.json?" + paramStr, "_blank");
+        })
+
+        callParent.isLoadEnd("purchase_price");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width = $('.panel').width(), realW = width - 20;
+        $('.datagrid-htable').css('width', realW);
+        $('.datagrid-btable').css('width', realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

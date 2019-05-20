@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jimmy.dao.sys.mapper.SysLogInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.jimmy.dao.sys.entity.SysLogInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="operation_content" property="operationContent" jdbcType="VARCHAR" />
+    <result column="operation_code" property="operationCode" jdbcType="VARCHAR" />
+    <result column="log_type" property="logType" jdbcType="TINYINT" />
+    <result column="operation_ip" property="operationIp" jdbcType="VARCHAR" />
+    <result column="operation_token" property="operationToken" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="obj_type" property="objType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="modify_id" property="modifyId" jdbcType="INTEGER" />
+    <result column="operation_name" property="operationName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs" extends="BaseResultMap" >
+    <result column="operation_result" property="operationResult" jdbcType="LONGVARCHAR" />
+    <result column="operation_detail" property="operationDetail" jdbcType="LONGVARCHAR" />
+    <result column="obj_id" property="objId" jdbcType="VARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, operation_content, operation_code, log_type, operation_ip, operation_token, sign, 
+    obj_type, create_time, modify_time, create_id, modify_id, operation_name
+  </sql>
+  <sql id="Blob_Column_List" >
+    operation_result, operation_detail, obj_id
+  </sql>
+  <select id="find" resultMap="ResultMapWithBLOBs"  >
+  select
+  <include refid="Base_Column_List" />
+  ,
+  <include refid="Blob_Column_List" />
+  from t_sys_log_info
+    where id=#{id}
+  </select>
+  <select id="list" resultMap="ResultMapWithBLOBs"  >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_sys_log_info
+    where 1=1
+    <if test=" content != null and content != ''">
+      and operation_content like concat('%','#{content}','%')
+    </if>
+    <if test=" startDate != null ">
+      and create_time >= #{startDate}
+    </if>
+    <if test=" endDate != null ">
+      and create_time &lt;= #{endDate}
+    </if>
+    <if test=" logType != null ">
+      and log_type = #{logType}
+    </if>
+    <if test=" objType != null ">
+      and obj_type = #{objType}
+    </if>
+    limit #{startRow},#{pageSize}
+  </select>
+  <select id="count" resultType="java.lang.Integer"  >
+    select
+  count(id)
+    from t_sys_log_info
+    where 1=1
+    <if test=" content != null and content != ''">
+      and operation_content like concat('%','#{content}','%')
+    </if>
+    <if test=" startDate != null ">
+      and create_time >= #{startDate}
+    </if>
+    <if test=" endDate != null ">
+      and create_time &lt;= #{endDate}
+    </if>
+    <if test=" logType != null ">
+      and log_type = #{logType}
+    </if>
+    <if test=" objType != null ">
+      and obj_type = #{objType}
+    </if>
+
+  </select>
+
+
+  <insert id="insert" parameterType="com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs" >
+    insert into t_sys_log_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="operationContent != null" >
+        operation_content,
+      </if>
+      <if test="operationCode != null" >
+        operation_code,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="operationIp != null" >
+        operation_ip,
+      </if>
+      <if test="operationToken != null" >
+        operation_token,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+      <if test="objType != null" >
+        obj_type,
+      </if>
+
+        create_time,
+
+        modify_time,
+
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="modifyId != null" >
+        modify_id,
+      </if>
+      <if test="operationName != null" >
+        operation_name,
+      </if>
+      <if test="operationResult != null" >
+        operation_result,
+      </if>
+      <if test="operationDetail != null" >
+        operation_detail,
+      </if>
+      <if test="objId != null" >
+        obj_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="operationContent != null" >
+        #{operationContent,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        #{operationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=TINYINT},
+      </if>
+      <if test="operationIp != null" >
+        #{operationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operationToken != null" >
+        #{operationToken,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="objType != null" >
+        #{objType,jdbcType=INTEGER},
+      </if>
+     now(),
+      now(),
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyId != null" >
+        #{modifyId,jdbcType=INTEGER},
+      </if>
+      <if test="operationName != null" >
+        #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationResult != null" >
+        #{operationResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationDetail != null" >
+        #{operationDetail,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="objId != null" >
+        #{objId,jdbcType=VARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs" >
+    update t_sys_log_info
+    <set >
+      <if test="operationContent != null" >
+        operation_content = #{operationContent,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        operation_code = #{operationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=TINYINT},
+      </if>
+      <if test="operationIp != null" >
+        operation_ip = #{operationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operationToken != null" >
+        operation_token = #{operationToken,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="objType != null" >
+        obj_type = #{objType,jdbcType=INTEGER},
+      </if>
+        modify_time = now(),
+
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyId != null" >
+        modify_id = #{modifyId,jdbcType=INTEGER},
+      </if>
+      <if test="operationName != null" >
+        operation_name = #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationResult != null" >
+        operation_result = #{operationResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationDetail != null" >
+        operation_detail = #{operationDetail,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="objId != null" >
+        obj_id = #{objId,jdbcType=VARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

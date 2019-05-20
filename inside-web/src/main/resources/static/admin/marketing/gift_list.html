@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../common/css/bootstrap.css">-->
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_content"
+                       class="layui-btn layui-btn-small marketing_gift_save"
+                       authority_code="marketing_gift_save"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加满赠活动</a>
+                    <button class="layui-btn layui-btn-small marketing_gift_deleted"
+                            authority_code="marketing_gift_deleted" id="marketing_gift_deleted">删除
+                    </button>
+                    <button class="layui-btn layui-btn-small marketing_gift_stop"
+                            authority_code="marketing_gift_stop" id="marketing_gift_stop">停止
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba">
+               <!-- <colgroup>
+                    <col width="30">
+                    <col width="160">
+                    <col width="100">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                </colgroup>-->
+                <thead>
+                <tr>
+                    <th class="checked width30"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku sort width165" name="brand.name">名称</th>
+                    <th class="tab_img width70">是否有效</th>
+                    <th class="tab_img width70">是否启用</th>
+                    <th class="tab_img width165">说明</th>
+                    <th class="tab_img width140">开始日期</th>
+                    <th class="tab_img width140">结束日期</th>
+                    <th class="tab_img width140">创建时间</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td class="checked"><input type="checkbox" lay-skin="primary" id="{{:id}}"></td>
+    <td>{{:name}}</td>
+    <td>{{if effective}}有效{{else}}失效{{/if}}</td>
+   <td>{{if enabled}}启用{{else}}停止{{/if}}</td>
+    <td>{{:remark}}</td>
+    <td>{{:effectiveStartTime}}</td>
+    <td>{{:effectiveEndTime}}</td>
+    <td>{{:createDate}}</td>
+    <td class="state_uhandle">
+
+                <a   data-id="{{:id}}" class=" update marketing_gift_save" title="编辑"  authority_code="marketing_gift_save">
+                       <i class="icon-bianji"></i>
+                </a>
+                <a class=" delete marketing_gift_deleted"   data-id="{{:id}}"  title="删除" authority_code="marketing_gift_deleted">
+                       <i class="icon-delete"></i>
+                </a>
+                 <a class=" update marketing_gift_info"    data-id="{{:id}}" title="查看"  authority_code="marketing_gift_info"  n_authority_code="marketing_gift_save">
+                  　     <i class="icon-search"></i>
+                </a>
+                {{if enabled}}
+                  <a class=" update marketing_gift_stop"    data-id="{{:id}}" authority_code="marketing_gift_stop">
+                    <i class="icon-uniE617"></i>
+                </a>
+                {{/if}}
+
+    </td>
+</tr>
+{{/for}}
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var currPageNo;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        $("#add_content").click(function () {
+            openEditContent("新增满赠活动")
+        });
+        $("#marketing_gift_deleted,#marketing_gift_stop").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    idList.push(checkBox($(this), $(this).attr("id")));
+                }
+            });
+            var url="/admin/marketing/gift/deleted.json";
+            var activeType="删除";
+            if($(this).attr("id")=="marketing_gift_stop"){
+                url="/admin/marketing/gift/stop.json";
+                activeType="停止";
+            }
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要"+activeType+"所选满赠活动吗？",{icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function () {
+                    ajaxsend({giftActiveIds: idList}, url, function () {
+                        layer.alert(activeType+"成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                layer.alert("请选择要"+activeType+"的满赠活动", function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        var orderObj = new Order(function (obj) {
+            search();
+        });
+        function search(pageNo) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var option = {pageNo: pageNo, pageSize: pageSize};
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/admin/marketing/gift/list.json", function (dataJson) {
+                for (var i = 0; i < dataJson.result.result.length; i++) {
+                    var giftInfo = dataJson.result.result[i];
+                    giftInfo.effectiveStartTime = Utils.formatTime(Utils.createTimeByLong(giftInfo.startDate), "YYYY-MM-DD");
+                    giftInfo.effectiveEndTime = Utils.formatTime(Utils.createTimeByLong(giftInfo.endDate), "YYYY-MM-DD");
+                    giftInfo.createDate = Utils.formatTime(Utils.createTimeByLong(giftInfo.createTime), "YYYY-MM-DD HH:MS:SS")
+                }
+                var data = dataJson;
+                createTableData(data);
+                checkLocalAuthority(data);
+                form.render('checkbox'); //
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+                bindListButton();
+            })
+        }
+
+        function createTableData(data) {
+
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+            /*绑定数据*/
+                    finalTpl = jsRenderTpl(data.result);
+            $('#page_tbody').html(finalTpl)
+
+
+        }
+
+        function bindListButton() {
+            $("#page_tbody .state_uhandle  a").click(function () {
+                var url = "";
+                var data = {id: $(this).attr("data-id")}
+                if ($(this).attr("authority_code") == "marketing_gift_deleted") {
+                    url = "/admin/marketing/gift/deleted.json";
+                    data.giftActiveIds = $(this).attr("data-id");
+                    layer.confirm("确定要删除该满赠活动吗？",{icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index)
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "marketing_gift_save") {
+                    openEditContent("修改满赠信息", {id: $(this).attr("data-id")});
+                } else if ($(this).attr("authority_code") == "marketing_gift_info") {
+                    openEditContent("满赠信息查看", {id: $(this).attr("data-id"),type:"look"});
+                }else if ($(this).attr("authority_code") == "marketing_gift_stop") {
+                    url = "/admin/marketing/gift/stop.json";
+                    data.giftActiveIds = $(this).attr("data-id");
+                    layer.confirm("确定要停止该满赠活动吗？", {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']},function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index)
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                }
+            });
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+        function openEditContent(title, paramter) {
+            var url = "admin/marketing/gift_info.html?";
+            if(Utils.isNotNull(paramter)){
+                for(var i in paramter){
+                    url=url+"&"+i+"="+paramter[i];
+                }
+            }
+            callParent.openTab("marketing_gift_add", 0, title, url, true);
+        }
+
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["marketing_gift_save", "marketing_gift_deleted", "marketing_gift_info", "marketing_gift_stop"]);
+        }
+        callParent.isLoadEnd("marketing_gifts");
+        callParent.register(function () {
+            search(currPageNo)
+        }, "search");
+        search();
+    })
+</script>
+</body>
+</html>

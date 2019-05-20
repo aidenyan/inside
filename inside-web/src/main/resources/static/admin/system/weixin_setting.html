@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>促销管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <form>
+        <ul class="invoiceMsg promotions" id="alipay_setting">
+
+        </ul>
+        <div class="btnBottom " style="text-align: center">
+            <button class="layui-btn layui-btn-norma form_submit" lay-submit lay-filter="form_submit">确定</button>
+            <button class="layui-btn layui-btn-primary" id="cancel">取消</button>
+
+        </div>
+    </form>
+</div>
+<div id="select_category" style="display: none"></div>
+<div id="select_brand" style="display: none"></div>
+<script type="x-jsrender" id="edit_content">
+      <input type="hidden" class="layui-input" id="form_plugin_id"value="{{:paymentPluginId}}">
+     <li>
+            <div class="wp14 text_right">支付方式名称：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" lay-verify="required" id="form_name" lay-verify="required" maxlength="35" value="{{:name}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">公众账号ID：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" id="form_appid" lay-verify="required"  maxlength="255" value="{{:appid}}" >
+            </div>
+        </li>
+       <li>
+            <div class="wp14 text_right">商户号：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" id="form_merchantId" lay-verify="required"  maxlength="255" value="{{:merchantId}}" >
+            </div>
+        </li>
+         <li>
+            <div class="wp14 text_right">密钥：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" id="form_key" lay-verify="required"  maxlength="255" value="{{:key}}" >
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">手续费类型：</div>
+            <div class="wp32">
+                <select id="form_fee_type">
+                 {{for feeList}}
+                     <option   value="{{:code}}">{{:name}}</option>
+                {{/for}}
+                </select>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">手续费：</div>
+            <div class="wp32 ">
+                <input class="layui-input" placeholder="手续费"  lay-verify="required|price"  id="form_fee"  value="{{:fee}}">
+            </div>
+        </li>
+             <li>
+            <div class="wp14 text_right">回调地址：</div>
+            <div class="wp32 ">
+                <input class="layui-input" placeholder="回调地址"  lay-verify="required"  id="form_notify_url"  value="{{:notify_url}}">
+            </div>
+        </li>
+
+        <li>
+            <div class="wp14 text_right">描述：</div>
+            <div class="wp80 ">
+              <textarea  id="form_desc"  class="layui-textarea">{{:desc}}</textarea>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">排序：</div>
+            <div class="wp80 ">
+                    <input class="layui-input" placeholder="排序"  lay-verify="number"  id="form_order"  value="{{:orderNum}}">
+            </div>
+        </li>
+          <li>
+            <div class="wp14 text_right">是否启用：</div>
+            <div class="wp80 ">
+                     <input type="checkbox" id="form_is_enable"  lay-skin="primary"  {{if isEnabled}}checked="checked"{{/if}} title="启用"  >
+            </div>
+        </li>
+
+
+
+
+</script>
+<script type="text/javascript" src="../admin.js"></script>
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+            var pluginId = Utils.getHrefValue("pluginId");
+            var operation = Utils.getHrefValue("operation");
+            form.verify({
+                price: function (value, item) {
+                    if ($.trim(value).length > 0 && !Utils.checkIsInteger($.trim(value))) {
+                        return '手续费格式不正确';
+                    }
+                    return "";
+                },
+                number: function (value, item) {
+                    if ($.trim(value).length > 0 && !Utils.checkIsInteger(value)) {
+                        return '排序格式不正确';
+                    }
+                    return "";
+                }
+            });
+            $("#cancel").click(function () {
+                callParent.openTab("plugin_payment_page");
+                callParent.closeTab("plugin_payment_setting");
+            });
+            if (operation != "info") {
+                form.on("submit(form_submit)", function () {
+                    var data = {
+                        "pluginConfig.pluginId": $("#form_plugin_id").val(),
+                        "pluginConfig.orderNum": $("#form_order").val(),
+                        "pluginConfig.isEnabled": Utils.checkBox($("#form_is_enable"), true, false)
+                    };
+                    data.paymentPluginId = $("#form_plugin_id").val();
+                    var attrMap = new Map();
+                    attrMap.push("name", $("#form_name").val());
+                    attrMap.push("appid", $("#form_appid").val());
+                    attrMap.push("key", $("#form_key").val());
+                    attrMap.push("merchantId", $("#form_merchantId").val());
+                    attrMap.push("feeType", $("#form_fee_type").val());
+                    attrMap.push("fee", $("#form_fee").val());
+                    attrMap.push("desc", $("#form_desc").val());
+                    attrMap.push("notify_url", $("#form_notify_url").val());
+                    data.attrMap = {};
+                    for (var i = 0; i < attrMap.key().length; i++) {
+                        var key = attrMap.key()[i];
+                        data.attrMap[key] = attrMap.get(key);
+                    }
+
+                    ajaxsend(data, "/admin/payment/plugin/save.json", function (dataJson) {
+                        layer.alert("修改成功", {}, function (index) {
+                            layer.close(index)
+                            callParent.parentUse("plugin_payment_page", "search");
+                            loadInitData()
+                        });
+                    }, "post_get");
+                    return false;
+                });
+            }
+            function loadInitData() {
+                if (Utils.isNotBlack(pluginId)) {
+                    ajaxsend({pluginId: pluginId}, "/admin/payment/plugin/info.json", function (dataJson) {
+                        var dealDataInfo = {};
+                        dealDataInfo = dataJson.result.attrMap;
+                        if (!Utils.isNotNull(dealDataInfo)) {
+                            dealDataInfo = {};
+                        }
+                        dealDataInfo.paymentPluginId = dataJson.result.paymentPluginId;
+                        if (Utils.isNotNull(dataJson.result) && Utils.isNotNull(dataJson.result.pluginConfig)) {
+                            dealDataInfo.isEnabled = dataJson.result.pluginConfig.isEnabled
+                            dealDataInfo.orderNum= dataJson.result.pluginConfig.orderNum;
+                        }
+
+                        dealDataInfo.feeList = dataJson.searchMap.feeTypeList;
+                        var jsRenderTpl = $.templates('#edit_content'),
+                        /*绑定数据*/
+                                finalTpl = jsRenderTpl(dealDataInfo);
+                        $("#alipay_setting").html(finalTpl);
+                        closeUpdate()
+                        form.render();
+
+                    }, undefined, false);
+                } else {
+                    var jsRenderTpl = $.templates('#edit_content'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({});
+                    $("#alipay_setting").html(finalTpl);
+                    closeUpdate()
+
+                    form.render();
+                }
+
+
+            }
+
+
+            loadInitData();
+            function closeUpdate(){
+                if (operation == "info") {
+                    $(".form_submit").hide();
+                    $("input,textarea,select").attr("disabled","disabled");
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

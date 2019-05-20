@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>平台店铺管理</title>
+   <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+    <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add" class="layui-btn layui-btn-small role_save"
+                       authority_code="role_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加店铺</a>
+                </div>
+            </div>
+        </div>
+
+    <!--table 数据-->
+    <div class="layui-form">
+        <table class="layui-table">
+       			<colgroup>
+                    <col width="30">
+                    <col width="50">
+                    <col width="100">
+                    <col width="100">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                </colgroup>
+            <thead>
+            <tr>
+                <th class="checked"><input type="checkbox" id="selectAllCheckBox" lay-filter="selectAllCheckBox" lay-skin="primary"></th>
+                <th>序号</th>
+                <th>店铺名称</th>
+                <th>平台名称</th>
+                <th>网址</th>
+                <th>备注</th>
+                <th class="sort" name="s.create_time">创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="page_tbody">
+            </tbody>
+        </table>
+        </div>
+
+    <!--分页条-->
+    <div class="cf">
+        <div id="pageNum" class="text-r"></div>
+    </div>
+
+    </div>
+</div>
+
+
+<form id="platformStore" action="" style="display: none">
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>平台名称</label>
+        <div class="layui-input-inline detailedAddress" id="platfromList" lay-verify="platfromList">
+        
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>店铺名称</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入店铺名称" class="layui-input" id="storeName" name="storeName" lay-verify="storeName">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>店铺编号</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入店铺编号" class="layui-input" id="storeCode" name="storeCode" lay-verify="storeCode">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">店铺网址</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入店铺网址" class="layui-input" id="website" name="website">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">店铺描述</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea  placeholder="请输入描述信息" class="layui-textarea" id="remark" name="remark"> </textarea>
+        </div>
+    </div>
+</form>
+
+<form id="platformStoreSecret" action="" style="display: none">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">店铺名称</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" class="layui-input" id="storeShowName" readonly="readonly">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">请求地址</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入请求地址" class="layui-input" id="applicationUrl" name="applicationUrl" lay-verify="applicationUrl">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">appkey</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入appkey" class="layui-input" id="appkey" name="appkey" lay-verify="appkey">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">secret</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入secret" class="layui-input" id="secret" name="secret" lay-verify="secret">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">session_key</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入session_key" class="layui-input" id="sessionKey" name="sessionKey" lay-verify="sessionKey">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">refresh_token</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text"  placeholder="请输入refresh_token" class="layui-input" id="refreshToken" name="refreshToken" lay-verify="refreshToken">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">是否启用</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="checkbox" name="effective" id="effective" value="1" lay-skin="primary">
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script src="../../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/js/child.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script type="text/javascript" src="../../common/js/system/platformStore.js"></script>
+<script type="text/javascript" src="../../common/js/common/ajaxsend.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="platformCheckbox" lay-skin="primary" type="checkbox" value="{{item.id}}"></i></td>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td>{{item.name==null?'':item.name}}</td>
+        <td>{{item.platformName==null?'':item.platformName}}</td>
+        <td><a href="{{item.webSite==null?'':item.webSite}}" target="view_window">{{item.webSite==null?'':item.webSite}}</a></td>
+        <td>{{item.remark}}</td>
+        <td>{{item.createTime==null?'':laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+        <td class="state_uhandle">
+           <div class="">
+                <button class=" delete" value="{{item.id}}" onclick="updateInfo({{item.id}})">
+                   	 <i class="icon-bianji"></i>
+                </button>
+		{{#  if(item.platformType==1){ }}
+                <button class=" update" value="{{item.id}}" onclick="secretEdit({{item.id}})">
+                  	 <i class="icon-miyao"></i>
+                </button>
+                <button class=" update" value="{{item.id}}" onclick="authorize({{item.id}})">
+                  	 <i class="icon-shouquan"></i>
+                </button>
+ 		{{#  } }}
+		{{#  if(item.platformType==0){ }}
+                <button class=" layui-btn-disabled" value="{{item.id}}" onclick="secretEdit({{item.id}})">
+                    <i class="icon-miyao"></i>
+                </button>
+                <button class=" layui-btn-disabled" value="{{item.id}}" onclick="authorize({{item.id}})">
+                    <i class="icon-shouquan"></i>
+                </button>
+ 		{{#  } }}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+    	<tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+<script id="platformTpl" type="text/html">
+ {{# layui.each(d, function(index, item){ }}
+ {{#  if(item.effective==false){ }}
+    <input type="radio" value="{{item.id}}" name="platform" lay-skin="primary" title="{{item.name}}(已禁用)" disabled="">
+    {{#  } }}
+{{#  if(item.effective==true){ }}
+    <input type="radio" value="{{item.id}}" name="platform" lay-skin="primary" title="{{item.name}}">
+    {{#  } }}
+ {{#  }); }}
+</script>
+</body>
+</html>

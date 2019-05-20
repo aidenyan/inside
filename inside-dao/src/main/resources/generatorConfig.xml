@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--mysql的生成方式-->
+    <classPathEntry
+            location="d:/work/repositorys/mysql/mysql-connector-java/5.1.36/mysql-connector-java-5.1.36.jar"/>
+    <context id="my" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="false"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/inside" userId="root"
+                        password="123456"/>
+
+        <javaModelGenerator targetPackage="com.jimmy.dao.sys.entity"
+                            targetProject="D:/idea/work/inside/inside-dao/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.jimmy.dao.sys.mapper"
+                         targetProject="D:/idea/work/inside/inside-dao/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+
+        <javaClientGenerator targetPackage="com.jimmy.dao.sys.mapper"
+                             targetProject="D:/idea/work/inside/inside-dao/src/main/java"
+                             type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table tableName="T_FEE_AGTBILL" domainObjectName="FeeAgentBill"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"/>-->
+
+
+        <table tableName="t_department_info" domainObjectName="DepartmentInfo"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <!--oracle的生成方式-->
+        <!--<classPathEntry-->
+        <!--location="C:/Oracle/Middleware/wlserver_10.3/server/lib/ojdbc6.jar"/>-->
+        <!--<context id="my" targetRuntime="MyBatis3">-->
+        <!--<commentGenerator>-->
+        <!--<property name="suppressDate" value="false"/>-->
+        <!--<property name="suppressAllComments" value="true"/>-->
+        <!--</commentGenerator>-->
+
+        <!--<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"-->
+        <!--connectionURL="jdbc:oracle:thin:@172.20.16.***:1521:CARGO" userId="***"-->
+        <!--password="***"/>-->
+
+        <!--<javaModelGenerator targetPackage="ctas.test.entity"-->
+        <!--targetProject="D:/yangjm/Code/CTAS/JAVAEE/CTAS2CCSP/src/main/java">-->
+        <!--<property name="enableSubPackages" value="true"/>-->
+        <!--<property name="trimStrings" value="true"/>-->
+        <!--</javaModelGenerator>-->
+
+        <!--<sqlMapGenerator targetPackage="ctas.test.entity.xml"-->
+        <!--targetProject="D:/yangjm/Code/CTAS/JAVAEE/CTAS2CCSP/src/main/java">-->
+        <!--<property name="enableSubPackages" value="true"/>-->
+        <!--</sqlMapGenerator>-->
+
+        <!--<javaClientGenerator targetPackage="ctas.test.mapper"-->
+        <!--targetProject="D:/yangjm/Code/CTAS/JAVAEE/CTAS2CCSP/src/main/java" type="XMLMAPPER">-->
+        <!--<property name="enableSubPackages" value="true"/>-->
+        <!--</javaClientGenerator>-->
+
+        <!--&lt;!&ndash;<table tableName="T_FEE_AGTBILL" domainObjectName="FeeAgentBill"-->
+        <!--enableCountByExample="false" enableUpdateByExample="false"-->
+        <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+        <!--selectByExampleQueryId="false"/>&ndash;&gt;-->
+
+        <!--<table tableName="CTAS_FEE_BASE" domainObjectName="FeeBase"-->
+        <!--enableCountByExample="false" enableUpdateByExample="false"-->
+        <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+        <!--selectByExampleQueryId="false">-->
+        <!--&lt;!&ndash;<columnRenamingRule searchString="^D_"-->
+        <!--replaceString=""/>&ndash;&gt;-->
+        <!--</table>-->
+    </context>
+</generatorConfiguration>

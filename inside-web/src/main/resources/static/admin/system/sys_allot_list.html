@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style type="text/css">
+        .layui-form-checkbox[lay-skin="primary"] span {
+            padding-right: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="javascript:void(-1);" id="add_allot" class="layui-btn layui-btn-small product_save"
+                       authority_code="product_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加规则</a>
+                    <button class="layui-btn layui-btn-small allot_deleted" id="allot_deleted">删除</button>
+                </div>
+                <div class="layui-inline po-r">
+                    <input type="text" name="title" id="search_content" placeholder="规则名称"
+                           autocomplete="off" class="layui-input small mizo-srarch-input">
+                    <button class="layui-btn layui-btn-small" id="search_id">搜索</button>
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba" style="table-layout: fixed">
+                <thead>
+                <tr>
+                    <th class="checked" width="30"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku" width="20%">规则名称</th>
+                    <th class="tab_fenlei" width="20%"><a href="" style="color: #646976">发货仓库</a></th>
+                    <th class="tab_img" width="20%">修改时间</th>
+                    <th class="setting" width="20%">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+        <div id="select_category" style="display: none"></div>
+        <div id="select_brand" style="display: none"></div>
+    </div>
+    <script type="text/javascript" src="../admin.js"></script>
+    <script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><input type="checkbox"  lay-skin="primary" allotCode="{{:allotCode}}"></td>
+    <td>{{:allotName}}</td>
+    <td>{{:warehouseName}}</td>
+    <td>{{:modifyTime}}</td>
+    <td class="state_uhandle">
+
+                <a  allot="{{:allotCode}}" class=" update allot_save" title="编辑" authority_code="allot_save">
+                          <i class="icon-bianji"></i>
+                </a>
+                <a class=" delete allot_deleted"   allot="{{:allotCode}}" title="删除"  authority_code="allot_deleted">
+                           <i class="icon-delete"></i>
+                </a>
+                 <a class=" update allot_info"   allot="{{:allotCode}}"  title="查看"  authority_code="allot_info"  n_authority_code="allot_save">
+                                <i class="icon-uniE602"></i>
+                </a>
+
+    </td>
+</tr>
+{{/for}}
+
+
+    </script>
+    <script type="x-jsrender" id="select_brand_category">
+        <ul class="layui-form form-box ">
+            {{if list.length>0 }}
+            {{for list}}
+            <li>
+                {{if level }}
+                 <div class="layui-inline paddL5{{:level}}">
+                    <input type="checkbox" name="" parent_id="{{:parentId}}" lay-filter="selectChose" value="{{:id}}" {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}" class="">
+                </div>
+                {{else}}
+                <div class="layui-inline">
+                    <input type="checkbox" name="" value="{{:id}}" parent_id="{{:parentId}}" lay-filter="selectChose"  {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}"
+                           class="">
+                </div>
+
+                {{/if }}
+            </li>
+            {{/for}}
+            {{else }}
+            无数据
+            {{/if }}
+        </ul>
+
+
+
+    </script>
+    <script type="x-jsrender" id="j-platform-list">
+        {{for result}}
+         <div class="check_wrapper"><input lay-verify="platform" type="checkbox" name="platformId" value="{{:id}}" {{if checked}}checked="checked"{{/if}} lay-skin="primary" title="{{:name}}"></div>
+        {{/for}}
+
+
+    </script>
+    <script type="x-jsrender" id="j-edit-content">
+    <form class="layui-form dialog" id="form1" style="display: none">
+        <input type="hidden" id="allot_code_id" value="{{:allotCode}}">
+    <div class="layui-form form-box">
+        <div class="layui-form-item dialog_form_item">
+            <div class="layui-inline">
+                <label class="dialog_label">规则名称：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <input type="text" class="layui-input" maxlength="49"  id="edit_allot_name" lay-verify="required" value="{{:allotName}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="dialog_label">指定发货仓库：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <select value="{{:warehouseId}}" id="warehouse_select_id" lay-verify="required">
+                      <option value="">请选择仓库地址</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label">所在平台：</label>
+             <div class="layui-inline Width533" id="platform_id">
+
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label">采用SKU方式：</label>
+             <div class="layui-inline Width533" >
+              <div class="check_wrapper"><input  type="checkbox" id="is_used_sku"   lay-filter="is_used_sku"  {{if isUsedSku}}checked="checked"{{/if}} lay-skin="primary" ></div>
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item sku_not_select" >
+            <label class="dialog_label">选择分类：</label>
+            <div class="layui-inline">
+                <div class="dialog_choice">
+                    <span class="dialog_span" id="select_category_list">点击选择分类</span>
+                </div>
+            </div>
+        </div>
+        <!--<div class="layui-form-item dialog_form_item ">
+            <label class="dialog_label"></label>
+            <div class="layui-inline">
+                <div class="check_wrapper">
+                    <input type="checkbox" name="" lay-skin="primary" title="全选">
+                </div>
+            </div>
+        </div>-->
+        <div class="layui-form-item dialog_form_item sku_not_select">
+            <label class="dialog_label open">选择品牌：</label>
+            <div class="layui-inline">
+                <div class="dialog_choice">
+                    <span class="dialog_span" id="select_brand_list">点击选择品牌</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label">选择区域：</label>
+            <div class="layui-inline Width533">
+                <table class="layui-table area_list">
+                    <thead>
+                    <tr>
+                        <td width="28%">省</td>
+                        <td width="28%">市</td>
+                        <td width="28%">区</td>
+                        <td width="16%">操作</td>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr  class="area_tr">
+                        <td>
+                            <select class="province_class" lay-verify="area">
+                             <option value=''>请选择省份</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select  class="city_class" lay-verify="area">
+                              <option value=''>请选择城市</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="area_class" lay-verify="area">
+                                 <option value=''>请选择区域</option>
+                            </select>
+                        </td>
+                        <td class="state_uhandle">
+                            <div class="">
+                                <div class="">
+                                        <a class=" layui-btn-add-area">
+                                            <i class="icon-plus2"></i>
+                                        </a>
+                                        <a class=" layui-btn-deleted">
+                                            <i class="icon-delete"></i>
+                                        </a>
+                                    </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-form-item dialog_form_item sku_select">
+            <label class="dialog_label">SKU编码：</label>
+            <div class="layui-inline Width533">
+                <table class="layui-table tab_fixed">
+                    <thead>
+                    <tr>
+                        <td width="42%">SKU编码</td>
+                        <td width="42%">类别名称</td>
+                        <td width="16%">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <input type="hidden" class="child_detail_sku_Id" >
+                        <input type="hidden" class="child_detail_sku_code" >
+                        <td>
+                            <div class="mizone-input-number">
+                                        <div class="mizone-input-number-input">
+                                            <input type="text"
+                                                   class="layui-input sku_input sku_input" placeholder="请输入SKU编码">
+                                        </div>
+                                        <dl class="mizone-input-up" style="display: none">
+
+                                        </dl>
+                                    </div>
+                        </td>
+                        <td class="text_left over_hid">
+
+                        </td>
+                        <td class="state_uhandle">
+                                  <div class="">
+                                <div class="">
+                                        <a class=" layui-btn-add_sku  ">
+                                            <i class="icon-plus2"></i>
+                                        </a>
+                                        <a class=" layui-btn-deleted ">
+                                            <i class="icon-delete"></i>
+                                        </a>
+                                    </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+          <input type="hidden" lay-verify="checkAllot" />
+    </div>
+     <input type="hidden" id="form_submit" lay-submit lay-filter="form_submit" />
+   </form>
+
+
+    </script>
+    <script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:name}}</option>
+    {{/for}}
+
+
+    </script>
+    <script type="x-jsrender" id="j-sku-td">
+  {{for result}}
+         <dd data-id="{{:id}}" class="sku_dd">{{if fullName!=null}}{{:fullName}}{{else}}{{:name}}{{/if}}({{:skuCode}})</dd>
+  {{/for}}
+
+
+    </script>
+    <script type="text/javascript">
+        layui.use(['form', 'laypage', 'layedit', 'laydate', 'laytpl'], function () {
+            var form = layui.form();
+            var laytpl = layui.laytpl;
+            var layer = layui.layer,
+                    laypage = layui.laypage;
+            var start = {}, end = {}, currPageNo;
+            var warehouseList, categoryArrayList, categoryList, brandList, platformList, allotInfo,
+                    provinceList, cityMap, areaMap;
+            form.on('checkbox(allChoose)', function (data) {
+                var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            function createAllotInfo() {
+                var allotInfoObj = {};
+                allotInfoObj.isUsedSku = Utils.checkBox($("#is_used_sku"), true, false);
+                allotInfoObj.allotName = $("#edit_allot_name").val();
+                allotInfoObj.warehouseId = $("#warehouse_select_id").val();
+                allotInfoObj.platformIdSet = new Array();
+                $("#platform_id input[type='checkbox']").each(function () {
+                    if (this.checked) {
+                        allotInfoObj.platformIdSet.push($(this).val());
+                    }
+                })
+                var categorySet = new Array();
+                $("#select_category input[type='checkbox']").each(function () {
+                    if (this.checked) {
+                        categorySet.push($(this).val());
+                    }
+                })
+                if (categorySet.length > 0) {
+                    allotInfoObj.categoryIdList = categorySet;
+                }
+                var brandSet = new Array();
+                $("#select_brand input[type='checkbox']").each(function () {
+                    if (this.checked) {
+                        brandSet.push($(this).val());
+                    }
+                })
+                if (brandSet.length > 0) {
+                    allotInfoObj.brandIdList = brandSet;
+                }
+                var areaList = new Array();
+                $(".area_list .area_tr").each(function () {
+                    var provinceId = $(this).find(".province_class").val();
+                    if (Utils.isNotNull(provinceId) && provinceId.length > 0) {
+                        var allotAreaInfo = {};
+                        allotAreaInfo.provinceId = provinceId;
+                        var cityId = $(this).find(".city_class").val();
+                        if (Utils.isNotNull(cityId) && cityId.length > 0) {
+                            allotAreaInfo.cityId = cityId;
+                            var areaId = $(this).find(".area_class").val();
+                            if (Utils.isNotNull(areaId) && areaId.length > 0) {
+                                allotAreaInfo.areaId = areaId;
+                            }
+                        }
+                        areaList.push(allotAreaInfo)
+                    }
+                })
+                if (areaList.length > 0) {
+                    allotInfoObj.allotAreaInfoSet = areaList;
+                }
+                var detailProductIdList = new Array();
+                $(".child_detail_sku_Id").each(function () {
+                    var detailSkuId = $(this).val();
+                    if (Utils.isNotNull(detailSkuId) && detailSkuId.length > 0) {
+                        detailProductIdList.push(detailSkuId)
+                    }
+                })
+                if (detailProductIdList.length > 0) {
+                    allotInfoObj.productIdList = detailProductIdList;
+                }
+                var allotCode = $("#allot_code_id").val();
+                if (Utils.isNotBlack(allotCode)) {
+                    allotInfoObj.allotCode = allotCode;
+                }
+                return allotInfoObj;
+            }
+
+            form.on('checkbox(is_used_sku)', function () {
+                selectSkuCodeCheck();
+            });
+            function selectSkuCodeCheck() {
+                if (Utils.checkBox($("#is_used_sku"), true, false)) {
+                    $(".sku_not_select").hide();
+                    $(".sku_select").show();
+                } else {
+                        $(".sku_not_select").show();
+                        $(".sku_select").hide();
+                }
+
+            }
+
+            form.verify({
+                platform: function (value, item) {
+                    var bool = false;
+                    $("#platform_id input[type='checkbox']").each(function () {
+                        if (Utils.checkBox($(this), true, false)) {
+                            bool = true;
+                        }
+                    })
+                    if (!bool) {
+                        return "所在平台不能为空！";
+                    }
+                },
+                area: function (value, item) {
+                    var areaList = new Array();
+                    var message = "";
+                    $(".area_list .area_tr").each(function () {
+                        var provinceId = $(this).find(".province_class").val();
+                        if (Utils.isNotNull(provinceId) && provinceId.length > 0) {
+                            var allotAreaInfo = {};
+                            allotAreaInfo.provinceId = provinceId;
+                            var cityId = $(this).find(".city_class").val();
+                            if (Utils.isNotNull(cityId) && cityId.length > 0) {
+                                allotAreaInfo.cityId = cityId;
+                                var areaId = $(this).find(".area_class").val();
+                                if (Utils.isNotNull(areaId) && areaId.length > 0) {
+                                    allotAreaInfo.areaId = areaId;
+                                }
+                            }
+                            for (var i = 0; i < areaList.length; i++) {
+                                var tempAllotAreaInfo = areaList[i];
+                                var bool = true;
+                                bool = bool && (tempAllotAreaInfo.provinceId == allotAreaInfo.provinceId)
+                                bool = bool && (tempAllotAreaInfo.areaId == allotAreaInfo.areaId)
+                                bool = bool && (tempAllotAreaInfo.cityId == allotAreaInfo.cityId)
+                                if (bool) {
+                                    message = "选择的地址与其他地址寻找重复";
+                                }
+                            }
+                            areaList.push(allotAreaInfo)
+                        }
+                    })
+                    return message;
+                },
+                checkAllot: function () {
+                    var message;
+                    ajaxsend(createAllotInfo(), "/admin/allot/check.json", function (dataJson) {
+                        if (!dataJson.result) {
+                            message = "该分配方案和已经的分配方案有冲突！";
+                        }
+                    }, "post", false);
+                    return message;
+                }
+            });
+
+
+            $("#allot_deleted").click(function () {
+                var allotCodeList = new Array();
+                $("#page_tbody input[type='checkbox']").each(function () {
+                    if (checkBox($(this), true, false)) {
+                        allotCodeList.push($(this).attr("allotCode"));
+                    }
+
+                })
+                if (Utils.isNotNull(allotCodeList) && allotCodeList.length > 0) {
+                    layer.confirm("确定要删除所选推荐规则吗？", {
+                        icon: 3,
+                        title: '提示',
+                        'closeBtn': 0,
+                        area: ['480px', '240px']
+                    }, function () {
+                        ajaxsend({
+                            allotCodeList: allotCodeList,
+                            enable: false
+                        }, "/admin/allot/deleted.json", function () {
+                            layer.alert("删除成功", {}, function (index) {
+                                layer.close(index)
+                                search(currPageNo)
+                            });
+
+                        })
+                    })
+                } else {
+                    layer.alert("请选择要删除的规则", function (index) {
+                        layer.close(index);
+                    });
+                }
+            });
+            var orderObj = new Order(function (obj) {
+                search();
+            }, "allot.id");
+            $("#add_allot").click(function () {
+                allotInfo = undefined;
+                openEditContent("新增分配")
+            });
+            function appendPlatform() {
+                if (Utils.isNotNull(platformList) && platformList.length > 0) {
+                    for (var i = 0; i < platformList.length; i++) {
+                        var platformObj = platformList[i];
+                        platformObj.checked = false;
+                        if (Utils.isNotNull(allotInfo) && Utils.isNotNull(allotInfo.platformIdSet) && allotInfo.platformIdSet.length > 0) {
+                            if (Utils.isContain(allotInfo.platformIdSet, platformObj.id)) {
+                                platformObj.checked = true;
+                            }
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#j-platform-list'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({result: platformList});
+                    $("#platform_id").html(finalTpl);
+                    form.render();
+                }
+            }
+
+            function appendWarehouse() {
+                if (Utils.isNotNull(warehouseList) && warehouseList.length > 0) {
+                    var jsRenderTpl = $.templates('#j-option'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({result: warehouseList});
+                    $("#warehouse_select_id").empty();
+                    $("#warehouse_select_id").append('<option value="">请选择仓库地址</option>')
+                    $("#warehouse_select_id").append(finalTpl);
+                    $("#warehouse_select_id").val($("#warehouse_select_id").attr("value"))
+                    form.render(); //
+                }
+            }
+
+            function getCategoryLevel(categoryMap, categoryObj) {
+                if (!Utils.isNotNull(categoryObj.parentId)) {
+                    return 0;
+                } else {
+                    var parentCategoryObj = categoryMap.get(categoryObj.parentId);
+                    if (!Utils.isNotNull(parentCategoryObj.level)) {
+                        return getCategoryLevel(categoryMap, parentCategoryObj)
+                    } else {
+                        return parentCategoryObj.level + 1;
+                    }
+                }
+            }
+
+            function addCategory(category) {
+                var categoryList = new Array();
+                categoryList.push(category);
+                if (Utils.isNotNull(category.children) && category.children.length > 0) {
+                    for (var i = 0; i < category.children.length; i++) {
+                        var childCategory = category.children[i];
+                        categoryList = categoryList.concat(addCategory(childCategory));
+                    }
+                }
+                return categoryList;
+            }
+
+            function appendCategory() {
+                if (Utils.isNotNull(categoryList) && categoryList.length > 0) {
+                    if (!(Utils.isNotNull(categoryArrayList) && categoryArrayList.length > 0)) {
+                        var categoryMap = new Map();
+                        var tempCategoryArrayList = new Array();
+                        for (var i = 0; i < categoryList.length; i++) {
+                            var categoryObj = categoryList[i];
+                            if (!Utils.isNotNull(categoryObj.parentId)) {
+                                categoryObj.level = 0;
+                            }
+                            categoryObj.children = new Array();
+                            categoryMap.push(categoryObj.id, categoryObj);
+                        }
+                        for (var i = 0; i < categoryList.length; i++) {
+                            var categoryObj = categoryList[i];
+                            categoryObj.level = getCategoryLevel(categoryMap, categoryObj);
+                            if (!Utils.isNotNull(categoryObj.parentId)) {
+                                tempCategoryArrayList.push(categoryObj);
+                            } else {
+                                categoryMap.get(categoryObj.parentId).children.push(categoryObj);
+                            }
+                        }
+                        categoryArrayList = new Array();
+                        for (var i = 0; i < tempCategoryArrayList.length; i++) {
+                            categoryArrayList = categoryArrayList.concat(addCategory(tempCategoryArrayList[i]));
+                        }
+                    }
+                    for (var i = 0; i < categoryArrayList.length; i++) {
+                        var categoryArrayObj = categoryArrayList[i];
+                        categoryArrayObj.checked = false;
+                    }
+                    if (Utils.isNotNull(allotInfo) && Utils.isNotNull(allotInfo.categoryIdList) && allotInfo.categoryIdList.length > 0) {
+                        for (var i = 0; i < categoryArrayList.length; i++) {
+                            var categoryArrayObj = categoryArrayList[i];
+                            categoryArrayObj.checked = Utils.isContain(allotInfo.categoryIdList, categoryArrayObj.id)
+                        }
+                    }
+
+                    var jsRenderTpl = $.templates('#select_brand_category'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({code: "0", list: categoryArrayList});
+                    $("#select_category").html(finalTpl);
+                    form.on('checkbox(selectChose)', function (data) {
+                        selectChildId(data.value, data.elem.checked);
+                        var parentId = null;
+                        $("#select_category input[type='checkbox']").each(function () {
+                            if ($(this).val() == data.value) {
+                                parentId = $(this).attr("parent_id");
+                            }
+                        });
+                        selectParentId(parentId, data.elem.checked);
+                        form.render();
+                    });
+                    form.render();
+                }
+            }
+
+            function selectChildId(id, checked) {
+                $("#select_category input[type='checkbox']").each(function () {
+                    var parentId = $(this).attr("parent_id");
+                    if (Utils.isNotBlack(parentId) && parentId.length > 0) {
+                        if (parentId == id) {
+                            if (checked) {
+                                if (!this.checked) {
+                                    $(this).click();
+                                }
+
+                            } else {
+                                $(this).removeAttr("checked");
+                            }
+                            selectChildId($(this).val(), checked);
+                        }
+                    }
+                })
+            }
+
+            function selectParentId(parentId, checked) {
+                $("#select_category input[type='checkbox']").each(function () {
+                    var id = $(this).val();
+                    if (Utils.isNotBlack(id) && id.length > 0) {
+                        if (parentId == id) {
+                            if (!checked) {
+                                $(this).removeAttr("checked");
+                            }
+                            selectParentId($(this).attr("parentId"), checked);
+                        }
+                    }
+                })
+
+            }
+
+            function appendBrand() {
+                if (Utils.isNotNull(brandList) && brandList.length > 0) {
+                    for (var i = 0; i < brandList.length; i++) {
+                        var brandObj = brandList[i];
+                        brandObj.checked = false;
+                    }
+                    if (Utils.isNotNull(allotInfo) && Utils.isNotNull(allotInfo.brandIdList) && allotInfo.brandIdList.length > 0) {
+                        for (var i = 0; i < brandList.length; i++) {
+                            var brandObj = brandList[i];
+                            brandObj.checked = Utils.isContain(allotInfo.brandIdList, brandObj.id)
+                        }
+                    }
+                    var jsRenderTpl = $.templates('#select_brand_category'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({code: "0", list: brandList});
+                    $("#select_brand").html(finalTpl);
+                    form.render();
+                }
+            }
+
+            function search(pageNo) {
+                if (!Utils.isNotNull(pageNo)) {
+                    pageNo = 1;
+                }
+                currPageNo = pageNo;
+                var pageSize = 15;
+                var option = {
+                    pageNo: pageNo,
+                    pageSize: pageSize,
+                    name: $("#search_content").val()
+                }
+                option = orderObj.setOption(option);
+                ajaxsend(option, "/admin/allot/list.json", function (dataJson) {
+                    var data = dataJson;
+                    for (var i = 0; i < data.result.result.length; i++) {
+                        var resultObj = data.result.result[i];
+                        var date = new Date();
+                        date.setTime(resultObj.modifyTime);
+                        resultObj.modifyTime = Utils.formatTime(date, "YYYY-MM-DD HH:MS:SS");
+                    }
+                    createTableData(data)
+                    checkLocalAuthority(data);
+                    form.render('checkbox'); //
+                    laypage({
+                        cont: "pager",
+                        curr: dataJson.result.pageNo
+                        , pages: dataJson.result.totalPage
+                        , skip: true
+                        , jump: function (jumpObj, first) {
+                            if (!first) {
+                                search(jumpObj.curr);
+                            }
+                        }
+                    })
+                });
+            }
+
+            function createTableData(data) {
+                /*获取模板*/
+                var jsRenderTpl = $.templates('#j-con-list'),
+                /*绑定数据*/
+                        finalTpl = jsRenderTpl(data.result);
+                $('#page_tbody').html(finalTpl)
+                $("#checkTba").tableCheck('success');
+                form.render('checkbox'); //
+                checkLocalAuthority(data)
+                bind();
+            }
+
+            function checkBox($box, checkValue, notCheckValue) {
+                if ($box.is(':checked')) {
+                    return checkValue;
+                } else {
+                    return notCheckValue;
+                }
+            }
+
+            $("#search_id").click(function () {
+                search();
+            })
+            function bind() {
+                $("#page_tbody .state_uhandle a").click(function () {
+                    var url = "";
+                    var data = {}
+                    if ($(this).attr("authority_code") == "allot_deleted") {
+                        url = "/admin/allot/deleted.json"
+                        data.allotCodeList = $(this).attr("allot");
+                        ajaxsend(data, url, function () {
+                            layer.alert("操作成功", {}, function (index) {
+                                layer.close(index);
+                                search(currPageNo);
+                            })
+
+                        })
+                    } else if ($(this).attr("authority_code") == "allot_save") {
+                        openEditContent("修改分配", {allotCode: $(this).attr("allot")}, "/admin/allot/info.json", function (dataJson) {
+                            allotInfo = dataJson.result;
+                            return dataJson.result;
+                        })
+                    } else if ($(this).attr("authority_code") == "allot_info") {
+                        openEditContent("分配信息", {allotCode: $(this).attr("allot")}, "/admin/allot/info.json", function (dataJson) {
+                            allotInfo = dataJson.result;
+                            return dataJson.result;
+                        }, function (dataJson) {
+                            if (!Utils.isContain(dataJson.authorityCodeList, "allot_save")) {
+                                $("#form1 input").attr("disabled", "disabled");
+                                return false;
+                            } else {
+                                return true;
+                            }
+
+                        })
+                    }
+                })
+            }
+
+            function dealProvince(provinceObj) {
+                var value = provinceObj.attr("value")
+                provinceObj.empty()
+                provinceObj.append("<option value=''>请选择省份</option>");
+                var jsRenderTpl = $.templates('#j-option'),
+                        finalTpl = jsRenderTpl({result: provinceList});
+                provinceObj.append(finalTpl);
+                if (Utils.isNotBlack(value)) {
+                    provinceObj.val(value);
+                }
+            }
+
+            function dealCityArea(cityAreaObj, cityList, optionValue) {
+                var value = cityAreaObj.attr("value")
+                cityAreaObj.empty()
+                cityAreaObj.append("<option value=''>" + optionValue + "</option>");
+                var jsRenderTpl = $.templates('#j-option'),
+                        finalTpl = jsRenderTpl({result: cityList});
+                cityAreaObj.append(finalTpl);
+                if (Utils.isNotBlack(value)) {
+                    cityAreaObj.val(value);
+                }
+            }
+
+            function bindAreaSku() {
+                $(".layui-btn-deleted").unbind();
+                $(".layui-btn-add-area").unbind();
+                $(".layui-btn-add_sku").unbind();
+                $(".sku_input").unbind();
+                $(".layui-btn-add_sku").click(function () {
+                    var trObj = $(this).parents("tr").clone();
+                    trObj.find(".child_detail_sku_Id").val("");
+                    trObj.find(".child_detail_sku_code").val("");
+
+                    trObj.find(".sku_input").val("");
+                    trObj.find(".text_left").html("");
+                    $(this).parents("table").append(trObj);
+                    bindAreaSku();
+                });
+                $(".sku_input").keyup(function () {
+                    var skuCode = $(this).val();
+                    var that = $(this)
+                    if (Utils.isNotBlack($.trim(skuCode))) {
+                        var detailIdList = new Array();
+                        $(".child_detail_sku_Id").each(function () {
+                            var detailId = $(this).val();
+                            if (Utils.isNotBlack(detailId)) {
+                                detailIdList.push(detailId);
+                            }
+                        })
+                        if (detailIdList.length == 0) {
+                            detailIdList = undefined;
+                        }
+                        ajaxsend({
+                            skuCode: $.trim(skuCode),
+                            detailIdList: detailIdList
+                        }, "/admin/allot/product/list.json", function (dataJson) {
+                            if (dataJson.result.length > 0) {
+                                var jsRenderTpl = $.templates('#j-sku-td'),
+                                        finalTpl = jsRenderTpl(dataJson);
+                                that.parents(".mizone-input-number").find(".mizone-input-up").html(finalTpl);
+                                that.parents(".mizone-input-number").find(".mizone-input-up").show();
+                                that.parents(".mizone-input-number").find(".mizone-input-up").find(".sku_dd").click(function () {
+                                    var id = $(this).attr("data-id")
+                                    $(this).parents(".mizone-input-up").hide();
+                                    for (var i = 0; i < dataJson.result.length; i++) {
+                                        var dataObj = dataJson.result[i];
+                                        if (dataObj.id == id) {
+                                            var trObj = $(this).parents("tr");
+                                            var name = Utils.isNotBlack(dataObj.fullName) ? dataObj.fullName : dataObj.shortName
+                                            trObj.find(".child_detail_sku_Id").val(dataObj.id);
+                                            trObj.find(".child_detail_sku_code").val(dataObj.skuCode);
+
+
+                                            trObj.find(".sku_input").val(dataObj.skuCode);
+                                            trObj.find(".text_left").html(name);
+                                            break;
+                                        }
+                                    }
+                                })
+                            } else {
+                                that.parents(".mizone-input-number").find(".mizone-input-up").html("")
+                                that.parents(".mizone-input-number").find(".mizone-input-up").hide();
+                            }
+                        })
+                    } else {
+                        $(".mizone-input-up").hide();
+                    }
+                });
+                $(".layui-btn-deleted").click(function () {
+                    if ($(this).parents("table").find(".layui-btn-deleted").length > 1) {
+                        $(this).parents("tr").remove();
+                    }
+                })
+                $(".layui-btn-add-area").click(function () {
+                    var trObj = $(this).parents("tr").clone();
+                    $(this).parents("table").append(trObj);
+                    dealProvince(trObj.find(".province_class"));
+                    trObj.find(".city_class").empty();
+                    trObj.find(".city_class").append("<option value=''>请选择城市</option>");
+                    trObj.find(".area_class").empty();
+                    trObj.find(".area_class").append("<option value=''>请选择区域</option>");
+                    bindAreaSku();
+                    form.render();
+                });
+                form.on('select', function (data) {
+                    if ($(data.elem).hasClass("province_class")) {
+                        if (!Utils.isNotNull(cityMap)) {
+                            cityMap = new Map();
+                        }
+                        var provinceThat = $(data.elem);
+                        var cityList = cityMap.get(data.value);
+                        if (!(Utils.isNotNull(cityList) && cityList.length > 0)) {
+                            ajaxsend({parentId: data.value}, "/admin/common/area/list.json", function (dataJson) {
+                                var cityList = dataJson.result;
+                                cityMap.push(data.value, cityList);
+                                dealCityArea(provinceThat.parents("tr").find(".city_class"), cityList, "请选择城市")
+                                form.render();
+                            }, undefined, true);
+                        } else {
+                            dealCityArea(provinceThat.parents("tr").find(".city_class"), cityList, "请选择城市")
+                        }
+                    } else if ($(data.elem).hasClass("city_class")) {
+                        if (!Utils.isNotNull(areaMap)) {
+                            areaMap = new Map();
+                        }
+                        var cityThat = $(data.elem);
+                        var areaList = areaMap.get(data.value);
+                        if (!(Utils.isNotNull(areaList) && areaList.length > 0)) {
+                            ajaxsend({parentId: data.value}, "/admin/common/area/list.json", function (dataJson) {
+                                var areaList = dataJson.result;
+                                areaMap.push(data.value, areaList);
+                                dealCityArea(cityThat.parents("tr").find(".area_class"), areaList, "请选择区域");
+                                form.render();
+                            }, undefined, true);
+                        } else {
+                            dealCityArea(cityThat.parents("tr").find(".area_class"), areaList, "请选择区域")
+                        }
+                    }
+                    form.render();
+                });
+            }
+
+            function bindCategoryBrand() {
+                $('#select_category_list').on('click', function () {
+                    var hasSku = false;
+                    $(".child_detail_sku_Id").each(function () {
+                        if (Utils.isNotBlack($(this).val())) {
+                            hasSku = true;
+                        }
+                    })
+                    if (hasSku) {
+                        layer.alert("有sku的情况下，分类不作为选项", {}, function (index) {
+                            layer.close(index);
+                        })
+                        return;
+                    }
+                    layer.open({
+                        title: "选择分类",
+                        type: 1
+                        , content: $("#select_category")            //弹窗内容
+                        , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                        , btn: ["确定", "取消"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'r',
+                        yes: function (index, item) {
+                            $("#select_category input[type='checkbox']").each(function () {
+                                if (!Utils.isNotNull(allotInfo)) {
+                                    allotInfo = {};
+                                }
+                                allotInfo.categoryIdList = new Array();
+                                if (Utils.checkBox($(this), true, false)) {
+                                    allotInfo.categoryIdList.push($(this).val());
+                                }
+                            });
+                            layer.close(index);
+                        },
+                        btn2: function () {
+                            $("#select_category").hide();
+                        }
+                    })
+                });
+                $('#select_brand_list').on('click', function () {
+                    var hasSku = false;
+                    $(".child_detail_sku_Id").each(function () {
+                        if (Utils.isNotBlack($(this).val())) {
+                            hasSku = true;
+                        }
+                    })
+                    if (hasSku) {
+                        layer.alert("有sku的情况下，分类不作为选项", {}, function (index) {
+                            layer.close(index);
+                        })
+                        return;
+                    }
+                    layer.open({
+                        title: "选择品牌",
+                        type: 1
+                        , content: $("#select_brand")            //弹窗内容
+                        , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                        , btn: ["确定", "取消"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'r',
+                        yes: function (index, item) {
+                            $("#select_brand input[type='checkbox']").each(function () {
+                                if (!Utils.isNotNull(allotInfo)) {
+                                    allotInfo = {};
+                                }
+                                allotInfo.brandIdList = new Array();
+                                if (Utils.checkBox($(this), true, false)) {
+                                    allotInfo.brandIdList.push($(this).val());
+                                }
+                            })
+                            layer.close(index);
+                        },
+                        btn2: function () {
+                            $("#select_brand").hide();
+                        }
+                    })
+
+                });
+            }
+
+            /**
+             * 选择省份
+             * */
+            function dealAreaProvince() {
+                if (Utils.isNotNull(provinceList) && provinceList.length > 0) {
+                    for (var i = 0; i < $(".province_class").length; i++) {
+                        dealProvince($($(".province_class").get(i)))
+                    }
+                    form.render();
+
+                } else {
+                    ajaxsend("", "/admin/common/province/list.json", function (dataJson) {
+                        provinceList = dataJson.result;
+                        for (var i = 0; i < $(".province_class").length; i++) {
+                            dealProvince($($(".province_class").get(i)))
+                        }
+                        form.render();
+                    }, undefined, true);
+                }
+            }
+
+            function dealAreaCity(parentIdList, type) {
+                var tempParentIdList = new Array();
+                var areaCityList = null;
+                var areaCityMap = null;
+                var name = null;
+                if (type == "city") {
+                    if (!Utils.isNotNull(cityMap)) {
+                        cityMap = new Map();
+                    }
+                    areaCityMap = cityMap;
+                    name = "城市"
+                } else {
+                    if (!Utils.isNotNull(areaMap)) {
+                        areaMap = new Map();
+                    }
+                    areaCityMap = areaMap;
+                    name = "区域"
+                }
+
+                for (var i = 0; i < parentIdList.length; i++) {
+                    areaCityList = areaCityMap.get(parentIdList[i]);
+                    if (!(Utils.isNotNull(areaCityList) && areaCityList.length > 0)) {
+                        tempParentIdList.push(parentIdList[i]);
+                    }
+                }
+                if (tempParentIdList.length > 0) {
+                    ajaxsend({parentIds: tempParentIdList}, "/admin/common/area/list/parents.json", function (dataJson) {
+                        var areaCityList = dataJson.result;
+                        var tempAreaCityMap = new Map();
+                        var tempAreaCityList = null;
+                        for (var i = 0; i < areaCityList.length; i++) {
+                            tempAreaCityList = tempAreaCityMap.get(areaCityList[i].parentId);
+                            if (!Utils.isNotNull(tempAreaCityList)) {
+                                tempAreaCityList = new Array();
+                                tempAreaCityMap.push(areaCityList[i].parentId, tempAreaCityList);
+                            }
+                            tempAreaCityList.push(areaCityList[i]);
+                        }
+                        for (var i = 0; i < tempAreaCityMap.key().length; i++) {
+                            var key = tempAreaCityMap.key()[i];
+                            if (type == "city") {
+                                cityMap.push(key, tempAreaCityMap.get(key));
+                            } else {
+                                areaMap.push(key, tempAreaCityMap.get(key))
+                            }
+                        }
+                        if (type == "city") {
+                            areaCityMap = cityMap;
+                        } else {
+                            areaCityMap = areaMap;
+                        }
+                        $("." + type + "_class").each(function () {
+                            var areaCityClass = $(this);
+                            var parentId = areaCityClass.attr("parent_id")
+                            if (Utils.isNotBlack(parentId)) {
+                                dealCityArea(areaCityClass, areaCityMap.get(parentId), "请选择" + name)
+                            }
+                        });
+                        form.render();
+                    }, undefined, true);
+                } else {
+                    $("." + type + "_class").each(function () {
+                        var areaCityClass = $(this);
+                        var parentId = areaCityClass.attr("parent_id")
+                        if (Utils.isNotBlack(parentId)) {
+                            dealCityArea(areaCityClass, areaCityMap.get(parentId), "请选择" + name)
+                        }
+
+                    });
+                }
+            }
+
+            function openEditContent(title, paramter, url, dataDeal, openAfterDeal) {
+                var isUpdate = true;
+                dialog.open({
+                    paramter: paramter,
+                    url: url,
+                    dataDeal: dataDeal,
+                    id: "j-edit-content",
+                    removeId: "form1",
+                    bind: function () {
+                        if (!(Utils.isNotNull(brandList) && brandList.length > 0)) {
+                            ajaxsend("", "/admin/common/brand/list.json", function (dataJson) {
+                                brandList = dataJson.result;
+                                appendBrand()
+                            }, undefined, true);
+                        }
+                        if (!(Utils.isNotNull(categoryList) && categoryList.length > 0)) {
+                            ajaxsend("", "/admin/common/category/list.json", function (dataJson) {
+                                categoryList = dataJson.result;
+                                appendCategory();
+                            }, undefined, true);
+                        }
+                        if (!(Utils.isNotNull(platformList) && platformList.length > 0)) {
+                            ajaxsend("", "/admin/common/platform/list.json", function (dataJson) {
+                                platformList = dataJson.result;
+                                appendPlatform();
+                            }, undefined, true);
+                        }
+                        if (!(Utils.isNotNull(warehouseList) && warehouseList.length > 0)) {
+                            ajaxsend("", "/admin/common/warehouse/listAll.json", function (dataJson) {
+
+                                for (var i = 0; i < dataJson.result.length; i++) {
+                                    var warehouseObj = dataJson.result[i];
+                                    warehouseObj.name = warehouseObj.companyShortName;
+                                }
+                                warehouseList = dataJson.result
+                                appendWarehouse()
+                            }, undefined, true);
+                        }
+                        if (!(Utils.isNotNull(provinceList) && provinceList.length > 0)) {
+                            ajaxsend("", "/admin/common/province/list.json", function (dataJson) {
+                                provinceList = dataJson.result;
+                                for (var i = 0; i < $(".province_class").length; i++) {
+                                    dealProvince($($(".province_class").get(i)))
+                                }
+                                form.render();
+                            }, undefined, true);
+                        } else {
+                            for (var i = 0; i < $(".province_class").length; i++) {
+                                dealProvince($($(".province_class").get(i)))
+                            }
+                            form.render();
+                        }
+                        appendPlatform();
+                        appendCategory();
+                        appendBrand();
+                        appendWarehouse()
+                        bindCategoryBrand();
+                        bindAreaSku();
+                        if (Utils.isNotNull(allotInfo) && Utils.isNotNull(allotInfo.allotAreaInfoSet) && allotInfo.allotAreaInfoSet.length > 0) {
+                            for (var i = 0; i < allotInfo.allotAreaInfoSet.length; i++) {
+                                if (i != 0) {
+                                    $(".layui-btn-add-area:eq(0)").click();
+                                }
+                            }
+                            var i = 0;
+                            var tempProvinceIdList = new Array();
+                            var tempCityIdList = new Array();
+                            $(".layui-btn-add-area").each(function () {
+                                var areaInfoObj = allotInfo.allotAreaInfoSet[i];
+                                var trObj = $(this).parents("tr");
+                                if (Utils.isNotNull(areaInfoObj.provinceId)) {
+                                    trObj.find(".province_class").attr("value", areaInfoObj.provinceId);
+                                    trObj.find(".city_class").attr("parent_id", areaInfoObj.provinceId);
+                                    tempProvinceIdList.push(areaInfoObj.provinceId)
+                                }
+                                if (Utils.isNotNull(areaInfoObj.cityId)) {
+                                    trObj.find(".city_class").attr("value", areaInfoObj.cityId);
+                                    trObj.find(".area_class").attr("parent_id", areaInfoObj.cityId);
+                                    tempCityIdList.push(areaInfoObj.cityId)
+                                }
+                                if (Utils.isNotNull(areaInfoObj.areaId)) {
+                                    trObj.find(".area_class").attr("value", areaInfoObj.areaId);
+
+                                }
+                                i++
+                            })
+                            /**
+                             * 选择地址处理
+                             */
+                            dealAreaProvince()
+                            dealAreaCity(tempProvinceIdList, "city");
+                            dealAreaCity(tempCityIdList, "area");
+                        }
+                        if (Utils.isNotNull(allotInfo) && Utils.isNotNull(allotInfo.productIdList) && allotInfo.productIdList.length > 0) {
+                            for (var i = 0; i < allotInfo.productIdList.length; i++) {
+                                if (i != 0) {
+                                    $(".layui-btn-add_sku:eq(0)").click();
+                                }
+                                /**
+                                 * 选择SKU
+                                 */
+                                ajaxsend({
+                                    detailIdList: allotInfo.productIdList
+                                }, "/admin/marketing/gift/product/list/by_id.json", function (dataJson) {
+                                    var i = 0;
+                                    $(".sku_input").each(function () {
+                                        var dataObj = dataJson.result[i];
+                                        var trObj = $(this).parents("tr");
+                                        var name = Utils.isNotBlack(dataObj.fullName) ? dataObj.fullName : dataObj.shortName
+                                        trObj.find(".child_detail_sku_Id").val(dataObj.id);
+                                        trObj.find(".child_detail_sku_code").val(dataObj.skuCode);
+                                        trObj.find(".sku_input").val(dataObj.skuCode);
+                                        trObj.find(".text_left").html(name);
+                                        i++;
+                                    })
+                                })
+                            }
+                        }
+                    },
+                    openDilog: function (dataJson) {
+                        selectSkuCodeCheck();
+                        layer.open({
+                            title: title
+                            , type: 1
+                            , content: $("#form1")
+                            , area: ["763px", "500px"]
+                            , btn: ["确定", "取消"]
+                            , closeBtn: 0
+                            , btnAlign: 'r'
+                            , yes: function (index, item) {
+                                form.on("submit(form_submit)", function () {
+                                    ajaxsend(createAllotInfo(), "/admin/allot/save.json", function (dataJson) {
+                                        layer.alert(title + "成功！", function (alertIndex) {
+                                            layer.close(alertIndex);
+                                            layer.close(index);
+                                            search(currPageNo)
+                                        })
+                                    }, "post", false);
+                                    return false;
+                                })
+                                $("#form_submit").click();
+                            },
+                            btn2: function (index) {
+                                layer.close(index);
+                            }
+                        });
+                        if (Utils.isNotNull(openAfterDeal)) {
+                            isUpdate = openAfterDeal.call(this, dataJson);
+                        }
+                    }
+                })
+            }
+
+            function checkLocalAuthority(data) {
+                checkAuthority(data.authorityCodeList, ["allot_deleted", "allot_info", "allot_save"]);
+            }
+
+            search();
+            callParent.isLoadEnd("allot_list");
+            callParent.register(function () {
+                search(currPageNo)
+            }, "search");
+        })
+    </script>
+</body>
+</html>

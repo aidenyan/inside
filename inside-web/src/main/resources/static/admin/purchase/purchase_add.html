@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>采购单管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+</head>
+<body>
+<div class="content-wrpper" id="divBody" style="display: none;">
+    <div class="list">
+        <form class="layui-form" action="">
+            <input id="hidId" type="hidden" name="id"/>
+            <input id="hidTotalAmount" type="hidden" name="totalAmount"/>
+            <input id="hidWarehouseName" type="hidden" name="warehouseName"/>
+            <input id="hidSupplierName" type="hidden" name="supplierName"/>
+            <!--<div class="infor-show">
+                <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                <span>采购单信息</span>
+            </div>
+            <hr>-->
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>采购单信息</span>
+            </div>
+            <div class="layui-form mizone-add-form" id="purchaseContent">
+                <div class="layui-form-item form-item-margButtom5">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>供应商</label>
+                        <div class="layui-input-inline">
+                            <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-verify="required"
+                                    lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">发送邮件</label>
+                        <div class="layui-input-inline">
+                            <input id="cbxSended" type="checkbox" name="sended" lay-skin="primary" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item form-item-margButtom5">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>采购方式</label>
+                        <div class="layui-input-inline">
+                            <select id="slcPurchaseType" name="purchaseType" lay-filter="purchaseType"
+                                    lay-verify="required"
+                                    lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>收货仓库</label>
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId" lay-filter="warehouse" lay-verify="required"
+                                    lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item form-item-margButtom5">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>联系人</label>
+                        <div class="layui-input-inline">
+                            <input id="txtConName" type="text" name="contactName" class="layui-input"
+                                   lay-verify="required|enChar" placeholder="限输中文或英文">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>联系电话</label>
+                        <div class="layui-input-inline">
+                            <input id="txtPhone" type="text" name="contactTel" class="layui-input"
+                                   lay-verify="required|phone">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item form-item-margButtom5">
+                    <div class="layui-inline" style="width: 513px;">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>收货地区</label>
+                        <div class="layui-input-inline mizonbe-input-inline-select" id="proviceList">
+                            <select id="province" lay-filter="provinceFilter">
+                                <option value="">请选择省</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline mizonbe-input-inline-select" style="display: none" id="cityList">
+                            <select id="city" lay-filter="cityFilter" lay-verify="required">
+                                <option value="">请选择市</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline mizonbe-input-inline-select" style="display: none" id="areaList">
+                            <select id="sysarea">
+                                <option value="">请选择县/区</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>详细地址</label>
+                        <div class="layui-input-inline">
+                            <input id="txtAddress" type="text" name="address" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item form-item-margButtom5">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">期待到货日期</label>
+                        <div class="layui-input-inline">
+                            <input id="txtHopeTime" class="layui-input" name="hopeTime"
+                                   onclick="layui.laydate({elem: this, min: laydate.now(0)})">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">备注</label>
+                        <div class="layui-input-inline">
+                            <input id="txtRemark" type="text" name="remark" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="infor-show">
+                <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                <span>商品信息</span>
+            </div>
+            <hr>-->
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>商品信息</span>
+            </div>
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_commodity"> <i class="layui-icon"
+                                                                                                style="vertical-align: middle">
+                    &#xe61f;</i>添加商品</a>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th class="wp30">SKU编码/商品名称</th>
+                        <th class="wp10">品牌</th>
+                        <th class="wp5">单位</th>
+                        <th class="wp10">商品分类</th>
+                        <th class="width70 number">采购数量</th>
+                        <th class=" number" style="width: 89px">采购指导价</th>
+                        <th class="width70 number">采购单价</th>
+                        <th class="wp5 number">小计</th>
+                        <th class="width70 number">销售库存</th>
+                        <th class="width70 number">实际库存</th>
+                        <th class="wp5 number">月销量</th>
+                        <th class="wp5">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="purchaseItemsContent">
+                    </tbody>
+                    <tr>
+                        <td>合计</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td id="tdTotalNum" class="number"></td>
+                        <td></td>
+                        <td></td>
+                        <td id="tdTotalAmount" class="number"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="save">保存并关闭</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveAdd">保存并新增</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="toApproval">提交审核</button>
+                <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="layui-form dialog" id="form_addCommodity" style="display: none">
+    <form>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label padd_top" style="width: 30px;">品牌</label>
+                <div class="layui-input-inline">
+                    <select id="slcBrand" name="brandId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <label class="layui-form-label padd_top" style="width: 60px;">商品分类</label>
+                <div class="layui-input-inline">
+                    <select id="slcProductType" name="typeId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline ">
+                <input type="text" name="inputStr" placeholder="商品编码/SKU编码" style="width: 250px;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+        </div>
+    </form>
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                <th>SKU编码</th>
+                <th>品牌</th>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>商品分类</th>
+                <!--<th>上月销量</th>-->
+            </tr>
+            </thead>
+            <tbody id="proListContent">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script id="tplProList" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td><input name="skuCodes" lay-skin="primary" type="checkbox" value="{{item.skuCode}}"></td>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+        <!--<td>-</td>-->
+    </tr>
+    {{#  }); }}
+    {{#  if(d.length == 0){ }}
+    <tr>
+        <td colspan="7" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="tplPurchaseType" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script id="tplWarehouse" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplSupplier" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplOption" type="text/html">
+    <option value="-1">全部</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+
+<script id="tplPurchaseItems" type="text/html">
+    {{#  layui.each(d.purchaseItemDTOList, function(index, item){ }}
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input class="proSku" type="hidden" name="purchaseItemMap[{{item.skuCode}}].skuCode"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="" placeholder="商品名称/SKU编码" value="{{item.skuCode}} / {{item.productName}}"
+                       class="layui-input small mizo-srarch-input productSearch" style="width: 100%"
+                       lay-verify="required"/>
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;"
+                       style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.productUnit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td class="number">
+            <input type="number" min="1" name="purchaseItemMap[{{item.skuCode}}].purchaseNum"
+                   class="layui-input small mizo-srarch-input proNum" style="width: 100%; text-align: right;"
+                   value="{{item.purchaseNum || '' }}" lay-verify="required|min"></td>
+        <td class="number">{{item.cost || ''}}</td>
+        <td class="number"><input class="layui-input small mizo-srarch-input proPrice" min="0" type="text"
+                                  name="purchaseItemMap[{{item.skuCode}}].purchasePrice"
+                                  style="width: 100%; text-align: right; padding-right: 8px;"
+                                  value="{{item.purchasePrice || '' }}" lay-verify="required|min|price"/></td>
+        <td class="number">{{item.purchaseNum * item.purchasePrice}}</td>
+        <td class="number">{{item.saleStock || ''}}</td>
+        <td class="number">{{item.stock || ''}}</td>
+        <td class="number">{{item.saleCount || ''}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="delete" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplAddItems" type="text/html">
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input type="text" name="" placeholder="商品名称/SKU编码" style="width: 100%;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input productSearch">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;"
+                       style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><input type="number" min="1" name="" class="layui-input small mizo-srarch-input" style="width: 100%;"></td>
+        <td></td>
+        <td><input type="text" name="" class="layui-input small mizo-srarch-input" style="width: 100%;"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="delete" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+<script id="tplProductLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li skucode="{{item.skuCode}}">{{item.skuCode}} / {{item.name}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+<script>
+    var form;
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        form = layui.form();
+        var layer = layui.layer
+                , $ = layui.jquery
+                , laytpl = layui.laytpl
+                , myAjax = layui.myAjax;
+
+        form.verify({
+            enChar: [/^[\u4e00-\u9fa5a-zA-Z]+$/, '请输入中文或英文'],
+            price: [/^\d+(?:\.\d{1,2})?$/, '金额格式错误'],
+            min: function (value, item) {
+                var result = "";
+                var vmin = $(item).attr('min') - 0;
+                if (value < vmin) {
+                    result = "请选择一个不小于" + vmin + "的值";
+                }
+                return result;
+            }
+        });
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        form.on('select(provinceFilter)', function (data) {
+            changeProvince(data.value);
+        });
+        form.on('select(cityFilter)', function (data) {
+            changeCity(data.value);
+        });
+
+        //保存
+        form.on('submit(save)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/purchase/save.json', function () {
+                    layer.msg('保存成功');
+                    callParent.parentUse("purchase_list", "refresh");
+                    callParent.openTab("purchase_list");
+                    callParent.closeTab('purchase_add');
+                }, $.extend(data.field, {'areaId': getselectAreaId()}), 'post');
+            }
+            return false;
+        });
+
+        //保存并新增
+        form.on('submit(saveAdd)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/purchase/save.json', function () {
+                    //layer.alert('保存成功');
+                    parent.$("#purchase_add").attr('src', 'admin/purchase/purchase_add.html');
+                }, $.extend(data.field, {'areaId': getselectAreaId()}), 'post');
+            }
+            return false;
+        });
+
+        form.on('select(warehouse)', function (data) {
+            $("#hidWarehouseName").val(data.othis.find(".layui-this").html());
+            myAjax.ajaxSend('/admin/common/warehouse/get.json', function (dataJson) {
+                $("#txtConName").val(dataJson.result.legalPerson);
+                $("#txtPhone").val(dataJson.result.contactPhone);
+                $("#txtAddress").val(dataJson.result.address);
+                getAreaSelect(dataJson.result.areaId);
+            }, {'companyOrgId': data.value});
+        });
+
+        form.on('select(supplier)', function (data) {
+            $("#hidSupplierName").val(data.othis.find(".layui-this").html());
+            myAjax.getTpl('purchaseItemsContent', 'tplAddItems', {"result": []});
+        });
+
+        form.on('submit(toApproval)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/purchase/toApproval.json', function () {
+                    layer.msg('提交成功');
+                    callParent.parentUse("purchase_list", "refresh");
+                    callParent.openTab("purchase_list");
+                    callParent.closeTab('purchase_add');
+                }, $.extend(data.field, {'areaId': getselectAreaId()}), 'post');
+            }
+            return false;
+        });
+
+        $("#cancel").click(function () {
+            callParent.openTab('purchase_list');
+            callParent.closeTab('purchase_add');
+        });
+
+        form.on('submit(search)', function (data) {
+            var suppId = $("#slcSupplier").val();
+            if (suppId != null && suppId != '') {
+                var varSku = [];
+                $("#purchaseItemsContent").find(".proSku").each(function () {
+                    varSku.push($(this).val());
+                });
+                myAjax.ajaxTpl('/storage/listProduct.json', 'proListContent', 'tplProList', false, null, $.extend(data.field, {
+                    "notInSku": varSku,
+                    'supplierId': suppId
+                }), 'post');
+            } else {
+                layer.alert('请选择供应商');
+            }
+            return false;
+        });
+
+        $("#purchaseItemsContent").on('click', '.delete', function () {
+            $(this).closest('tr').remove();
+            totalNum();
+        });
+
+        var varTr;
+        $(document).on('click', '.change', function () {
+            varTr = $(this).closest("tr");
+            var suppId = $("#slcSupplier").val();
+            var wareId = $("#slcWarehouse").val();
+            if (suppId != null && suppId != '' && wareId != null && wareId != '') {
+                $("#proListContent").html('');
+                $("#form_addCommodity").find('input[type="checkbox"]').attr('checked', false);
+                layer.open({
+                    title: "添加商品"
+                    , type: 1
+                    , content: $("#form_addCommodity")            //弹窗内容
+                    , area: ["800px", "500px"]         //设置窗体高度 和宽度
+                    , btn: ["确定", "取消"]
+                    , closeBtn: 0                      //取消右上角关闭按钮
+                    , btnAlign: 'r'
+
+                    , success: function (layero, index) {
+                        //获取分类
+                        myAjax.ajaxTpl("/admin/common/category/list.json", 'slcProductType', 'tplOption');
+                        //获取品牌
+                        myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'tplOption');
+
+                        layero.addClass('layui-form');
+                        layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '');
+                        form.render();
+                    }
+                    , yes: function (index, item) {
+                        myAjax.ajaxTpl('/purchase/getItemDTOList.json?wareId=' + wareId, 'purchaseItemsContent', 'tplPurchaseItems', true, function () {
+                            layer.close(index);
+                            varTr.remove();
+                        }, $(item.selector + " input[name='skuCodes']:enabled:checked").serialize());
+                    }
+                });
+            } else {
+                layer.alert('请选择供应商和仓库');
+            }
+            return false;
+        });
+
+        $("#purchaseItemsContent").on('keyup', '.productSearch', function () {
+            var varThis = $(this);
+            varThis.prev().val('');
+            var suppId = $("#slcSupplier").val();
+            var wareId = $("#slcWarehouse").val();
+            if (suppId != null && suppId != '' && wareId != null && wareId != '') {
+                var varSku = [];
+                $("#purchaseItemsContent").find(".proSku").each(function () {
+                    varSku.push($(this).val());
+                });
+                myAjax.ajaxSend('/storage/listProduct.json', function (dataJson) {
+                    var getTpl = $("#tplProductLi").html();
+                    laytpl(getTpl).render(dataJson.result, function (html) {
+                        varThis.parent().children('.proSearchDiv').each(function () {
+                            $(this).remove();
+                        });
+                        var varDivPL = '<div class="proSearchDiv" style="height: auto;">' + html + '</div>';
+                        if (dataJson.result != null && dataJson.result != '') {
+                            varThis.next().after(varDivPL);
+                            varTr = varThis.closest("tr");
+                            $(".proSearchDiv").find('li').click(function () {
+                                var vSkuCode = $(this).attr('skucode');
+                                myAjax.ajaxTpl('/purchase/getItemDTOList.json?skuCodes=' + vSkuCode + '&wareId=' + wareId, 'purchaseItemsContent', 'tplPurchaseItems', true, function () {
+                                    varTr.remove();
+                                });
+                                $(this).closest('div').remove();
+                            });
+                        }
+                    });
+                }, {"inputStr": varThis.val(), "notInSku": varSku, 'supplierId': suppId}, 'post');
+            } else {
+                layer.alert('请选择供应商和仓库');
+            }
+        });
+
+        $("#purchaseItemsContent").on('blur', '.productSearch', function () {
+            var varThis = $(this);
+            var hideSku = varThis.prev().val();
+            if (hideSku == undefined || hideSku == '') {
+                varThis.val('');
+            }
+            //varThis.next().next().delay(120001).hide();
+        });
+
+        var varId = params.get('purchaseId');
+        var vSkus = params.get('skus');
+        var vWare = params.get('resHouse');
+        var vSupp = params.get('resSup');
+        if (varId != null) {
+            myAjax.ajaxSend("/purchase/get.json?id=" + varId, function (data) {
+                $("#hidId").val(varId);
+                $("#hidTotalAmount").val(data.result.totalAmount);
+                $("#hidWarehouseName").val(data.result.warehouseName);
+                $("#hidSupplierName").val(data.result.supplierName);
+                if (data.result.sended) {
+                    $("#cbxSended").attr('checked', true);
+                }
+                $("#txtConName").val(data.result.contactName);
+                $("#txtPhone").val(data.result.contactTel);
+                $("#txtAddress").val(data.result.address);
+                $("#txtHopeTime").val(laydate.now(data.result.hopeTime));
+                $("#txtRemark").val(data.result.remark);
+                //收货地区
+                getAreaSelect(data.result.areaId);
+                //获取仓库
+                myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'tplWarehouse', true, function () {
+                    $("#slcWarehouse").val(data.result.warehouseId);
+                });
+                //获取采购类型
+                myAjax.ajaxTpl("/purchase/getPurchaseType.json", 'slcPurchaseType', 'tplPurchaseType', true, function () {
+                    $("#slcPurchaseType").val(data.result.purchaseType);
+                });
+                //获取供应商
+                myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true, function () {
+                    $("#slcSupplier").val(data.result.supplierId);
+                });
+                //获取采购明细
+                myAjax.getTpl('purchaseItemsContent', 'tplPurchaseItems', data, false, function () {
+                    $("#purchaseItemsContent .proNum").eq(0).keyup();
+                    showBody();
+                });
+            });
+        } else if (vSkus != null) {
+            myAjax.ajaxSend("/purchase/warnPurchase.json", function (data) {
+                $("#hidWarehouseName").val(data.result.warehouseName);
+                $("#hidSupplierName").val(data.result.supplierName);
+                //收货地区
+                getAreaSelect(data.result.areaId);
+                //获取仓库
+                myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'tplWarehouse', true, function () {
+                    $("#slcWarehouse").val(data.result.warehouseId);
+                });
+                //获取入库类型
+                myAjax.ajaxTpl("/purchase/getPurchaseType.json", 'slcPurchaseType', 'tplPurchaseType', true);
+                //获取供应商
+                myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true, function () {
+                    $("#slcSupplier").val(data.result.supplierId);
+                });
+                //获取采购明细
+                myAjax.getTpl('purchaseItemsContent', 'tplPurchaseItems', data, false, function () {
+                    $("#purchaseItemsContent .proNum").eq(0).keyup();
+                    showBody();
+                });
+            }, {"skus": vSkus, "resHouse": vWare, "resSup": vSupp});
+        } else {
+            //获取仓库
+            myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'tplWarehouse', true);
+            //获取入库类型
+            myAjax.ajaxTpl("/purchase/getPurchaseType.json", 'slcPurchaseType', 'tplPurchaseType', true);
+            //获取供应商
+            myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true);
+            getProvinceList();
+            showBody();
+        }
+
+        $("#add_commodity").click(function () {
+            //获取入库明细
+            myAjax.getTpl('purchaseItemsContent', 'tplAddItems', {"result": []}, true);
+        });
+
+        function totalPrice() {
+            var varPrice = 0;
+            $("#purchaseItemsContent .proPrice").each(function () {
+                var currPrice = $(this).val() * $(this).parent().prev().prev().children().val();
+                $(this).parent().next().text(currPrice.toFixed(2));
+                varPrice = currPrice + varPrice;
+            });
+            $("#hidTotalAmount").val(varPrice.toFixed(2));
+            $("#tdTotalAmount").text(varPrice.toFixed(2));
+        }
+
+        $("#purchaseItemsContent").on("keyup", ".proPrice", function () {
+            totalPrice();
+        });
+
+        function totalNum() {
+            var varNum = 0;
+            $("#purchaseItemsContent .proNum").each(function () {
+                varNum = $(this).val() - 0 + varNum;
+            });
+            $("#tdTotalNum").text(varNum);
+            totalPrice();
+        }
+
+        $("#purchaseItemsContent").on("keyup change", ".proNum", function () {
+            totalNum();
+        });
+    });
+</script>
+
+</body>
+</html>

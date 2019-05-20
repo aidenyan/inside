@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>淘宝物流管理</title>
+   <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+    <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                 <button class="layui-btn layui-btn-small" id="refreshTaobaoExpress">刷新</button>
+                </div>
+            </div>
+        </div>
+
+    <!--table 数据-->
+    <div class="layui-form">
+        <table class="layui-table">
+       			<colgroup>
+                    <col width="40">
+                    <col width="200">
+                    <col width="200">
+                    <col width="250">
+                    <col width="250">
+                    <col >
+                </colgroup>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>淘宝物流名称</th>
+                <th>淘宝物流编号</th>
+ <!--               <th>匹配规则</th>
+   -->                <th>本地物流名称</th>
+               <th>本地物流编号</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="page_tbody">
+            </tbody>
+        </table>
+        </div>
+
+    <!--分页条-->
+    <div class="cf">
+        <div id="pageNum" class="text-r"></div>
+    </div>
+
+    </div>
+</div>
+<div class="layui-form dialog" id="form_editCommodity" style="display: none">
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th><input name=""  title=" " lay-skin="primary" type="radio"/></th>
+              	<th>序号</th>
+              	<th>本地物流名称</th>
+                <th>本地物流编号</th>
+            </tr>
+            </thead>
+            <tbody id="expressListContent">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td>{{item.name||''}}</td>
+        <td>{{item.code||''}}</td>
+        <td>{{item.localExpressName||''}}</td>
+        <td>{{item.localExpressCode||''}}</td>
+        <td class="state_uhandle">
+           <div class="">
+                <button class=" update" value="{{item.id}}" onclick="editExpress({{item.id}},'{{item.name}}')">
+                   <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+        <tr aglin='center'><td colspan="6"><div class="null-show"></div></td></tr>
+    {{#  } }}
+</script>
+<script id="localExpressListTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td><input name="" title=" " lay-skin="primary" type="radio" value="{{item.id}}"/></td>
+        <td>{{(index+1)}}</td>
+        <td>{{item.name||''}}</td>
+        <td>{{item.code||''}}</td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d==null||d.length === 0){ }}
+        <tr aglin='center'><td colspan="4">无数据</td></tr>
+    {{#  } }}
+</script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script src="../../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script type="text/javascript" src="../../common/js/common/ajaxsend.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript">
+var form,element,layer,laytpl,myAjax,laydate;
+$().ready(function () {
+	layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], function () {
+		form = layui.form();element = layui.element();layer=layui.layer;laytpl = layui.laytpl;myAjax = layui.myAjax;laydate = layui.laydate;
+		var orderObj = new Order(function (obj) {
+			myAjax.ajaxPage('/express/taoBaoExpressList.json','pageNum','page_tbody','pageTpl',orderObj.setOption());
+		});
+		 myAjax.ajaxPage('/express/taoBaoExpressList.json','pageNum','page_tbody','pageTpl',orderObj.setOption());
+		 editExpress=function(id,name){
+			 myAjax.ajaxTpl("/express/listExpressInfo.json", 'expressListContent', 'localExpressListTpl',false,function(){
+				 layer.open({
+					  type: 1,
+					  title: "物流关系对照["+name+"]",
+					  btn: ['确定', '取消'],
+					  closeBtn: 0,
+					  btnAlign: 'r',
+					  area: '600px',
+					  shadeClose: true,
+					  content: $('#form_editCommodity'),
+					  success:function (layero, index) {
+		                  layero.addClass('layui-form');
+		                  layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+		                  form.render();
+		              },
+					  yes: function(index){
+						updateExpress(id,$("#expressListContent input[type='radio']:checked").val(),index)
+						 }
+					});
+			 })
+			
+		 }
+		 updateExpress=function(id,LocalExpressId,index){
+			 myAjax.ajaxSend("/express/updateTaoBaoExpressToLocalExpress.json",function(data){
+				 if(data.result==true){
+					 layer.alert("保存成功");
+					 layer.close(index);
+					 myAjax.ajaxPage('/express/taoBaoExpressList.json','pageNum','page_tbody','pageTpl',orderObj.setOption());
+				 }
+			 },{"id":id,"localExpressId":LocalExpressId})
+		 }
+		 var refreshCount=0;
+		 $("#refreshTaobaoExpress").on("click",function(){
+			 layer.confirm('该操作会同步淘宝平台上的物流信息!!更新本地没有的淘宝物流！', {
+	    		 /* time: 0, //不自动关闭
+	    		  shade: 0.6,//遮罩透明度
+	      		  shadeClose:true,//点击遮罩关闭层
+	      		  btn: ['确定', '取消'],*/
+                 icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px'],
+	    		  yes: function(index){
+					 if(refreshCount==0){
+						 refreshCount=1;
+						 myAjax.ajaxSend("/express/taobaoExpressInit.json",function(data){
+							 if(data.result==true){
+								 refreshCount=0;
+								 window.location.reload();
+							 }
+						 })
+					 }
+	    		  }
+       	 })
+		 })
+	});
+   });
+
+</script>
+</body>
+</html>

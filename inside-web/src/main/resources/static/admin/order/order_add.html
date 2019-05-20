@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>新建订单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        .layui-form-checked i, .layui-form-checked:hover i{
+            color: #009cff;
+        }
+        .layui-form-checked span, .layui-form-checked:hover span{
+            background-color: #009cff;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list" >
+    	<form class="layui-form" action="">
+        <!-- header -->
+        <div class="layui-form mizone-add" id="formOrderInfo">
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>基础信息</span>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>上架平台</label>
+                    <div class="layui-input-inline" id="platformShow" lay-verify="platformShow">
+                    
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>会员</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" id="accountId">
+                        <input type="hidden" id="accountName">
+                        <input type="text" lay-verify="accountNo" id="accountNo" autocomplete="off" class="layui-input accountNo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>收货人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="reciver" id="reciver" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>收货人电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="required|phone" id="phone" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline" lay-verify="sysareaVerify">
+                    <label class="layui-form-label"><span style="color:red">*</span>收货地址</label>
+                    		<div style="width: 349px;float: left">
+                                <div class="layui-input-inline linkageSelection" id="proviceList">
+                                    <select id="province" lay-filter="provinceFilter">
+                                        <option value="">请选择省</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline linkageSelection" style="display: none" id="cityList">
+                                    <select id="city" lay-filter="cityFilter">
+                                        <option value="">请选择市</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline linkageSelection" style="display: none" id="areaList">
+                                    <select id="sysarea">
+                                        <option value="">请选择县/区</option>
+                                    </select>
+                                </div>
+                            </div>
+                </div>
+                 <div class="layui-inline">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input name="invoice" id="invoice" type="checkbox" name="" title="是否开票" lay-filter="invoice">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline ">
+                    <label class="layui-form-label"><span style="color:red">*</span>详细地址</label>
+                    <div class="layui-input-inline add-block-width">
+                        <input type="tel" name="fullAddress" lay-verify="fullAddress" id="fullAddress"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline ">
+                    <label class="layui-form-label">订单备注</label>
+                    <div class="layui-input-inline add-block-width">
+                        <textarea placeholder="请输入内容" class="layui-textarea" id="remark"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>商品信息</span>
+            </div>
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_commodity"> <i class="layui-icon"
+                                                                                                style="vertical-align: middle">
+                    &#xe61f;</i>添加商品</a>
+            </div>
+
+            </div>
+             <div class="layui-form">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th width="">SKU编码/商品名称</th>
+                        <th width="100px;">品牌</th>
+                        <th width="50px;">单位</th>
+                        <th width="200px;">商品分类</th>
+                        <th width="100px;">销售单价</th>
+                        <th width="100px;">下单数量</th>
+                        <th width="100px;">小计</th>
+                        <th width="70px">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="storageInItemsContent" lay-verify="productInfolistVerify">
+                    <tr>
+                    <td>
+			            <div style="position: relative;width: 100%">
+			                <input type="text" name="" placeholder="商品名称/SKU编码" style="width: 100%;"
+			                       class="layui-input small mizo-srarch-input productSearch">
+			                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+			            </div>
+			        </td>
+			        <td></td>
+			        <td></td>
+			        <td></td>
+			        <td></td>
+			        <td></td>
+			        <td></td>
+			        <td class="state_uhandle">
+			            <div class="">
+			                <button class="delete">
+			                    <i class="icon-delete"></i>
+			                </button>
+			            </div>
+			        </td>
+                    </tr>
+                    </tbody>
+                    <tr>
+                        <td>合计</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td id="tdTotalNum"></td>
+                        <td id="tdTotalPrice"></td>
+                        <td></td>
+                    </tr>
+                </table>
+            
+        </div>
+         <div class="layui-inline">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveOrderInfo">保存并关闭</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveOrderInfoContinue">保存并新增</button>
+                <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+         </div>
+          </form>
+          </div>
+        <!--table 数据-->
+    </div>
+<div class="layui-form dialog" id="form_addCommodity" style="display: none">
+    <form id="formOrdeProduct">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label padd_top" style="width: 30px;">品牌</label>
+                <div class="layui-input-inline">
+                    <select id="slcBrand" name="brandId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <label class="layui-form-label padd_top" style="width: 60px;">商品分类</label>
+                <div class="layui-input-inline">
+                    <select id="slcProductType" name="typeId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline ">
+                <input type="text" name="inputStr" placeholder="商品名称/SKU编码" style="width: 250px;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+        </div>
+        <div id="hidNotInSku" style="display: none;"></div>
+    </form>
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th></th>
+              	<th>SKU编码</th>
+                <th>品牌</th>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>商品分类</th>
+            </tr>
+            </thead>
+            <tbody id="proListContent">
+
+            </tbody>
+        </table>
+    </div>
+     <div class="cf" align="right" style="margin-right: 20px">
+        <div id="pageNum"></div>
+    </div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/orderInfo/orderAdd.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+<script id="platformTpl" type="text/html">
+ {{# layui.each(d, function(index, item){ }}
+ {{#  if(item.effective==false){ }}
+    <input type="radio" value="{{item.id}}" name="platform" lay-skin="primary" title="{{item.name}}(已禁用)" disabled="" lay-filter="platformFilter">
+    {{#  } }}
+{{#  if(item.effective==true&&item.id!=5){ }}<!--小车经销商暂时不显示，没有移接会员，会员校验做不了 -->
+    <input type="radio" value="{{item.id}}" name="platform" lay-skin="primary" title="{{item.name}}" lay-filter="platformFilter">
+    {{#  } }}
+ {{#  }); }}
+</script>
+<script id="tplAddItems" type="text/html">
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input type="text" name="" placeholder="商品名称/SKU编码" style="width: 100%;"
+                       class="layui-input small mizo-srarch-input productSearch">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+<script id="tplOption" type="text/html">
+ 	<option value="">请选择</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script id="tplProList" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="skuCodes" lay-skin="primary" type="checkbox" value="{{item.skuCode}}"></td>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplProductLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li skucode="{{item.skuCode}}" class="skucodeList">{{item.skuCode}} / {{item.name}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+<script id="tplMemberLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li areaId="{{item.areaId}}" reciverName="{{item.reciverName}}" reciverPhone="{{item.phone}}" address="{{item.address}}">{{item.fullAddress}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+<script id="tplStorageInItems" type="text/html">
+    {{#  layui.each(d.storageItemDTOList, function(index, item){ }}
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input class="proSku" type="hidden" name="{{item.productName}}"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="proskuCode" placeholder="商品名称/SKU编码" value="{{item.skuCode}} / {{item.productName}}"
+                       class="layui-input small mizo-srarch-input productSearch" style="width: 100%;" autocomplete="off">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td class="clearTd">{{item.brandName}}</td>
+        <td class="clearTd">{{item.productUnit}}</td>
+        <td class="clearTd">{{item.categoryName}}</td>
+        <td class="clearTd">
+            <input type="number" min="1" name="proPrice"
+                   class="layui-input small mizo-srarch-input proPrice" style="width:150px;text-align:center;"
+                   value="{{item.price || 0 }}" lay-verify="required"/></td>
+        <td class="clearTd">
+            <input type="number" min="1" name="proNum"
+                   class="layui-input small mizo-srarch-input proNum" style="width:150px;text-align:center;"
+                   value="{{item.num || 1 }}" lay-verify="required"/></td>
+        </td>
+		<td name="priceAmount" class="priceAmount clearTd">
+			{{(item.price || 0)*(item.num ||1)}}
+		</td>
+        <td class="clearTd state_uhandle">
+            <div class="">
+                <button class=" delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+
+<script id="tplOrderItemItems" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input class="proSku" type="hidden" name="{{item.name}}"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="proskuCode" placeholder="商品名称/SKU编码" value="{{item.skuCode}} / {{item.name}}"
+                       class="layui-input small mizo-srarch-input productSearch" style="width: 100%;">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.productUnit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td>
+            <input type="number" min="1" name="proPrice"
+                   class="layui-input small mizo-srarch-input proPrice" style="width:150px;text-align:center;"
+                   value="{{item.price || 0 }}" lay-verify="required"/></td>
+        <td>
+            <input type="number" min="1" name="proNum"
+                   class="layui-input small mizo-srarch-input proNum" style="width:150px;text-align:center;"
+                   value="{{item.num || 1 }}" lay-verify="required"/></td>
+        </td>
+		<td name="priceAmount" class="priceAmount">
+			{{(item.price || 0)*(item.num ||1)}}
+		</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class=" delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+	{{#  if(d.length == 0){ }}
+   <tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+
+<script id="tplLocationNo" type="text/html">
+	<option value="">请选择</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.sn}}">{{item.sn}}{{item.skuCode || ''}}</option>
+    {{#  }); }}
+</script>
+</body>
+</html>

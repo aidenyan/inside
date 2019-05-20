@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加商品</title>
+
+    <link rel="stylesheet" href="../common/css/sccl.css">
+
+    <style>
+        .btn-default:hover, button.btn:hover, button.btn:active {
+            background-color: #0bc8ff;
+        }
+
+        .nav li {
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            float: left;
+            text-align: center;
+            /*border: 1px solid #ebebeb;*/
+
+            padding-right: 10px;
+        }
+
+        .nav li a:hover {
+            background-color: #00aadc;
+            color: #fff;
+        }
+
+        .basic_infor ul{
+            width: 770px;
+        }
+        .basic_infor>ul>li{
+            height: 30px;
+            padding-bottom: 10px;
+            line-height: 30px;
+        }
+        .basic_infor>ul>li span{
+            display: inline-block;
+            width: 80px;
+            height: 100%;
+            text-align: right;
+        }
+        .basic_infor ul li input{
+            border: 0;
+        }
+        .basic_infor ul li{
+            border: 1px solid #ebebeb;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div>
+        <ul class="nav cf">
+            <li><a href="##">基本信息</a></li>
+            <li><a href="##">商品介绍</a></li>
+            <li><a href="##">商品属性</a></li>
+            <li><a href="##">商品套装</a></li>
+        </ul>
+        <div class=tab-"content">
+            <div class="tab-pane">
+                <div class="line">基础信息展示</div>
+                <div class="basic_infor">
+                    <ul >
+                        <li>
+                           <span>商品名称</span> <input type="text" placeholder="输入添加商品名称">
+                        </li>
+                        <li>
+                            <span>@SKU编码:</span><input type="text" placeholder="输入SKU编码">
+                            <span>@商家编码:</span> <input type="text" placeholder="输入商家编码">
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <div>
+            <button class="btn ">确定</button>
+            <button class="btn ">取消</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

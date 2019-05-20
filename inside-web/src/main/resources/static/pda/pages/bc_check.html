@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>波次捡货</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+</head>
+<body>
+<div class="container-wrap">
+    <div class="title">
+        <p>波次捡货</p>
+    </div>
+    <div class="container-list">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">当前波次</p>
+        </div>
+        <div class="container-item text-wrap" style="flex: 8">
+            <p id="localBcCode"></p>
+        </div>
+    </div>
+    <div class="container-list">
+        <div class="container-item text-wrap" style="flex: 1">
+            <p class="bold ">库位</p>
+        </div>
+        <div class="container-item text-wrap" style="flex: 4">
+            <!--<input type="text" class="text-in no1" oninput="change1()" onfocus="this.select()">-->
+            <input type="text" class="text-in no1" id="inventorySn"  onfocus="this.select()">
+        </div>
+        <div class="container-item text-wrap" style="flex: 1">
+            <p class="bold">条码</p>
+        </div>
+        <div class="container-item text-wrap" style="flex: 4">
+            <input type="text" class="text-in no2"  onfocus="this.select()">
+            <input type="hidden" value="" id="hideSkuCode">
+        </div>
+    </div>
+    <div class="container-list">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">当前商品</p>
+        </div>
+        <div class="com-name" style="flex: 6">
+            <div>
+                <p class="long-show" id="localProName"></p>
+            </div>
+        </div>
+        <div class="container-item text-wrap" style="flex: 2">
+            <input type="text" class="text-in " onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" onBlur="change3(this)">
+        </div>
+    </div>
+    <div class="tab-wrap">
+        <div class="bar"></div>
+        <table class="ui-table">
+            <thead>
+            <tr class="ui-thead-bg">
+                <td class="wid40 paddL break-all">商品条码</td>
+                <td class="wid40 tex-c">库位*数量</td>
+                <td class="wid20 tex-c">待/已</td>
+            </tr>
+            </thead>
+            <tbody id="all_jxd_tbody">
+            </tbody>
+        </table>
+    </div>
+    <div class="container-item" style="flex: 2">
+           <input type="button" class="text-in btn" id="completeScan" value="完成">
+    </div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../js/bcCheck.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script id="allJxdTpl" type="text/html">
+    {{#  layui.each(d.orderProductList, function(index, item){ }}
+        {{#  if(item.orderStatus == 3){ }}
+        <tr>
+            <td class="wid35 paddL">{{item.proSn||item.skuCode}}</td>
+            <td class="wid25 tex-c">{{item.inventorySnNum||''}}</td>
+            <td class="wid20 tex-c">{{item.buyNum||''}}/<span class="checkNum" buyNum="{{item.buyNum||0}}" skuCode="{{item.proSn||item.skuCode}}">0</span></td>
+        </tr>
+        {{#  } }}
+    {{#  }); }}
+    {{#  if(d.length == 0){ }}
+   <tr aglin='center'><td colspan="3">无数据</td></tr>
+    {{#  } }}
+</script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="keywords" content="中策 仓储">
+    <title>中策云仓储配送管理平台</title>
+    <!--<script src="test.js"></script>-->
+    <link rel="stylesheet" href="layui/css/layui.css?v=2.12">
+    <link rel="stylesheet" href="common/css/sccl.css?v=2.12">
+    <link rel="stylesheet" href="common/css/font-style.css?v=2.12">
+    <link rel="shortcut icon" href="common/image/favicon.png">  <!--icon 图标-->
+    <style>
+        .header-right {
+            position: absolute;
+            right: 0;
+            qqqqqqqqqqqqqqqq top: 0;
+            height: 60px;
+        }
+
+        .user-infor {
+            margin-right: 25px;
+        }
+
+        .user-infor p {
+            display: inline-block;
+            font-size: 14px;
+            color: #888;
+            line-height: 56px;
+            /* padding: 33px 0 9px 0;*/
+        }
+
+        .user-infor span {
+            color: #2b3241;
+            padding-right: 8px;
+        }
+
+        .setting i {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+
+        .setting {
+            /* line-height: 1;
+             padding: 29px 0 9px 0;*/
+            line-height: 56px;
+            width: 100px;
+        }
+
+        .setting .shezhi {
+            background: url("common/image/shehzi.png") no-repeat;
+
+        }
+
+        .setting .baocun {
+            background: url("common/image/baocun.png") no-repeat;
+        }
+
+        .refresh {
+            cursor: pointer;
+            top: 0;
+            right: 0;
+            position: absolute;
+            width: 40px;
+            height: 36px;
+            background: url("common/image/refresh_03.png") no-repeat center #009cff;
+
+        }
+
+        .icon-logo:before {
+            content: "\e621";
+            color: #0498ff;
+            /* vertical-align: bottom;*/
+        }
+    </style>
+</head>
+
+<body>
+<div class="mizone-admin">
+    <!--头部LOGO-->
+    <header class="mizone-header">
+        <div class="header-logo layui-clear">
+            <div class="logo">
+                <!--<i class="icon-logo" style="font-size: 41px;vertical-align: middle;color: #0498ff;"></i>-->
+            </div>
+
+            <!--<h1>脉通仓储配送管理平台</h1>-->
+        </div>
+        <div class="header-right cf">
+            <div class="fl user-infor">
+                <p>您好！</p>
+                <p id="name_id"></p>
+            </div>
+            <div class="fr setting">
+                <i class="shezhi" id="accountOperate"></i>
+                <i class="baocun" id="out_id"></i>
+            </div>
+        </div>
+    </header>
+    <!--左侧导航-->
+    <aside class="mizone-side">
+        <ul class="side-menu">
+
+        </ul>
+    </aside>
+    <!--左侧收缩按钮-->
+    <div class="mizone-side-arrow">
+        <div class="mizone-side-arrow-icon"><i class="icon-uniE613"></i></div>
+    </div>
+    <!--右边主要内容-->
+    <section class="mizone-main">
+        <div class="mizone-main-tab">
+            <button class="tab-btn btn-left"><i class="icon-zuozuo"></i></button>
+            <nav class="tab-nav">
+                <div class="tab-nav-content">
+                    <a href="javascript:;" class="content-tab active" data-id="home_dashboard">首页</a>
+                </div>
+            </nav>
+
+            <button class="tab-btn btn-right"><i class="icon-youyou"></i></button>
+            <i class="refresh" id="refresh_page"></i>
+        </div>
+        <div class="mizone-main-body">
+            <iframe class="body-iframe" name="iframe0" width="100%" height="99%" src="admin/common/home.html"
+                    id="home_dashboard" frameborder="0"
+                    data-id="home_dashboard" seamless></iframe>
+        </div>
+    </section>
+    <!--<div class="mizone-footer">中策仓配一体化</div>-->
+</div>
+<div id="form_account" style="display: none">
+    <div class="layui-form">
+        <div class="layui-form-item mizone-form-item-t0">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span style="color:red">*</span>账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="accountName" id="accountName" lay-verify="accountName" autocomplete="off"
+                           class="layui-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item mizone-form-item-t0">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="personName" id="personName" lay-verify="personName" autocomplete="off"
+                           class="layui-input" maxlength="30" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item mizone-form-item-t0">
+            <div class="layui-inline" id="prompt_show">
+                <label class="layui-form-label"><span style="color:red">*</span>当前密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="normalpassword" id="normalpassword" lay-verify="normalpassword"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item mizone-form-item-t0">
+            <div class="layui-inline" id="prompt_show">
+                <label class="layui-form-label"><span style="color:red">*</span>新密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" id="password" lay-verify="password" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item mizone-form-item-t0">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span style="color:red">*</span>确认新密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="recheckpassword" id="recheckpassword" lay-verify="recheckpassword"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="layui/layui.js?v=2.12"></script>
+<script type="text/javascript" src="common/js/common/utils.js"></script>
+<script type="text/javascript" src="common/js/sccl.js"></script>
+<script type="text/javascript" src="common/lib/jsrender.js"></script>
+<script type="text/javascript" src="common/js/common/ajaxsend.js"></script>
+<script type="text/javascript" src="common/js/common/map.js"></script>
+<script type="text/javascript" src="common/js/parent.js"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+        var form, layer, laydate, laypage, laytpl;
+        layui.use(['form', 'layer', 'laytpl', 'laypage'], function () {
+            form = layui.form();
+            layer = layui.layer;
+            laypage = layui.laypage;
+            $ = layui.jquery;
+            laytpl = layui.laytpl;
+            var checknormalpassword = false;
+            form.verify({
+                password: [
+                    /^[a-zA-Z0-9]{4,20}$/,
+                    '密码格式不正确，只能为4到20位数字字母'
+                ],
+                recheckpassword: function (value) {
+                    if (value != $("#password").val()) {
+                        return '密码输入不一致';
+                    }
+                },
+                normalpassword: function (value) {
+                    if (value == null || value == "") {
+                        return '请先输入当前登录密码';
+                    } else {
+                        var accountName = $("#name_id").html();
+                        ajaxsend("", "/api/admin/common/account/check_password?password=" + value, function (dataJson) {
+                            dataJson = dataJson.result;
+                            if (dataJson != null && dataJson == true) {
+                                checknormalpassword = true;
+                            } else {
+                                $("#normalpassword").val("");
+                                layer.msg("当前密码输入错误");
+                                return false;
+                            }
+                        }, "post", false);
+                    }
+
+                },
+            });
+            $("#accountOperate").click(function () {
+                var accountName = $("#name_id").html();
+                $("#password").val("");
+                $("#recheckpassword").val("");
+                $("#normalpassword").val("");
+                var accountId;
+                if (accountName != null && accountName != "") {
+                    $("#accountName").val(accountName);
+                    ajaxsend("", "/api/admin/common/person/find_name", function (dataJson) {
+                        dataJson = dataJson.result;
+                        if (dataJson != null) {
+                            var personName = dataJson;
+                            $("#personName").val(personName);
+                        }
+                    }, "post", false);
+
+                }
+                layer.open({
+                    type: 1,
+                    title: "账户设置",
+                    btn: ['确定', '取消'],
+                    closeBtn: 0,
+                    btnAlign: 'r',
+                    area: ['400px', 'auto'],
+                    shadeClose: true,
+                    content: $('#form_account'),
+                    success: function (layero, index) {
+                        layero.addClass('layui-form');
+                        layero.find('.layui-layer-btn0').attr('lay-filter', 'formCheck').attr('lay-submit', 'disabled')
+                        form.render();
+                    },
+                    yes: function (index) {
+                        form.on('submit(formCheck)', function () {
+                            if (checknormalpassword) {
+                                checknormalpassword = false;
+                                saveAccountInfo(index, accountId);
+                            }
+                        })
+                    }
+                });
+            })
+        })
+
+        saveAccountInfo = function (index, accountId) {
+            var account = {
+                "oldPassword": $("#normalpassword").val(),
+                "password": $("#password").val(),
+                "personName": $("#personName").val(),
+            }
+            ajaxsend(account, "/api/admin/common/account/update", function (dataJson) {
+                dataJson = dataJson.result;
+                if (dataJson != null && dataJson == false) {
+                    return layer.msg("密码修改失败");
+                } else {
+                    layer.close(index);
+                }
+            }, "post", false);
+        }
+        $("#refresh_page").click(function () {
+            var id;
+            $(".content-tab").each(function () {
+                if ($(this).hasClass("active")) {
+                    id = $(this).data("id")
+                }
+            })
+            if (Utils.isNotBlack(id)) {
+                try {
+                    callChild.useRegister(id, "search");
+                    callChild.useRegister(id, "refresh");
+                } catch (e) {
+                    try {
+                        callChild.useRegister(id, "refresh");
+                    } catch (e) {
+                    }
+                }
+            }
+        })
+        ajaxsend("", "/api/admin/common/account/name", function (dataJson) {
+            dataJson = dataJson.result;
+            $("#name_id").html(dataJson);
+        })
+        ajaxsend("", "/api/admin/sys/common/list", function (dataJson) {
+            dataJson = dataJson.result;
+            var icorMap = new Map();
+            icorMap.push("product_manage", "&#xe907;");
+            icorMap.push("sys_manage", "&#xe90a;")
+            icorMap.push("user_manage", "&#xe909;")
+            icorMap.push("storage_manage", "&#xe902;")
+            icorMap.push("purchase_manage", "&#xe901;")
+            icorMap.push("order_manage", "&#xe904;")
+            icorMap.push("report_manage", "&#xe90c;")
+            icorMap.push("transportation_manage", "&#xe90b;")
+            icorMap.push("member_manage", "&#xe901;")
+            icorMap.push("marketing_manage", "&#xe90d;")
+            icorMap.push("financial_manage", "&#xe903;")
+            icorMap.push("billing_manage", "&#xe905;")
+            icorMap.push("storage_out_manage", "&#xe902;")
+            icorMap.push("inventory_manage", "&#xe900;")
+            icorMap.push("storage_in_mana", "&#xe906;")
+            icorMap.push("credit_manager", "&#xe908;")
+            icorMap.push("supervisor_manage", "&#xe90a;")
+            var menuList = new Array();
+            var map = new Map();
+            for (var i = 0; i < dataJson.length; i++) {
+                var menuInfo = dataJson[i];
+                if (menuInfo.menuType == 0) {
+                    var menuUrl = "";
+                    if (Utils.isNotNull(menuInfo.menuUrl)) {
+                        menuUrl = menuInfo.menuUrl;
+                    }
+                    map.push(menuInfo.id, {
+                        menuType: menuInfo.menuType,
+                        id: menuInfo.id,
+                        "name": menuInfo.name,
+                        "parentId": menuInfo.parentMenuId,
+                        code: menuInfo.code,
+                        "url": menuUrl,
+                        icon: icorMap.get(menuInfo.code),
+                        isHeader: "0",
+                        childMenus: new Array()
+                    });
+                }
+            }
+            for (var i = 0; i < dataJson.length; i++) {
+                var menuInfo = dataJson[i];
+                if (menuInfo.menuType == 1) {
+                    var parentMenuInfo = map.get(menuInfo.parentMenuId);
+                    parentMenuInfo.childMenus.push({
+                        id: menuInfo.id,
+                        "name": menuInfo.name,
+                        code: menuInfo.code,
+                        "parentId": menuInfo.parentMenuId,
+                        "url": menuInfo.menuUrl,
+                        icon: "",
+                        isHeader: "0",
+                        childMenus: new Array()
+                    })
+                }
+            }
+            var topMenuInfo = {
+                "id": "0",
+                "name": "主菜单",
+                "parentId": "-1",
+                "url": "",
+                "icon": "",
+                "isHeader": "1",
+                childMenus: new Array()
+            };
+            menuList.push(topMenuInfo);
+            var keyList = map.key();
+            for (var i = 0; i < keyList.length; i++) {
+                var menuInfo = map.get(keyList[i]);
+                if (menuInfo.menuType == 0) {
+                    menuInfo.parentMenuId = "0"
+                    topMenuInfo.childMenus.push(menuInfo);
+                }
+            }
+            initMenu(menuList, $(".side-menu"));
+            $(".side-menu > li").addClass("menu-item");
+
+            /*设置mizone-side区域的高度*/
+            getHeight()
+            $(window).on("resize", getHeight);
+
+            /*获取菜单icon随机色*/
+//            getMathColor();
+        });
+        $("#out_id").click(function () {
+            ajaxsend("", "/api/login/out", function (dataJson) {
+                window.location.href = "./login.html";
+            });
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公司列表</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <link rel="stylesheet" href="../../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+       	 <div class="userCenter_left">
+            <div class="userCenter_name">
+                <p>部门组织</p>
+            </div>
+            <div class="">
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="输入组织名称进行搜索"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" style="width: 250px" id="treeSearch">
+                    <ul id="searchList"></ul>
+                </div>
+                <ul id="companyTree" class="ztree">
+                </ul>
+            </div>
+        </div>
+        
+         <div class="userCenter_right">
+            <!--条件搜索部分-->
+            <div class="layui-inline mizone-padding-botton">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_org"> <i class="layui-icon" style="vertical-align: middle">
+                    &#xe61f;</i>新增组织</a>
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="公司名称/公司编号"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" id="searchParam">
+                    <button class="layui-btn layui-btn-small" id="searchCompany">搜索</button>
+                </div>
+            </div>
+            
+        <div class="layui-form">
+            <table class="layui-table " id="checkTba">
+                <colgroup>
+                    <col width="30">
+                    <col width="40">
+                    <col width="180">
+                    <col width="120">
+                    <col width="120"> 
+                    <col width="150">
+                    <col width="120">
+                    <col width="50">
+                    <col width="120">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                <tr>
+                	<th class="checked"><input type="checkbox" id="selectAllCheckBox" lay-filter="selectAllCheckBox" lay-skin="primary"></th>
+                    <th>序号</th>
+                    <th>组织全称</th>
+                    <th>组织简称</th>
+                    <th class="sort" name="c.agent_code">组织编号</th>
+                    <th class="sort" name="c.agent_type">组织类型</th>
+                    <th>父类简称</th>
+                    <th class="sort" name="c.level">层级</th>
+                    <th class="sort" name="c.create_time">创建时间</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+
+        </div>
+        <div class="cf">
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+
+</div>
+
+<form id="companyOrgForm" style="display: none" class="layui-form dialog">
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color:red">*</span>组织类型</label>
+        <div class="layui-input-block" lay-verify="companyTypeCheck">
+           <input type="checkbox" name="companyType" lay-skin="primary" title="公司"  value="1">
+           <!--  <input type="checkbox" name="companyType" lay-skin="primary"   title="供应商" value="2"> -->
+            <input type="checkbox" name="companyType" lay-skin="primary" class="consumer" id="consumer" title="经销商" value="4">
+            <input type="checkbox" name="companyType" lay-skin="primary" title="仓库" lay-filter="warehouse" id="warehouse" value="8">
+            <input type="checkbox" name="companyType" lay-skin="primary" title="门店" value="16" lay-filter="storeInfo" id="storeInfo" disabled>
+            <input type="checkbox" name="companyType" lay-skin="primary" title="合作方" value="32">
+        </div>
+    </div>
+	
+	<div class="layui-form-item" id="showPlatForm" hidden="true">
+        <label class="layui-form-label">关联平台</label>
+        <div class="layui-input-block" id="platformInnerHtml">
+        
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+	<div id="showDefaultWarehouse" hidden="true" class="layui-inline">
+        <label class="layui-form-label">默认仓库</label>
+        <div class="layui-input-block" id="defaultWarehouseHtml">
+            <input type="checkbox" name="defaultWarehouse" id="defaultWarehouse" lay-skin="primary" >
+        </div>
+    </div>
+	<div id="showCheckInventory" hidden="true" class="layui-inline">
+        <label class="layui-form-label">校验库存</label>
+        <div class="layui-input-block" id="checkInventoryHtml">
+            <input type="checkbox" name="checkInventory" id="checkInventory" lay-skin="primary" >
+        </div>
+    </div>
+    <div id="warehouse_orders" hidden="true" class="layui-inline">
+            <label class="layui-form-label">仓库序号</label>
+            <div class="layui-input-block" >
+                <input type="text" placeholder="仓库序号" class="layui-input" id="order_num" lay-verify="num" name="orderNum">
+            </div>
+      </div>
+    </div>
+   <!--  <div class="layui-form-item">
+	<div id="showSupervisor" hidden="true" class="layui-inline">
+        <label class="layui-form-label">督导信息</label>
+        <div class="layui-input-block" id="checkSupervisorHtml">
+           <select id="checkSupervisor" stype="width:40px">
+                 <option value="-1"></option>
+           </select>
+        </div>
+    </div>
+    </div> -->
+    
+    
+    <div class="layui-form-item">
+         <div class="layui-inline">
+        <label class="layui-form-label"><span style="color:red">*</span>组织全称</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入组织全称" class="layui-input" lay-verify="companyName" id="companyName" name="companyName">
+        </div>
+        </div>
+         <div class="layui-inline">
+        <label class="layui-form-label"><span style="color:red">*</span>组织简称</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入组织简称" class="layui-input" id="companyShortName" lay-verify="companyShortName" name="companyShortName">
+        </div>
+        </div>
+    </div>
+    
+	 <div class="layui-form-item">
+	    <div class="layui-inline">
+        <label class="layui-form-label">组织编号</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入组织编号" class="layui-input" id="companyCode" name="companyCode">
+        </div>
+        </div>
+          <div class="layui-inline">
+        <label class="layui-form-label">法人/负责人</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入法人/负责人" class="layui-input" id="legalPerson" name="legalPerson">
+        </div>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <div class="layui-inline">
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-block">
+             <input type="text" placeholder="请输入联系电话(固话)" class="layui-input" id="contactTel" name="contactTel">
+        </div>
+        </div>
+        <div class="layui-inline">
+        <label class="layui-form-label"><span style="color:red">*</span>手机号码</label>
+        <div class="layui-input-block">
+             <input type="text" placeholder="请输入手机号码" class="layui-input" id="contactPhone" name="contactPhone" lay-verify="required|phone">
+        </div>
+        </div>
+    </div>
+    
+    <div class="layui-form-item" lay-verify="sysarea">
+        <label class="layui-form-label">所在地区</label>
+           <div class="layui-input-inline" id="proviceList">
+           		<select id="province" lay-filter="provinceFilter">
+                        <option value=""></option>
+                </select>
+           </div>
+           <div class="layui-input-inline" style="display: none" id="cityList">
+                <select id="city" lay-filter="cityFilter" >
+                       <option value=""></option>
+                </select>
+           </div>
+           <div class="layui-input-inline" style="display: none" id="areaList">
+                <select id="sysarea">
+                       <option value=""></option>
+                </select>
+           </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">详细地址</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入详细地址" class="layui-input" id="fullAddress" name="fullAddress">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea  placeholder="请输入备注信息" class="layui-textarea" id="remark" name="remark"> </textarea>
+        </div>
+    </div>
+</form>
+</div>
+</body>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script src="../../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/js/child.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script type="text/javascript" src="../../common/ztree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../../common/ztree/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="../../common/js/userCenter/companyOrg.js"></script>
+<script type="text/javascript" src="../../common/js/userCenter/companyCommon.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+<script type="text/javascript" src="../../common/js/common/ajaxsend.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></i></td>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td>{{item.companyName==null||item.companyName==''?'-':item.companyName}}</td>
+        <td>{{item.companyShortName==null||item.companyShortName==''?'-':item.companyShortName}}</td>
+        <td>{{item.agentCode==null||item.agentCode==''?'-':item.agentCode}}</td>
+        <td>{{item.agentType==null||item.agentType==''?'-':companyOrgTypeRechange(item.agentType,item.defaultWarehouse)}}</td>
+        <td>{{item.parentShortName==null||item.parentShortName==''?'-':item.parentShortName}}</td>
+        <td>{{item.level==null||item.level==''?'-':item.level}}级</td>
+        <td>{{item.createTime==null?'-':laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="update" value="{{item.id}}" onclick="updateCompanyOrg({{item.id}})">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class="delete" value="{{item.id}}" onclick="deleteCompanyOrg({{item.id}},{{item.agentType}})">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+    	<tr aglin='center'><td colspan="10">无数据</td></tr>
+    {{#  } }}
+</script>
+</html>

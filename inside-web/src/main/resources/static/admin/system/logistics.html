@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>物流设置</title>
+   <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+    <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add" class="layui-btn layui-btn-small role_save"
+                       authority_code="role_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加</a>
+                    <button class="layui-btn layui-btn-small role_deleted" id="batchForbid">禁用</button>
+                    <button class="layui-btn layui-btn-small role_deleted" id="batchUse">启用</button>
+                    <button class="layui-btn layui-btn-small role_deleted" id="syncExpress">同步物流id</button>
+                </div>
+            </div>
+        </div>
+
+    <!--table 数据-->
+    <div class="layui-form">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th class="checked width30"><input type="checkbox" id="selectAllCheckBox" lay-filter="selectAllCheckBox" lay-skin="primary"></th>
+                <th class="width50">序号</th>
+                <th>公司名称</th>
+                <th class="sort" name="code">编码</th>
+                <th>类型</th>
+                <th class="width100">支持电子面单</th>
+                <th class="width100">京东物流公司Id</th>
+                <th class="width100">支持淘宝发货</th>
+                <th class="sort width80" name="status">状态</th>
+                <th class="sort width165" name="modifyTime">更新时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="page_tbody">
+            </tbody>
+        </table>
+        </div>
+
+    <!--分页条-->
+    <div class="cf">
+        <div id="pageNum"></div>
+    </div>
+
+    </div>
+</div>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="checkbox" lay-skin="primary" type="checkbox" value="{{item.id}}"></i></td>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td>{{item.name==null?'':item.name}}</td>
+        <td>{{item.code==null?'':item.code}}</td>
+        <td>{{item.type==0?'物流':'快递'}}</td>
+        <td>{{item.isWaybill==true?'是':'否'}}</td>
+        <td>{{item.jdLogisticsId||""}}</td>
+        <td>{{item.isTaoBao==true?'是':'否'}}</td>
+        <td>{{item.status==true?'已启用':'已禁用'}}</td>
+        <td>{{item.createTime==null?'':laydate.now(item.modifyTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+        <td class="state_uhandle">
+           <div class="">
+                <button class=" update" value="{{item.id}}">
+                    <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+        <tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="addTpl">
+<form class="" action=""" >
+    <input type="hidden" name="id" value="{{d.id||''}}">
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color:red">*</span>名称</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入名称" class="layui-input" id="name" name="name" lay-verify="required" value="{{d.name||''}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color:red">*</span>编码</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入编码" class="layui-input" id="code" name="code" lay-verify="code" value="{{d.code||''}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color:red">*</span>类型</label>
+        <div class="layui-input-inline detailedAddress">
+           <input type="radio" class="input-Ml" name="type" value="0" title="物流" lay-skin="primary" {{#  if(d.type==0){ }}checked="checked"{{#  } }} >
+            <input type="radio" class="input-Ml"  name="type" value="1" title="快递" lay-skin="primary" {{#  if(d.type==1){ }}checked="checked"{{#  } }} >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">电子面单</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="isWaybill" {{#  if(d.isWaybill==true){ }}checked="checked"{{#  } }} value="1" lay-skin="primary">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否启用</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" {{#  if(d.status==true){ }}checked="checked"{{#  } }} value="1" lay-skin="primary">
+        </div>
+    </div>
+</form>
+</script>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/javascript">
+layui.config({
+  base: '../../js/' //你的模块目录
+}).extend({myAjax: 'myAjax'})
+
+layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], function () {
+    form = layui.form();element = layui.element();layer=layui.layer;laytpl = layui.laytpl;myAjax = layui.myAjax;laydate = layui.laydate;
+     myAjax.ajaxPage('/express/list.json','pageNum','page_tbody','pageTpl');
+     form.on('checkbox(selectAllCheckBox)', function(data){
+         var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+    });
+    form.verify({
+    	code: [/^[a-zA-Z]{2,10}$/,'编号格式不正确，为2到10位字母']
+    });
+    $("#add").click(function () {
+        laytpl($("#addTpl").html()).render({}, function(html){
+        	layer.open({
+                type: 1,
+                title: "添加物流公司",
+                btn: ['确定', '取消'],
+                closeBtn: 0,
+                btnAlign: 'r',
+                area: '600px',
+                shadeClose: false,
+                content: html,
+                success:function (layero, index) {
+                    layero.addClass('layui-form');
+                    layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                    form.render();
+                },
+                yes: function(index){
+                    form.on('submit(fromContent)',function(){
+                    	ajaxsend($("form").serialize(), "/express/save.json", function (dataJson) {
+                    		if(dataJson.result==true){
+                    			layer.alert("新增成功！", function (alertIndex) {
+                    				callParent.parentUse("transportation_logistics", "search");
+                                    layer.close(alertIndex);
+                                    layer.close(index);
+                                })
+                            }
+                        }, "postForm");
+                    })
+                }
+              });
+        });
+        
+    });
+    $("#page_tbody").on("click",".update", function() {
+    	ajaxsend({"id":$(this).val()}, "/express/get.json", function (dataJson) {
+    		laytpl($("#addTpl").html()).render(dataJson.result, function(html){
+                layer.open({
+                    type: 1,
+                    title: "添加物流公司",
+                    btn: ['确定', '取消'],
+                    closeBtn: 0,
+                    btnAlign: 'r',
+                    area: '600px',
+                    shadeClose: false,
+                    content: html,
+                    success:function (layero, index) {
+                        layero.addClass('layui-form');
+                        layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                        form.render();
+                    },
+                    yes: function(index){
+                        form.on('submit(fromContent)',function(){
+                            ajaxsend($("form").serialize(), "/express/update.json", function (dataJson) {
+                                if(dataJson.result==true){
+                                    layer.alert("修改成功！", function (alertIndex) {
+                                    	callParent.parentUse("transportation_logistics", "search");
+                                        layer.close(alertIndex);
+                                        layer.close(index);
+                                    })
+                                }
+                            }, "postForm");
+                        })
+                    }
+                  });
+            });
+        })
+    	
+    })
+    $("#batchForbid").click(function () {
+        var ids = new Array();
+        $("#page_tbody input[name='checkbox']:checked").each(function(){
+            ids.push($(this).val());
+        });
+        if (ids.length > 0) {
+            layer.confirm("确定要禁用？", {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']},function (index) {
+                ajaxsend({"ids": ids,"status":0}, "/express/changeStatus.json", function (dataJson) {
+                	if(dataJson.result==true){
+                        layer.alert("禁用成功！", function (alertIndex) {
+                        	callParent.parentUse("transportation_logistics", "search");
+                            layer.close(alertIndex);
+                            layer.close(index);
+                        })
+                    }
+                })
+            })
+        }
+    });
+    $("#batchUse").click(function () {
+        var ids = new Array();
+        $("#page_tbody input[name='checkbox']:checked").each(function(){
+            ids.push($(this).val());
+        });
+        if (ids.length > 0) {
+        	ajaxsend({"ids": ids,"status":1}, "/express/changeStatus.json", function (dataJson) {
+                if(dataJson.result==true){
+                    layer.alert("启用成功！", function (alertIndex) {
+                    	callParent.parentUse("transportation_logistics", "search");
+                        layer.close(alertIndex);
+                    })
+                }
+            })
+        }
+    });
+    
+    $("#syncExpress").click(function () {
+    	ajaxsend({}, "/express/syncExpress.json", function (dataJson) {
+            if(dataJson.result==true){
+                layer.alert("同步成功！", function (alertIndex) {
+                    callParent.parentUse("transportation_logistics", "search");
+                    layer.close(alertIndex);
+                })
+            }
+        })
+    });
+    
+    callParent.isLoadEnd("transportation_logistics");
+    callParent.register(function () {
+    	myAjax.ajaxPage('/express/list.json','pageNum','page_tbody','pageTpl');
+    }, "search");
+});
+</script>
+</body>
+</html>

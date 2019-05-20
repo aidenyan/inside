@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>开票资料</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style type="text/css">
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header  搜索条件-->
+        <div class="content-search layui-form">
+            <div class=" layui-form-item hasNext">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <select name="" id="state">
+                            <option >选择开票状态</option>
+                            <option value="">全部</option>
+                            <option value="0">未开票</option>
+                            <option value="1">已开票</option>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <select name="" id="sourceId">
+                            <option value="">选择来源平台</option>
+                            <option value="">全部</option>
+                            <!--
+                            <option value="1">天猫平台</option>
+                            <option value="2">京东平台</option>
+                            -->
+                            <option value="3">小车商城</option>
+                            <option value="4">大车商城</option>
+                            <!--
+                            <option value="5">小车经销商</option>
+                            -->
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <select name="" id="taxpayerType">
+                            <option value="">选择纳税人类型</option>
+                            <option value="">全部</option>
+                            <option value="1">一般纳税人</option>
+                            <option value="2">小规模纳税人</option>
+                            <option value="3">个人纳税人</option>
+                        </select>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input id="startDate" class="layui-input" type="datetime" placeholder="开始日">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input id="endDate" class="layui-input" type="datetime" placeholder="截止日">
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <input type="text" id="searchVal"
+                           placeholder="门店编号/门店名称/联系人/公司名称/纳税人识别号"
+                           autocomplete="off" class="layui-input small mizo-srarch-input">
+                    <button id="search" class="layui-btn layui-btn-small">搜索</button>
+                    <button id="invoiceAll" class="layui-btn layui-btn-small">多订单开票</button>
+                </div>
+            </div>
+            <!--table 数据-->
+            <div class="panel layui-form">
+                <div class="datagrid-header" style="width: 100%; height: 29px;">
+                    <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                        <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr class="datagrid-header-row">
+                                <td>
+                                    <div class="datagrid-cell datagrid-cell-c1-checkbox" style="">
+                                        <input type="checkbox" lay-skin="primary" lay-filter="allChoose">
+                                    </div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name1">
+                                    <div class="datagrid-cell datagrid-cell-c1-number" style="">序号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name2">
+                                    <div class="datagrid-cell datagrid-cell-c1-order_num" style="">订单编号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name3">
+                                    <div class="datagrid-cell datagrid-cell-c1-time" style="">发货时间</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name4">
+                                    <div class="datagrid-cell datagrid-cell-c1-time" style="">用户帐号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name5">
+                                    <div class="datagrid-cell datagrid-cell-c1-time" style="">来源平台</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name6">
+                                    <div class="datagrid-cell datagrid-cell-c1-time" style="">门店编号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name7">
+                                    <div class="datagrid-cell datagrid-cell-c1-time" style="">门店名称</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name8">
+                                    <div class="datagrid-cell datagrid-cell-c1-store_name" style="">发票抬头</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name9">
+                                    <div class="datagrid-cell datagrid-cell-c1-store_num" style="">纳税人识别号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name10">
+                                    <div class="datagrid-cell datagrid-cell-c1-tel_num" style="">注册电话</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name11">
+                                    <div class="datagrid-cell datagrid-cell-c1-store_name" style="">开户行</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name12">
+                                    <div class="datagrid-cell datagrid-cell-c1-user_name" style="">账户</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name13">
+                                    <div class="datagrid-cell datagrid-cell-c1-w70" style="">纳税人类型</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name14">
+                                    <div class="datagrid-cell datagrid-cell-c1-w70" style="">开票金额</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name15">
+                                    <div class="datagrid-cell datagrid-cell-c1-order_num" style="">发票号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name16">
+                                    <div class="datagrid-cell datagrid-cell-c1-order_num" style="">寄送运单号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name17">
+                                    <div class="datagrid-cell datagrid-cell-c1-w50" style="">状态</div>
+                                </td>
+                                <td rowspan="1" colspan="1" field="name18">
+                                    <div class="datagrid-cell datagrid-cell-c1-w50" style="">操作</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                    <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody id="pager"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="pageNum" style="text-align:right"></div>
+            <form id="invoiceForm" action="" class="companyPositionForm" style="display: none">
+                <div class="layui-form-item" style="padding-left: 110px">
+                    <label id="invoiceTitle"></label>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>发票号</label>
+                    <div class="layui-input-block">
+                        <input type="text" placeholder="请输入发票号" class="layui-input" id="invoiceNos" name="invoiceNos">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label padd_top">运单号</label>
+                    <div class="layui-input-block">
+                        <input type="text" placeholder="请输入运单号" class="layui-input" id="waybillNos" name="waybillNos">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>
+            {{# if(item.state == 1){}}
+             <div class="datagrid-cell datagrid-cell-c1-checkbox"><input type="checkbox" lay-skin="primary" disabled
+                                                                        id="{{item.sn}}" invoicecompanyname="{{item.invoiceCompanyName}}" payamount="{{item.payAmount}}" userName="{{item.userName}}" sourceId="{{item.sourceId}}"></div>
+            {{# }else{}}
+            <div class="datagrid-cell datagrid-cell-c1-checkbox"><input type="checkbox" lay-skin="primary"
+                                                                        id="{{item.sn}}" invoicecompanyname="{{item.invoiceCompanyName}}" payamount="{{item.payAmount}}" userName="{{item.userName}}" sourceId="{{item.sourceId}}"></div>
+            {{#}}}                                                            
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-number invoice">{{(index+1)+(d.pageSize*(d.pageNo-1))}}</div>
+        </td>
+        <td class="invoice">
+            <div id="sn" class="datagrid-cell datagrid-cell-c1-order_num break_word">
+                {{# if(item.sn !=null){}}
+                {{item.sn}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-time">
+                {{# if(item.consignTime !=null){}}
+                {{laydate.now(item.consignTime,'YYYY-MM-DD hh:mm:ss')}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div id="userName" class="datagrid-cell datagrid-cell-c1-time ">
+                {{# if(item.userName!=null){}}
+                {{item.userName}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div id="userId" class="datagrid-cell datagrid-cell-c1-time ">
+                {{# if(item.name!=null){}}
+                {{item.name}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-time ">
+                {{# if(item.agentCode!=null){}}
+                {{item.agentCode}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-time ">
+                {{# if(item.companyName!=null){}}
+                {{item.companyName}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div id="invoiceCompanyName" class="datagrid-cell datagrid-cell-c1-store_name " title="{{item.invoiceCompanyName}}">
+                {{# if(item.invoiceCompanyName !=null){}}
+                {{item.invoiceCompanyName}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-store_num">
+                {{# if(item.taxpayerIdentificationNo !=null){}}
+
+                {{item.taxpayerIdentificationNo}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-tel_num">
+                {{# if(item.registerTel !=null){}}
+                {{item.registerTel}}
+                {{# }else{}}
+                -
+                {{#}}}
+                </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-store_name over-ellipsis">
+                {{# if(item.openBank !=null && item.openBank !=""){}}
+                {{item.openBank}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-user_name">
+                {{# if(item.account !=null){}}
+                {{item.account}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+                {{# if(item.taxpayerType !=null){}}
+                    {{# if(item.taxpayerType == 1){}}
+                    一般纳税人
+                    {{# }else if(item.taxpayerType == 2){}}
+                    小规模纳税人
+                    {{#}else{}}
+                    个人
+                    {{# }}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        <td class="invoice">
+            <div id="payAmount" class="datagrid-cell datagrid-cell-c1-w70">
+                {{# if(item.payAmount !=null){}}
+                {{item.payAmount}}
+                {{# }else{}}
+                -
+                {{#}}}
+            </div>
+        </td>
+        {{# if (item.invoiceNo==null||item.invoiceNo=="") {}}
+        <td class="invoice">
+            <div class="layui-input-inline mizone-input-inline datagrid-cell datagrid-cell-c1-order_num">
+                <input type="text" id="invoiceNo" class="layui-input invoiceBlur">
+            </div>
+        </td>
+        {{# } else { }}
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">{{item.invoiceNo}}</div>
+        </td>
+        {{#}}}
+        {{# if (item.waybillNo==null||item.waybillNo=="") {}}
+        <td class="invoice">
+            <div class="layui-input-inline mizone-input-inline datagrid-cell datagrid-cell-c1-order_num">
+                <input type="text" id="waybillNo" class="layui-input waybillBlur">
+            </div>
+        </td>
+        {{# } else { }}
+        <td class="invoice">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">{{item.waybillNo}}</div>
+        </td>
+        {{#}}}
+        {{# if (item.state==1) {}}
+        <td class="invoice">
+            <div id="state" class="datagrid-cell datagrid-cell-c1-w50">已开票</div>
+        </td>
+        {{# } else { }}
+        <td class="invoice">
+            <div id="state" class="datagrid-cell datagrid-cell-c1-w50">未开票</div>
+        </td>
+        {{#}}}
+        <td class="state_uhandle invoice">
+            <div class="datagrid-cell datagrid-cell-c1-w50">
+                 {{# if(item.state != 1){}}
+                <button class=" submit" lay-submit="" lay-filter="save" title="开票"><i class="icon-kpgl"></i></button>
+                {{# }}}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <div class="null-show"></div>
+    {{#  } }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+            , laypage = layui.laypage
+            , layer = layui.layer
+            , $ = layui.jquery
+            , myAjax = layui.myAjax
+            , laytpl = layui.laytpl
+            , date = layui.date;
+        var start = {}, end = {}
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $('.datagrid-body').find('tbody input[type="checkbox"]');
+            //var child = $(data.elem).parents('table').find('#paper input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        function pageDetailInvoice(data) {
+            if(data == undefined){
+                $("#startDate").val('');
+                $("#endDate").val('');
+                $('#searchVal').val('');
+                $('#state').val('');
+                $('#sourceId').val('');
+                $('#taxpayerType').val('');
+            }
+            myAjax.ajaxPage('/admin/invoice/detail/list.json', 'pageNum', 'pager', 'pageTpl', data);
+        }
+
+        pageDetailInvoice();
+
+        //保存单条订单开票信息
+        $("#pager").on("click", ".submit", function () {
+            //var sn = $(this).parent().parent().parent().children().find("#sn")[0].children()[0].innerHTML;
+            var sn = $.trim($(this).parent().parent().parent().find("#sn")[0].innerHTML);
+            //var invoiceNo = $(this).parent().parent().find("#invoiceNo")[0].value;
+            //var invoiceNo = $.trim($("#invoiceNo").val());
+            //var waybillNo = $(this).parent().parent().find("#waybillNo")[0].value;
+            //var waybillNo = $.trim($("#waybillNo").val());
+            myAjax.ajaxSend('/admin/invoice/detail/save.json', function () {
+            }, {'sn': sn, 'state': 1});
+            callParent.parentUse("invoice_order", "refresh");
+        });
+
+        //保存单条订单开票信息
+        $("#pager").on("blur", ".invoiceBlur", function () {
+            var state = $.trim($(this).parent().parent().parent().find("#state")[0].innerHTML);
+            if(state == "已开票"){
+                //var sn = $(this).parent().parent().parent().children().find("#sn")[0].children()[0].innerHTML;
+                var sn = $.trim($(this).parent().parent().parent().find("#sn")[0].innerHTML);
+                var invoiceNo = $.trim($(this).parent().parent().parent().find("#invoiceNo")[0].value);
+                //var invoiceNo = $.trim($("#invoiceNo").val());
+                //var waybillNo = $.trim($(this).parent().parent().parent().find("#waybillNo")[0].value);
+                //var waybillNo = $.trim($("#waybillNo").val());
+                myAjax.ajaxSend('/admin/invoice/detail/update.json', function () {
+                }, {'sn': sn, 'state': 1, 'invoiceNo': invoiceNo});
+                callParent.parentUse("invoice_order", "refresh");
+            }else{
+                layer.msg('请先确认已经开票')
+            }
+        });
+
+        //保存单条订单开票信息
+        $("#pager").on("blur", ".waybillBlur", function () {
+            var state = $.trim($(this).parent().parent().parent().find("#state")[0].innerHTML);
+            if(state == "已开票"){
+                //var sn = $(this).parent().parent().parent().children().find("#sn")[0].children()[0].innerHTML;
+                var sn = $.trim($(this).parent().parent().parent().find("#sn")[0].innerHTML);
+                //var invoiceNo = $.trim($(this).parent().parent().parent().find("#invoiceNo")[0].value);
+                //var invoiceNo = $.trim($("#invoiceNo").val());
+                var waybillNo = $.trim($(this).parent().parent().parent().find("#waybillNo")[0].value);
+                //var waybillNo = $.trim($("#waybillNo").val());
+                myAjax.ajaxSend('/admin/invoice/detail/update.json', function () {
+                }, {'sn': sn, 'state': 1,'waybillNo': waybillNo});
+                callParent.parentUse("invoice_order", "refresh");
+            }else{
+                layer.msg('请先确认已经开票')
+            }
+        });
+
+        //查询
+        $("#search").click(function () {
+            var state = $("#state").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var searchVal = $.trim($("#searchVal").val());
+            var sourceId = $("#sourceId").val();
+            var taxpayerType = $("#taxpayerType").val();
+            pageDetailInvoice({
+                'sn': searchVal,
+                'state': state,
+                'startTime': startDate,
+                'endTime': endDate,
+                'storeNo': searchVal,
+                'storeName': searchVal,
+                'invoiceCompanyName': searchVal,
+                'taxpayerIdentificationNo': searchVal,
+                'sourceId':sourceId,
+                'taxpayerType':taxpayerType
+            });
+        })
+
+        // $("#pager").on("click", ".invoice", function () {
+        //         var sn = $.trim($(this).parent().find("#sn")[0].innerHTML);
+        //         var invoiceCompanyName = $(this).parent().find("#invoiceCompanyName")[0].innerHTML;
+        //         var payAmount = $(this).parent().find("#payAmount")[0].innerHTML;
+        //         $("#invoiceTitle").html("您将("+invoiceCompanyName+")的1笔订单开票,金额"+payAmount);
+        //         layer.open({
+        //             type: 1,
+        //             title: "开票",
+        //             btn: ['确定', '取消'],
+        //             closeBtn: 0,
+        //             btnAlign: 'r',
+        //             area: ['600px', 'auto'],
+        //             shadeClose: true,
+        //             content: $('#invoiceForm'),
+        //             success: function (layero, index) {
+        //                 layero.addClass('layui-form');
+        //                 //layero.find('.layui-layer-btn0').attr('lay-filter', 'companyOrgContent').attr('lay-submit', '')
+        //                 form.render();
+        //             },
+        //             yes: function (index) {
+        //                 var invoiceNo = $.trim($('#invoiceNos').val());
+        //                 var waybillNo = $.trim($('#waybillNos').val());
+        //                 myAjax.ajaxSend('/admin/invoice/detail/save.json', function () {
+        //                 }, {'sn': sn, 'state': 1, 'invoiceNo': invoiceNo, 'waybillNo': waybillNo});
+        //                 layer.closeAll();
+        //                 callParent.parentUse("invoice_order", "refresh");
+        //             }
+        //         });
+        // });        
+        
+
+
+        $('#startDate').click(function () {
+            start.elem = this;
+            start.format = 'YYYY-MM-DD';
+            start.min = undefined;
+            if (!Utils.isNotBlack($("#endDate").val())) {
+                start.max = undefined;
+            } else if (!Utils.isNotNull(start.max)) {
+                start.max = laydate.now();
+            }
+            start.choose = function (datas) {
+                end.min = datas; //结束日选好后，重置开始日的最大日期
+            }
+            start.start = "";
+            start.istoday = false
+            laydate(start);
+        })
+        $('#endDate').click(function () {
+            end.elem = this;
+            end.format = 'YYYY-MM-DD';
+            end.max = undefined;
+            if (!Utils.isNotBlack($("#startDate").val())) {
+                end.min = undefined;
+            } else if (!Utils.isNotNull(end.min)) {
+                end.min = laydate.now();
+            }
+            end.choose = function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+            laydate(end);
+        })
+        $("#invoiceAll").click(function () {
+            var snList = new Array();
+            var invoiceCompanyName;
+            var nameList = new Array();
+            var payAmount = 0;
+            var userName;
+            var userNameList = new Array();
+            var sourceId;
+            var sourceIdList = new Array();
+            var err = 0;
+            var err_msg = "";
+            $("#pager input[type='checkbox']").each(function () {
+                var checkSn = Utils.checkBox($(this), $(this).attr("id"));
+                if(checkSn!=undefined){
+                    invoiceCompanyName = Utils.checkBox($(this), $(this).attr("invoicecompanyname"));
+                    payAmount = (parseFloat(Utils.checkBox($(this), $(this).attr("payamount")))+parseFloat(payAmount)).toFixed(2);
+                    userName = Utils.checkBox($(this), $(this).attr("userName"));
+                    sourceId = Utils.checkBox($(this), $(this).attr("sourceId"));
+                if (Utils.isNotNull(invoiceCompanyName) && invoiceCompanyName!="null") {
+                    nameList.push(invoiceCompanyName);
+                }else{
+                    err_msg=err_msg+"订单"+checkSn+"缺少开票公司名称<br>";
+                    err = 1;
+                }
+
+                if (Utils.isNotNull(userName) && userName!="null") {
+                    userNameList.push(userName);
+                }else{
+                    err_msg=err_msg+"订单"+checkSn+"缺少会员帐号<br>";
+                    err = 1;
+                }
+
+                if (Utils.isNotNull(sourceId) && sourceId!="null") {
+                    sourceIdList.push(sourceId);
+                }else{
+                    err_msg=err_msg+"订单"+checkSn+"缺少平台信息<br>";
+                    err = 1;
+                }
+
+                }
+                if (Utils.isNotNull(checkSn) && checkSn!="null") {
+                    snList.push(checkSn);
+                }
+            })
+            if(err==0){
+                nameList = arr(nameList);
+                userNameList = arr(userNameList);
+                sourceIdList = arr(sourceIdList);
+                if((nameList.length != 1 || userNameList.length !=1||sourceIdList.length!=1)){
+                    layer.msg('您选择的订单不能合并开票<br>合并开票必须会员帐号与开票资料信息完全一致');
+                    return
+                }else if(nameList.length==0 || userNameList==0){
+                    layer.msg('请选择需要开票的订单');
+                    return
+                }
+                if(invoiceCompanyName==null || invoiceCompanyName == undefined){
+                    $("#invoiceTitle").html("您将(开票公司名称未知)的"+snList.length+"笔订单开票,金额"+payAmount);
+                }else{
+                    $("#invoiceTitle").html("您将("+invoiceCompanyName+")的"+snList.length+"笔订单开票,金额"+payAmount);
+                }
+                if (snList.length > 0) {
+                    layer.open({
+                        type: 1,
+                        title: "开票",
+                        btn: ['确定', '取消'],
+                        closeBtn: 0,
+                        btnAlign: 'r',
+                        area: ['600px', 'auto'],
+                        shadeClose: true,
+                        content: $('#invoiceForm'),
+                        success: function (layero, index) {
+                            layero.addClass('layui-form');
+                            //layero.find('.layui-layer-btn0').attr('lay-filter', 'companyOrgContent').attr('lay-submit', '')
+                            form.render();
+                        },
+                        yes: function (index) {
+                            var invoiceNo = $('#invoiceNos').val();
+                            var waybillNo = $('#waybillNos').val();
+                            $.each(snList, function (index, value, array) {
+                                myAjax.ajaxSend('/admin/invoice/detail/save.json', function () {
+
+                                }, {'sn': value, 'state': 1, 'invoiceNo': invoiceNo, 'waybillNo': waybillNo}, 'post');
+                            });
+                            callParent.parentUse("invoice_order", "refresh");
+                            layer.closeAll();
+                        }
+                    });
+                }
+            }else{
+                layer.msg(err_msg);
+            }
+        });
+        callParent.isLoadEnd("invoice_order");
+        callParent.register(function () {
+            pageDetailInvoice();
+        }, "refresh");
+        
+    });
+
+
+</script>
+<script>
+   /* $(function () {
+        resize();
+        var height = $(document.body).height(), topH = 130, panelH = height - topH, bodyH = panelH - 30;
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    })
+    function resize() {
+       var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+       var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+      /!* console.log(width);*!/
+       $('.panel').css('height', panelH);
+       $('.datagrid-body').css('height', bodyH);
+   }*/
+   function arr(arr) {
+    var result=[]
+    for(var i=0; i<arr.length; i++){
+        if(result.indexOf(arr[i])==-1){
+            result.push(arr[i])
+        }
+    }
+    return result;
+}
+</script>
+</body>
+</html>

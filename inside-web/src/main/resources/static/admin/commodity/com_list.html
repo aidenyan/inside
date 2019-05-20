@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../common/css/amazeui.css?v=2.12">
+    <link rel="stylesheet" href="../../layui/css/layui.css?v=2.12">
+    <link rel="stylesheet" href="../../common/css/common.css?v=2.12">
+    <link rel="stylesheet" href="../../common/css/font-style.css?v=2.12">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+
+        <div class="content-search layui-form">
+            <div class=" layui-form-item hasNext">
+                <div class="layui-inline">
+                    <a href="javascript:void(-1);" id="add_product" class="layui-btn layui-btn-small product_save"
+                       authority_code="product_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加商品</a>
+                    <a href="javascript:void(-1);" id="add_common_product"
+                       class="layui-btn layui-btn-small product_save_common"
+                       authority_code="product_save_common"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加公共商品</a>
+                    <button class="layui-btn layui-btn-small product_enbale" id="product_deleted"
+                            authority_code="product_enbale">禁用
+                    </button>
+                    <button class="layui-btn layui-btn-small" id="export_id">导出</button>
+                </div>
+
+                <div class="layui-inline po-r">
+                    <input type="text" name="title" id="search_content" placeholder="商品编码/SKU编码"
+                           autocomplete="off" class="layui-input small mizo-srarch-input key_up_enable">
+                    <button class="layui-btn layui-btn-small" id="search_id">搜索</button>
+                </div>
+				<div class="layui-inline po-r">
+                    <button class="layui-btn layui-btn-small" id="batch_update_desc">批量更新商品说明</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-small" id="pager_id">清空条件</button>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <!-- <select name=""  lay-filter="change_search" id="platform_id">
+                             <option value="">请选择平台</option>
+                         </select>-->
+                        <div class="am-selected am-dropdown  am-active" id="am-selected-platform_id"
+                             style="width: 135px">
+                            <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                   placeholder="请选择平台">
+                            <i class="edge"></i>
+                            <div class="am-selected-content am-dropdown-content"
+                                 style="min-width: 135px;display: none">
+                                <div class="am-selected-search">
+                                    <input autocomplete="off" class="am-form-field am-input-sm">
+                                </div>
+                                <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto"
+                                    id="platform_id">
+                                </ul>
+                                <div class="am-selected-hint"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <!--<select name="" lay-filter="change_search" id="brand_id">-->
+                        <!--<option value="">请选择商品</option>-->
+                        <!--</select>-->
+                        <div class="am-selected am-dropdown  am-active" id="am-selected" style="width: 135px">
+                            <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                   placeholder="选择品牌">
+                            <i class="edge"></i>
+                            <div class="am-selected-content am-dropdown-content"
+                                 style="min-width: 135px;display: none">
+                                <div class="am-selected-search">
+                                    <input autocomplete="off" class="am-form-field am-input-sm">
+                                </div>
+                                <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto" id="brand_id">
+                                </ul>
+                                <div class="am-selected-hint"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <!--<select name="" lay-filter="change_search" id="category_id">
+                            <option value="">请选择分类</option>
+                        </select>-->
+                        <div class="am-selected am-dropdown  am-active" id="am-selected-category_id"
+                             style="width: 135px">
+                            <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                   placeholder="请选择分类">
+                            <i class="edge"></i>
+                            <div class="am-selected-content am-dropdown-content"
+                                 style="min-width: 135px;display: none">
+                                <div class="am-selected-search">
+                                    <input autocomplete="off" class="am-form-field am-input-sm">
+                                </div>
+                                <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto"
+                                    id="category_id">
+                                </ul>
+                                <div class="am-selected-hint"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input class="layui-input key_up_enable" placeholder="开始日" id="startDate">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input class="layui-input key_up_enable" placeholder="截止日" id="endDate">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-block mizo-margin-0">
+                        <input name="like1[write]" lay-skin="primary" lay-filter="check_search" id="market_id"
+                               title="上架"
+                               type="checkbox">
+                        <input name="like1[read]" lay-skin="primary" lay-filter="check_search" id="gif_id" title="赠品"
+                               type="checkbox">
+                        <input name="like1[game]" lay-skin="primary" lay-filter="check_search" id="package_id"
+                               title="套装"
+                               type="checkbox">
+                        <input name="like1[write]" lay-skin="primary" lay-filter="check_search" id="no_enabled_id"
+                               title="禁用"
+                               type="checkbox">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <!--<div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <colgroup>
+                    <col width="30">
+                    <col width="120">
+                    <col width="120">
+                    <col width="80">
+                    <col width="120">
+                    <col width="280">
+                    <col width="40">
+                    <col width="80">
+                    <col width="60">
+                    <col width="60">
+                    <col width="120">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="checked"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku sort" name="product.sku_code">SKU编码</th>
+                    <th class="tab_fenlei">商品分类</th>
+                    <th class="tab_img">商品图片</th>
+                    <th class="tab_pinpai">品牌</th>
+                    <th class="tab_name sort" name="product.name">商品名称</th>
+                    <th class="tab_unit sort" name="product.unit">单位</th>
+                    <th class="tab_price sort" name="product.price">销售单价</th>
+                    <th class="isOrNo">是否上架</th>
+                    <th class="isOrNo">是否启用</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+
+                </tbody>
+            </table>
+
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-checkbox" style="">
+                                    <input type="checkbox" lay-skin="primary" lay-filter="allChoose">
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="product.sku_code"
+                                     style="">SKU编码
+                                </div>
+                            </td>
+
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-w200" style="">商品分类</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w50">商品图片</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-user_name">品牌</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-w400 sort" name="product.name">商品名称</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="product.unit" style="">单位
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name9">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 sort" name="product.price" style="">
+                                    销售单价
+                                </div>
+                            </td>
+							<td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w60 " style="">上架数量</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w60 " style="">是否上架</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name11">
+                                <div class="datagrid-cell datagrid-cell-c1-w60 " style="">是否启用</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num " style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--table 分页-->
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value" lay-ignore="">
+                <option value="20" selected="">20 条/页</option>
+                <option value="100">100 条/页</option>
+                <option value="300">300 条/页</option>
+                <option value="500">500 条/页</option>
+            </select></span>
+            <div id="pager" class="text-r"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><div class="datagrid-cell datagrid-cell-c1-checkbox"><input type="checkbox"  lay-skin="primary" class="{{if isCommon}}common{{/if}}" id="{{:id}}"></div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-order_num break_word"  style="">{{:skuCode}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w200"  style="">{{:categoryName}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w50 text-c" onclick='showImg("{{upper2:urlPath}}")' id='imgW'><img class="mizone-table-td-img" src="{{upper:urlPath}}"/></div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-user_name" >{{:brandName}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w400 over_hid" title="{{:name}}">{{:name}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w50 text-c" >{{:unit}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w70" >{{:price}}</div></td>
+	<td><div class="datagrid-cell datagrid-cell-c1-w50 text-c tmpStock_{{:id}}" data-val="{{:tmpStock}}" data-id="{{:id}}" onclick='tmpStockFun("{{:id}}")'>{{:tmpStock}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w60 text-c" style="">{{:marketable}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w60 text-c" style="">{{:enabled}}</div></td>
+    <td class="state_uhandle">
+    <div class="datagrid-cell datagrid-cell-c1-order_num " style="">
+        <a href="javascript:;" product="{{:id}}" class="product_save product_save_common" product_category_num="{{:categoryFirstNum}}" {{if isCommon}}authority_code="product_save_common"{{else}}authority_code="product_save"{{/if}} title="编辑"><i class="icon-bianji"></i></a>
+        {{if isEnabled}}
+        <a href="javascript:;"  product="{{:id}}" class="product_down_up" authority_code="product_down_up{{if isCommon}},product_save_common{{/if}}" isMarketable="{{:isMarketable}}" {{if isMarketable}} title="下架" {{else}}title="上架"{{/if}}>{{if isMarketable}}<i class="icon-download" ></i>{{else}}<i class="icon-upload" ></i>{{/if}}</a>
+         {{/if}}
+
+        <a href="javascript:;" product="{{:id}}" class="product_enbale" authority_code="product_enbale{{if isCommon}},product_save_common{{/if}}" isEnabled="{{:isEnabled}}" {{if isEnabled}} title="禁用" {{else}}title="启用"{{/if}} >{{if isEnabled}}<i class="icon-uniE617"></i>{{else}}<i class="icon-zhenque"></i>{{/if}}</a>
+        <a href="javascript:;" product="{{:id}}" class="product_info" product_category_num="{{:categoryFirstNum}}"  authority_code="product_info" {{if isCommon}}n_authority_code="product_save_common"{{else}}n_authority_code="product_save"{{/if}} title="查看"><i class="icon-uniE602"></i></a>
+        </div>
+    </td>
+</tr>
+{{/for}}
+</script>
+<script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:name}}</option>
+    {{/for}}
+</script>
+
+<script type="x-jsrender" id="j-select-li">
+    {{for result}}
+    <li class="" val="{{:id}}"><span class="am-selected-text">{{:name}}</span> <i class="am-check icon-duigou"></i></li>
+    {{/for}}
+
+</script>
+<div class="layui-form-item mizone-form-item" id="commodityDescriptionDiv" style="display:none">
+	<div class="layui-inline">
+		<div class="layui-input-inline">
+			<textarea cols="80" rows="6" id="commodityDescription" name="commodityDescription"></textarea>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var start = {}, end = {}, currPageNo;
+        var authorityCodeList;
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $('.datagrid-body').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        form.on('checkbox(check_search)', function (data) {
+            search();
+        });
+        $(".page_size_value").change(function () {
+            search();
+        });
+
+        form.on('select(change_search)', function (data) {
+            search();
+        });
+
+        $(".key_up_enable").keyup(function (event) {
+            if (event.keyCode == "13") {
+                search();
+            }
+        });
+
+        $('#startDate').click(function () {
+            start.elem = this;
+            start.format = 'YYYY-MM-DD';
+            start.min = undefined;
+            if (!Utils.isNotBlack($("#endDate").val())) {
+                start.max = undefined;
+            } else if (!Utils.isNotNull(start.max)) {
+                start.max = laydate.now();
+            }
+            start.choose = function (datas) {
+                end.min = datas; //结束日选好后，重置开始日的最大日期
+            }
+            start.start = "";
+            start.istoday = false
+            laydate(start);
+        });
+        $('#endDate').click(function () {
+            end.elem = this;
+            end.format = 'YYYY-MM-DD';
+            end.max = undefined;
+            if (!Utils.isNotBlack($("#startDate").val())) {
+                end.min = undefined;
+            } else if (!Utils.isNotNull(end.min)) {
+                end.min = laydate.now();
+            }
+            end.choose = function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+            laydate(end);
+        })
+        $("#add_product").click(function () {
+            if (isSpecgetParam()) {
+                callParent.openTab("product_add", 0, "新增商品", "admin/commodity/add_com_ckj.html", true);
+            } else {
+                callParent.openTab("product_add", 0, "新增商品", "admin/commodity/add_com.html", true);
+            }
+        });
+        $("#add_common_product").click(function () {
+            if (isSpecgetParam()) {
+                callParent.openTab("product_add", 0, "新增公共商品", "admin/commodity/add_com_ckj.html?isCommon=1", true);
+            } else {
+                callParent.openTab("product_add", 0, "新增公共商品", "admin/commodity/add_com.html?isCommon=1", true);
+
+            }
+        });
+        $("#pager_id").click(function () {
+            clearSelectLiId("platform_id");
+            clearSelectLiId("brand_id");
+            clearSelectLiId("category_id");
+            $("#startDate").val("");
+            $("#endDate").val("");
+            $("#market_id").removeAttr("checked");
+            $("#gif_id").removeAttr("checked");
+            $("#package_id").removeAttr("checked");
+            $("#no_enabled_id").removeAttr("checked");
+
+            $("#search_content").val("");
+            form.render();
+            search();
+        })
+        var brandList = null;
+        var categoryList = null;
+        var platformList = null;
+        var selectCommon = false;
+        $("#product_deleted").click(function () {
+            var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (!$(this).hasClass("common")) {
+                    var checkId = Utils.checkBox($(this), $(this).attr("id"));
+                    if (Utils.isNotNull(checkId)) {
+                        idList.push(checkId);
+                    }
+                } else {
+                    selectCommon = true;
+                }
+
+            })
+            if (idList.length > 0) {
+                layer.confirm("确定要禁用已选择的商品吗？", {
+                    icon: 3,
+                    title: '提示',
+                    'closeBtn': 0,
+                    area: ['430px', '240px']
+                }, function () {
+                    ajaxsend({productId: idList, enable: false}, "/admin/product/enable.json", function () {
+                        layer.alert("禁用成功", {}, function (index) {
+                            layer.close(index)
+                            search(currPageNo)
+                        });
+                    })
+                })
+            } else {
+                if (selectCommon) {
+                    layer.alert("您所选择的都是公共商品，请选择非公共商品！", function (index) {
+                        layer.close(index);
+                    });
+                } else {
+                    layer.alert("请选择要禁用的非公共商品", {}, function (index) {
+                        layer.close(index)
+                    });
+                }
+
+            }
+        });
+        ajaxsend("", "/admin/common/brand/list.json", function (dataJson) {
+            brandList = dataJson.result;
+            var jsRenderTpl = $.templates('#j-select-li'),
+                    finalTpl = jsRenderTpl(dataJson);
+            $("#brand_id").append(finalTpl);
+            form.render();
+        })
+        ajaxsend("", "/admin/common/category/list.json", function (dataJson) {
+            categoryList = dataJson.result;
+            var jsRenderTpl = $.templates('#j-select-li');
+            dataJson.result = addBlanck(dataJson.result);
+            var finalTpl = jsRenderTpl(dataJson);
+            $("#category_id").append(finalTpl)
+            form.render();
+        })
+        ajaxsend("", "/admin/common/platform/list.json", function (dataJson) {
+            platformList = dataJson.result;
+            var jsRenderTpl = $.templates('#j-select-li'),
+                    finalTpl = jsRenderTpl(dataJson);
+            $("#platform_id").append(finalTpl);
+            form.render();
+        });
+        $('#am-selected-platform_id').selectMy({
+            nextFunction: function () {
+                search()
+            }
+        });
+        $('#am-selected').selectMy({
+            nextFunction: function () {
+                search()
+            }
+        });
+        $('#am-selected-category_id').selectMy({
+            nextFunction: function () {
+                search()
+            }
+        });
+
+        function addBlanck(result) {
+            var resultMap = new Map();
+            for (var i = 0; i < result.length; i++) {
+                resultMap.push(result[i].id, {category: result[i], child: new Array()});
+            }
+            var categoryList = new Array();
+            var resultList = new Array();
+            for (var i = 0; i < resultMap.key().length; i++) {
+                var key = resultMap.key()[i];
+                var category = resultMap.get(key);
+                if (Utils.isNotNull(category.category.parentId)) {
+                    var parentCategory = resultMap.get(category.category.parentId)
+                    parentCategory.child.push(category);
+                } else {
+                    resultList.push(category)
+                }
+            }
+            return addChildBlankMark(resultList, "");
+        }
+
+        function addChildBlankMark(resultList, mark) {
+            var categoryList = new Array();
+            for (var i = 0; i < resultList.length; i++) {
+                resultList[i].category.name = mark + resultList[i].category.name
+                categoryList.push(resultList[i].category);
+                if (resultList[i].child.length > 0) {
+                    var tempList = addChildBlankMark(resultList[i].child, resultList[i].category.name + "/");
+                    for (var j = 0; j < tempList.length; j++) {
+                        categoryList.push(tempList[j]);
+                    }
+                }
+            }
+            return categoryList;
+
+        }
+
+        var orderObj = new Order(function (obj) {
+            search();
+        }, "product.create_time");
+        $("#export_id").click(function () {
+            exportOut();
+        })
+        function exportOut() {
+            var productType = Utils.checkBox($("#package_id"), 2);
+            var option="";
+            var brandIdList = getSelectLiId("brand_id");
+
+            if(brandIdList.length>0){
+            for(var i=0;i<brandIdList.length;i++){
+                option += "&brandIdList=" + brandIdList[i];
+            }}
+
+            var platformIdList = getSelectLiId("platform_id");
+
+            if(platformIdList.length>0){
+                for(var i=0;i<platformIdList.length;i++){
+                    option += "&platformIdList=" + platformIdList[i];
+                }}
+            var categoryIdList = getSelectLiId("category_id");
+
+            if(categoryIdList.length>0){
+                for(var i=0;i<categoryIdList.length;i++){
+                    option += "&categoryIdList=" + categoryIdList[i];
+                }}
+            option += "&startDate=" + $("#startDate").val();
+            option += "&endDate=" + $("#endDate").val();
+            if (Utils.checkBox($("#market_id"), true, false)) {
+                option += "&isMarketable=true"
+            }
+            if (Utils.checkBox($("#gif_id"), true, false)) {
+                option += "&isGift=true";
+
+            }
+            if (Utils.checkBox($("#no_enabled_id"), true, false)) {
+                option += "&noEnabled=true";
+
+            }
+
+            if (productType == 2) {
+                option += "&productType=" + productType;
+            }
+            option += "&productName=" + $.trim($("#search_content").val());
+            option += "&skuCode=" + $.trim($("#search_content").val());
+            window.open("/admin/product/export/list.json?" + option, "_blank");
+        }
+
+        function getSelectLiId(id) {
+            var idList = new Array();
+            $("#" + id).find("li").each(function () {
+                if ($(this).hasClass("am-checked")) {
+                    idList.push($(this).attr("val"))
+                }
+            })
+            return idList;
+        }
+
+        function clearSelectLiId(id) {
+            var idList = new Array();
+            $("#" + id).find("li").each(function () {
+                $(this).removeClass("am-checked")
+            })
+
+        }
+
+        function search(pageNo, is) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var productType = Utils.checkBox($("#package_id"), 2);
+            var option = {
+                pageNo: pageNo,
+                pageSize: pageSize,
+                brandIdList: getSelectLiId("brand_id"),
+                platformIdList: getSelectLiId("platform_id"),
+                categoryIdList: getSelectLiId("category_id"),
+                startDate: $("#startDate").val(),
+                endDate: $("#endDate").val(),
+                isMarketable: Utils.checkBox($("#market_id"), true),
+                noEnabled: Utils.checkBox($("#no_enabled_id"), true),
+                isGift: Utils.checkBox($("#gif_id"), true),
+                productType: productType,
+                productName: $.trim($("#search_content").val()),
+                skuCode: $.trim($("#search_content").val())
+            }
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/admin/product/page.json", function (dataJson) {
+                var data = dataJson;
+                authorityCodeList = data.authorityCodeList;
+                createTableData(data)
+                checkLocalAuthority(data);
+                if (is) {
+                    layer.msg('已刷新为最新数据！！', {
+                        time: 300
+                    })
+                }
+                form.render('checkbox'); //
+                if (!Utils.isNotNull(brandList)) {
+                    ajaxsend("", "/admin/common/brand/list.json", function (dataJson) {
+                        brandList = dataJson.result;
+                        createTableData(data)
+                    });
+                }
+                if (!Utils.isNotNull(categoryList)) {
+                    ajaxsend("", "/admin/common/category/list.json", function (dataJson) {
+                        categoryList = dataJson.result;
+                        createTableData(data)
+                    });
+                }
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+            });
+        }
+
+        function createTableData(data) {
+            if (Utils.isNotNull(brandList) && Utils.isNotNull(categoryList)) {
+                var resultList = data.result.result;
+                var brandMap = new Map();
+                var categoryMap = new Map();
+                if (resultList != null) {
+                    if (brandList.length > 0) {
+                        for (var i in brandList) {
+                            brandMap.push(brandList[i].id, brandList[i]);
+                        }
+                    }
+                    if (categoryList.length > 0) {
+                        for (var i in categoryList) {
+                            categoryMap.push(categoryList[i].id, categoryList[i]);
+                        }
+                    }
+                }
+                for (var j in resultList) {
+                    var brand = brandMap.get(resultList[j].brandId);
+                    if (Utils.isNotNull(brand)) {
+                        resultList[j].brandName = brand.name
+                    }
+                    var category = categoryMap.get(resultList[j].categoryId);
+                    if (Utils.isNotNull(category)) {
+                        resultList[j].categoryName = category.name
+                    }
+                    if (resultList[j].isMarketable) {
+                        resultList[j].marketable = "是"
+                    } else {
+                        resultList[j].marketable = "否"
+                    }
+                    if (resultList[j].isEnabled) {
+                        resultList[j].enabled = "是"
+                    } else {
+                        resultList[j].enabled = "否"
+                    }
+                }
+                /*获取模板*/
+                var jsRenderTpl = $.templates('#j-con-list'),
+                /*绑定数据*/
+                        finalTpl = jsRenderTpl(data.result);
+                $('#page_tbody').html(finalTpl)
+                $("#checkTba").tableCheck('success');
+                form.render('checkbox'); //
+                checkLocalAuthority(data);
+                bind();
+            }
+        }
+
+
+        $("#search_id").click(function () {
+            search();
+        })
+		$("#batch_update_desc").click(function(){
+			var idList = new Array();
+            $("#page_tbody input[type='checkbox']").each(function () {
+                var checkId = Utils.checkBox($(this), $(this).attr("id"));
+				if (Utils.isNotNull(checkId)) {
+					idList.push(checkId);
+				}
+            })
+            if (idList.length > 0) {
+				var btn= ["保存", "取消"]
+				layer.open({
+				    type: 1,
+				    title: "批量商品说明",
+				    closeBtn: 0,
+					area: ["580px", "250px"],
+					btn: btn,
+				    content: $("#commodityDescriptionDiv"),
+					yes: function (index, item) {
+						ajaxsend({idList: idList, commodityDescription: $("#commodityDescription").val()}, "/admin/product/update/batchUpdateDesc.json", function () {
+							layer.alert("更新成功", {}, function (alertindex) {
+								layer.close(alertindex);
+								layer.close(index);
+								search(currPageNo);
+								$("#commodityDescription").val("");
+							});
+						})
+					},
+					btn2: function (index) {
+						layer.close(index);
+					}
+				});
+            } else {
+				layer.alert("请选择要更新的商品", {}, function (index) {
+					layer.close(index)
+				});
+            }
+		});
+        function isSpecgetParam() {
+			// console.info(Utils.isNotNull(authorityCodeList));
+			// console.info(Utils.isContain(authorityCodeList, "product_marker_info"));
+            return Utils.isNotNull(authorityCodeList) && Utils.isContain(authorityCodeList, "product_marker_info")
+        }
+
+        function bind() {
+            $("#page_tbody .state_uhandle a").click(function () {
+                var url = "";
+                var data = {}
+                // console.log($(this).attr("authority_code"));
+                if ($(this).attr("authority_code").indexOf("product_down_up") >= 0) {
+                    url = "/admin/product/down_up.json";
+                    var title = "";
+                    if ($(this).attr("isMarketable") == "true") {
+                        data.isMarketable = false;
+                        title = "商品已下架";
+                    } else {
+                        data.isMarketable = true;
+                        title = "商品已上架";
+                    }
+                    data.productId = $(this).attr("product");
+                    ajaxsend(data, url, function () {
+                        layer.alert(title, {}, function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        })
+
+                    })
+                } else if ($(this).attr("authority_code").indexOf("product_enbale") >= 0) {
+                    url = "/admin/product/enable.json";
+                    var title = "";
+                    if ($(this).attr("isenabled") == "true") {
+                        data.enable = false;
+                        title = "商品已经禁用，禁用后不能使用";
+                    } else {
+                        data.enable = true;
+                        title = "商品已经启用";
+                    }
+                    data.productId = new Array();
+                    data.productId.push($(this).attr("product"))
+
+                    ajaxsend(data, url, function () {
+                        layer.alert(title, {}, function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "product_save") {
+                    var param = "";
+
+                    if (Utils.isNotBlack($(this).attr("product_category_num"))) {
+                        // if (!isSpecgetParam()) {
+                        //     param = "type=look&";
+                        // }
+                        callParent.openTab("product_add", 0, "修改商品", "admin/commodity/add_com.html?" + param + "id=" + $(this).attr("product"), true);
+                    } else {
+                        // if (isSpecgetParam()) {
+                        //     param = "type=look&";
+                        // }
+
+                        callParent.openTab("product_add", 0, "修改商品", "admin/commodity/add_com.html?" + param + "id=" + $(this).attr("product"), true);
+                    }
+                    //公共商品编辑
+                } else if ($(this).attr("authority_code") == "product_save_common") {
+                    var param = "";
+                    if (Utils.isNotBlack($(this).attr("product_category_num"))) {
+                        // if (!isSpecgetParam()) {
+                        //     param = "type=look&";
+                        // }
+                        callParent.openTab("product_add", 0, "修改公共商品", "admin/commodity/add_com_ckj.html?" + param + "isCommon=1&id=" + $(this).attr("product"), true);
+                    } else {
+                        // if (isSpecgetParam()) {
+                        //     param = "type=look&";
+                        // }
+                        callParent.openTab("product_add", 0, "修改公共商品", "admin/commodity/add_com.html?" + param + "isCommon=1&id=" + $(this).attr("product"), true);
+                    }
+                } else if ($(this).attr("authority_code") == "product_info") {
+                    if (Utils.isNotBlack($(this).attr("product_category_num"))) {
+                        callParent.openTab("product_add", 0, "修改公共商品", "admin/commodity/add_com_ckj.html?type=look&isCommon=1&id=" + $(this).attr("product"), true);
+                    } else {
+                        callParent.openTab("product_add", 0, "修改公共商品", "admin/commodity/add_com.html?type=look&isCommon=1&id=" + $(this).attr("product"), true);
+
+                    }
+                }
+            })
+        }
+		saveTmpStockFun = function(id){
+			var tmpStock = $(".tmpStock_"+id).find("input");
+			var dataval = $(".tmpStock_"+id).attr("data-val");
+			
+			if(typeof(tmpStock)!="undefined"){
+				var tmpVal = tmpStock.val();
+				if(dataval == tmpVal){
+					$(".tmpStock_"+id).html(tmpVal);
+					return ;
+				}
+				$.ajax({
+					url : "/admin/product/update/tmpStock.json",
+					type : "get",
+					data:{"tmpStock":tmpVal,"id":id},
+					traditional : true,
+					async : false,
+					dataType : "json",
+					contentType : "application/json; charset=utf-8",
+					success : function(data) {
+						if(data.result!=null && data.result){
+							$(".tmpStock_"+id).html(tmpVal);
+							$(".tmpStock_"+id).attr("data-val",tmpVal);
+						}
+					}
+				});
+			}
+		}
+		tmpStockFun = function(id){
+			var dataval = $(".tmpStock_"+id).attr("data-val");
+			dataval = typeof(dataval)=="undefined"?"":dataval;
+			var objHtml = '<input type="text" name="tmpStock" value="'+dataval+'" style="width:50px;" onBlur="saveTmpStockFun('+id+')">';
+			$(".tmpStock_"+id).html(objHtml);
+			$(".tmpStock_"+id).find("input").val("").focus().val(dataval);
+		}
+        showImg = function (path) {
+            parent.layer.open({
+                title: false,
+                btn: 0,
+                area: ['auto', 'auto'],
+                closeBtn: 0,
+                shadeClose: true,
+                content: '<img src="' + path + '" alt="" width="400" height="400">'
+            })
+        }
+        $.views.converters({
+            upper: function (val) {
+                var reg = new RegExp(/mizone/);
+                if (reg.test(val)) {
+                    return val + '_32x32'
+                } else {
+                    return val
+                }
+            },
+            upper2: function (val) {
+                var reg = new RegExp(/mizone/);
+                if (reg.test(val)) {
+                    return val + '_400x400'
+                } else {
+                    return val
+                }
+            }
+        });
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["product_down_up", "product_save_common", "product_enbale", "product_info", "product_save"]);
+        }
+        search();
+        callParent.isLoadEnd("product_page");
+        callParent.register(function () {
+            var isRefresh = true
+            search(currPageNo, isRefresh)
+        }, "search");
+		
+    })
+</script>
+</body>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+//        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织架构管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list cf">
+        <div class="userCenter_left">
+            <div class="userCenter_name">
+                <p>组织架构</p>
+            </div>
+            <div class="">
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="输入组织名称进行搜索"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" style="width: 250px">
+                </div>
+                <ul id="treeDemo" class="ztree">
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="userCenter_right">
+            <!--条件搜索部分-->
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_use"> <i class="layui-icon"
+                                                                                          style="vertical-align: middle">
+                    &#xe61f;</i>新增成员</a>
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="商品编码/SKU编码"
+                           autocomplete="off" class="layui-input small mizo-srarch-input">
+                    <button class="layui-btn layui-btn-small">搜索</button>
+                </div>
+            </div>
+
+            <!--表格数据填充部分-->
+            <div class="">
+                <table class="layui-table" id="">
+                    <colgroup>
+                        <col width="50">
+                        <col width="150">
+                        <col width="100">
+                        <col width="80">
+                        <col width="300">
+                        <col width="100">
+                        <col width="250">
+                        <col width="150">
+                        <col width="80">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th class="">组织名称</th>
+                        <th class="">组织编号</th>
+                        <th class="">法人/负责人</th>
+                        <th class="">地址</th>
+                        <th class="">税号</th>
+                        <th class="">备注</th>
+                        <th class="">创建时间</th>
+                        <th class="">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="page_tbody">
+                    <tr>
+                        <td>公司</td>
+                        <td class="editTd">中策橡胶集团有限公司</td>
+                        <td class="editTd">ZHONGCE-1</td>
+                        <td>沈大大</td>
+                        <td>获取省市区+详细地址展示</td>
+                        <td></td>
+                        <td>税号3301483920432</td>
+                        <td>2017-03-04 12：00</td>
+                        <td>
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                    <i class="layui-icon">&#xe642;</i>
+                                </button>
+                                <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                    <i class="layui-icon">&#xe640;</i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="form_addUse" style="display: none" class="layui-form dialog">
+    <!--类型-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="公司" checked="">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="仓库" checked="">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="经销商" checked="">
+        </div>
+    </div>
+    <!--平台-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车平台" checked="">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="大车平台" checked="">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车经销商平台" checked="">
+        </div>
+    </div>
+    <!--组织名称-->
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">*组织名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--组织编号-->
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">*组织编号</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--法人/负责人-->
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">*法人</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--税号-->
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">*税号</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--地址-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">所在地区</label>
+        <div class="layui-input-inline">
+            <select name="">
+                <option value="">请选择省</option>
+                <option value="浙江" selected="">浙江省</option>
+                <option value="你的工号">江西省</option>
+                <option value="你最喜欢的老师">福建省</option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <select name="">
+                <option value="">请选择市</option>
+                <option value="杭州">杭州</option>
+                <option value="宁波" disabled="">宁波</option>
+                <option value="温州">温州</option>
+                <option value="温州">台州</option>
+                <option value="温州">绍兴</option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <select name="">
+                <option value="">请选择县/区</option>
+                <option value="西湖区">西湖区</option>
+                <option value="余杭区">余杭区</option>
+                <option value="拱墅区">临安市</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">*详细地址</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--备注-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品描述</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入商品描述信息" class="layui-textarea"> </textarea>
+        </div>
+    </div>
+
+
+</div>
+<script src="../common/lib/jquery-1.9.0.min.js"></script>
+
+<script src="../layui/layui.js"></script>
+<script src="../js/list.js"></script>
+<script type="text/javascript">
+    $().ready(function () {
+        layui.use(['form', 'layer', 'laytpl', 'element','myUtil'], function () {
+            var form = layui.form(),
+                element = layui.element(),
+                layer = layui.layer,
+                laytpl = layui.laytpl,
+                myUtil=layui.myUtil,
+                $editTd = $(".editTd");
+            $("#add_use").click(function () {
+                layer.open({
+                    title: "新增/编辑组织机构"
+                    , type: 1
+                    , content: $("#form_addUse")            //弹窗内容
+                    , area: ["671px", "600px"]         //设置窗体高度 和宽度
+                    , btn: ["确定", "取消"]
+                    , closeBtn: 0                    //取消右上角关闭按钮
+                    , btnAlign: 'c'
+                    , yes: function (index, item) {
+                        layer.close(index)
+                        console.log(item)
+                    }
+                    , btn: ["确定", "取消"]
+                })
+
+            })
+
+            $editTd.click(function () {
+                myUtil.editText($(this))
+            })
+        })
+    })
+</script>
+</body>
+
+</html>

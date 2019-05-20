@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../layui/layui.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <!--搜索条件-->
+    <div class="content-search layui-form">
+        <div class=" layui-form-item dialog_form_item">
+            <div class="layui-inline button-w70">
+                <a href="javascript:;" class="layui-btn layui-btn-small"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加文章</a>
+            </div>
+
+            <div class="layui-inline dialog_input_inline">
+                <select>
+                    <option value="1">请选择类型</option>
+                    <option value="2">站内信息</option>
+                    <option value="3">帮助信息</option>
+                </select>
+            </div>
+            <div class="layui-inline">
+                <input type="text" name="title" required lay-verify="required" placeholder="商品编码/SKU编码"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small">搜索</button>
+            </div>
+        </div>
+    </div>
+<!--table 内容-->
+    <div class="table_box">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <td width="5%"><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox">
+                </td>
+                <td width="5%">序号</td>
+                <td width="21% ">标题</td>
+                <td width="21%">名称</td>
+                <td width="9%">类型</td>
+                <td width="15%">操作人</td>
+                <td width="15%">创建时间</td>
+                <td width="9%">操作</td>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div id="pa" style="display: none"></div>
+<div id="pa1" style="display: none"></div>
+
+<script type="text/html" id="advertiseList">
+    {{# layui.each(d.list, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></td>
+        <td class="text_left">{{index+1}}</td>
+        <td class="text_left">{{item.advertiseTitle}}</td>
+        <td class="text_left">{{item.advertiseGroup}}</td>
+        <td class="text_left">{{item.advertiseStart}}</td>
+        <td class="text_left">{{item.advertiseEnd}}</td>
+        <td class="text_left">{{item.advertiseCreatTime}}</td>
+        <td>
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-small" title="编辑" onclick="">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class="layui-btn layui-btn-small" title="删除" onclick="">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.list.length === 0){ }}
+    无数据
+    {{# } }}
+</script>
+
+<script type="text/html" id="advertiseSet">
+    {{# layui.each(d.list, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></td>
+        <td class="text_left">{{item.advertiseName}}</td>
+        <td class="text_left">{{item.advertiseWidth}}</td>
+        <td class="text_left">{{item.advertiseHeight}}</td>
+        <td class="text_left">{{item.advertiDescribed}}</td>
+        <td>
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-small" title="编辑" onclick="">
+                    <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.list.length === 0){ }}
+    无数据
+    {{# } }}
+</script>
+
+<script type="text/html" id="addAdvertise">
+    <div class="layui-form form-box">
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">标题：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input" maxlength="6">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">广告位：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <select>
+                    <option value="1">小车客户端车空间商城广告</option>
+                    <option value="2">大车积分商城广告</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">起始时间：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="开始日" id="LAY_demorange_s">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">结束时间：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="开始日" id="LAY_demorange_e">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">链接地址：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="" >
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="addPositons">
+    <div class="layui-form form-box">
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">新增广告名称：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input" maxlength="6">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">广告宽度：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input" maxlength="6">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">广告高度：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input" maxlength="6">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">广告描述：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <textarea placeholder="对广告位置的描述" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+
+            var start = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+
+            var end = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            }
+            var data = {
+                "code": 0,
+                "list": [{
+                    "advertiseTitle": "小车门店APP车空间商城首页",
+                    "advertiseGroup": "会员创建订单",
+                    "advertiseStart": "站内信息",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00"
+                }, {
+                    "advertiseTitle": "首页滚动广告",
+                    "advertiseGroup": "商品标签",
+                    "advertiseStart": "站内信息",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00"
+                }, {
+                    "advertiseTitle": "小车门店APP车空间商城首页",
+                    "advertiseGroup": "会员创建订单",
+                    "advertiseStart": "帮助信息",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00"
+                }, {
+                    "advertiseTitle": "小车门店APP车空间商城首页",
+                    "advertiseGroup": "会员创建订单",
+                    "advertiseStart": "帮助信息",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00"
+                }]
+            };
+            var data1= {
+                "code": 0,
+                "list": [{
+                    "advertiseName": "小车门店APP车空间商城首页",
+                    "advertiseWidth": "500",
+                    "advertiseHeight": "600",
+                    "advertiDescribed": "结束日选好后，重置开始日的最大日期",
+                },]
+            };
+            var getTpl = $("#advertiseList").html();
+            var getTpl1 = $("#addAdvertise").html();
+            var getTpl2 = $("#advertiseSet").html();
+            var getTpl3 = $("#addPositons").html();
+
+            laytpl(getTpl).render(data, function (html) {
+                $("#tbody").html(html);
+                form.render()
+            });
+
+            laytpl(getTpl1).render(data, function (html) {
+                $("#pa").html(html);
+                form.render()
+            });
+
+            laytpl(getTpl2).render(data1, function (html) {
+                $("#tbody1").html(html);
+                form.render()
+            });
+            laytpl(getTpl3).render(data1, function (html) {
+                $("#pa1").html(html);
+                form.render()
+            });
+
+
+            $('#LAY_demorange_s').on('click',function () {
+                start.elem = this;
+                laydate(start);
+            })
+
+            $('#LAY_demorange_e').click(function () {
+                end.elem = this;
+                laydate(end)
+            })
+        })
+    })
+</script>
+
+<script>
+    $('#add').click(function () {
+        layer.open({
+            title: "新增广告"
+            , type: 1
+            , content: $('#pa')            //弹窗内容
+            , area: ["800px", "400px"]         //设置窗体高度 和宽度
+            , btn: ["确定", "取消"]
+            , closeBtn: 0                      //取消右上角关闭按钮
+            , btnAlign: 'c'
+        })
+    })
+    $('#add1').click(function () {
+        layer.open({
+            title: "新增广告位"
+            , type: 1
+            , content: $('#pa1')            //弹窗内容
+            , area: ["800px", "400px"]         //设置窗体高度 和宽度
+            , btn: ["确定", "取消"]
+            , closeBtn: 0                      //取消右上角关闭按钮
+            , btnAlign: 'c'
+        })
+    })
+</script>
+</body>
+</html>

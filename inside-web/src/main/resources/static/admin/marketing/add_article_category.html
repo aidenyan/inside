@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>新建文章分类</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header -->
+        <div class="layui-form mizone-add">
+            <div class="infor-show">
+                <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                <span>基础信息</span>
+            </div>
+            <form id="form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>名称:</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" id="id" name="id">
+                        <input type="text" lay-verify="required" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">上级分类:</label>
+                    <div class="layui-input-inline">
+                        <select id="parentId" name="parent"><option value="">请选择</option></select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">设置:</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox"  id="isShow" name="isShow"  lay-skin="primary" title="显示" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">页面标题:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="seoTitle" name="seoTitle" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">页面关键词:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="seoKeywords" name="seoKeywords" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline ">
+                    <label class="layui-form-label">页面描述:</label>
+                    <div class="layui-input-inline add-block-width">
+                        <input type="text" id="seoDescription" name="seoDescription" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            </form>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="save">保存并关闭</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveAndContinue">保存后新增</button>
+                <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+            </div>
+            
+          </div>
+        <!--table 数据-->
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/html" id="categoryOption">
+	<option value="-1">请选择</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">
+	{{#
+		function showGrade(grade){
+			var tmpNb = '';
+			var i=1;
+			while(i<=grade){
+			tmpNb+='&nbsp;';
+				i++;
+			}
+			return tmpNb;
+		}
+	}}
+	{{= showGrade(item.grade)}}
+	{{item.name}}
+	</option>
+    {{#  }); }}
+</script>
+<script>
+$(window).ready(function () {
+        layui.use(['form', 'layedit', 'laytpl'], function () {
+        	var form = layui.form();
+            var layer = layui.layer;
+            var laytpl = layui.laytpl;
+            var id = Utils.getHrefValue("id");
+            var index;
+            ajaxsend("","/admin/article/category/list.json", function (dataJson) {
+                if(dataJson.code=="0"){
+                   laytpl($("#categoryOption").html()).render(dataJson.result, function (html) {
+                       $("#parentId").html(html);
+                       form.render();
+                   });
+                }
+            })
+            if(id){
+            	ajaxsend({"id":id},"/admin/article/category/get.json", function (dataJson) {
+                    if(dataJson.code=="0"){
+                    	$("#id").val(dataJson.result.id);
+                        $("#name").val(dataJson.result.name);
+                        $("#parentId").val(dataJson.result.parent);
+                        $("#seoTitle").val(dataJson.result.seoTitle);
+                        $("#seoKeywords").val(dataJson.result.seoKeywords);
+                        $("#seoDescription").val(dataJson.result.seoDescription);
+                        $("#isShow").attr("checked",dataJson.result.isShow);
+                        form.render();
+                    }
+                })
+            }
+            form.on('submit(save)',function(data){
+                saveOrderInfo(null);
+            }); 
+            form.on('submit(saveAndContinue)',function(data){
+                saveOrderInfo(1);
+            }); 
+        	
+            
+            saveOrderInfo=function(flag){
+            	ajaxsend($("form").serialize(), "/admin/article/category/save.json", function (dataJson) {
+                    if(dataJson.result==true){
+                    	if(flag!=null){
+                            layer.msg("保存成功，请继续");
+                            $('#form')[0].reset();
+                            form.render();
+                        }else{
+                             callParent.parentUse("article_category_list", "search");
+                             $("#cancel").click();
+                        }
+                    }else{
+                    	layer.alert(data.message,{icon: 5});
+                    }
+                }, "postForm");
+            }
+            
+            $("#cancel").click(function(){
+                callParent.openTab("article_category_list");
+                if(id){
+                	callParent.closeTab("article_category_update");
+                }else{
+                	callParent.closeTab("article_category_add");
+                }
+                
+            })
+        })  
+})
+</script>
+</body>
+</html>

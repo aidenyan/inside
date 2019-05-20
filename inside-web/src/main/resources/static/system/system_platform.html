@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>平台管理</title>
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header -->
+        <div class="layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="javascript:;" class="layui-btn layui-btn-small" id="add_paltform"> <i class="layui-icon"
+                                                                                                   style="vertical-align: middle">
+                        &#xe61f;</i>新增平台</a>
+                    <button class="layui-btn layui-btn-small">禁用</button>
+                    <button class="layui-btn layui-btn-small">启用</button>
+                </div>
+            </div>
+        </div>
+
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="">
+                <colgroup>
+                    <col width="30">
+                    <col width="300">
+                    <col width="160">
+                    <col width="160">
+                    <col width="100">
+                    <col width="100">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                    <th class="">平台编号</th>
+                    <th class="">平台名称</th>
+                    <th class="">描述</th>
+                    <th class="">创建时间</th>
+                    <th class="">状态</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                <tr>
+                    <td><input name="" lay-skin="primary" type="checkbox"></i></td>
+                    <td>294814321441</td>
+                    <td class=""></td>
+                    <td>描述</td>
+                    <td>创建时间</td>
+                    <td>状态</td>
+                    <td>
+                        <div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                <i class="layui-icon">&#xe642;</i>
+                            </button>
+                            <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                <i class="layui-icon">&#xe640;</i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<form action="" class="layui-form " style="display: none" id="form_addPlatform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">平台编码</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入平台编码" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">平台名称</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入平台名称" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品描述</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入商品描述信息" class="layui-textarea"> </textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否启用</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like1[write]" lay-skin="primary" title="启用" checked="">
+        </div>
+    </div>
+
+</form> 
+</div>
+
+<!--弹窗内容-->
+
+
+<script src="../common/lib/jquery-1.9.0.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script type="text/javascript">
+    $().ready(function () {
+        layui.use(['form', 'layer', 'laytpl', 'element'], function () {
+            var form = layui.form(), element = layui.element(), layer = layui.layer, laytpl = layui.laytpl;
+            $("#add_paltform").click(function () {
+                layer.open({
+                    title: "新增平台"
+                    , type: 1
+                    ,content:$("#form_addPlatform")//弹窗内容
+                    , area: ["671px", "500px"]         //设置窗体高度 和宽度
+                    , closeBtn: 0                    //取消右上角关闭按钮
+                    , btnAlign: 'c'
+                    ,success:function (layero, index) {
+                        layero.addClass('layui-form');
+                        layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                        form.render();
+                    }
+                    , yes: function (index, item) {
+
+                        form.on('submit(fromContent)',function(){
+                            alert('a')
+                        })
+
+alert('a')
+
+                        alert('a')
+
+                    }
+                    , btn: ["确定", "取消"]
+                })
+
+            })
+        })
+    })
+
+</script>
+</body>
+</html>

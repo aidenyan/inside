@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>库位管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <style>
+        .layui-form-item .layui-input-inline{
+            width: 190px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form class="layui-form" action="">
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22" style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>基本信息</span>
+            </div>
+            <div class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>仓库</label>
+                        <div class="layui-input-inline">
+                            <input id="hidComOrg" type="hidden" name="comOrgName" value="{{d.comOrgName || ''}}"/>
+                            <select id="slcComOrg" name="comOrgId" lay-verify="required" lay-filter="comOrg"
+                                    lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>库房编号</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="house1" lay-verify="required|noCheck" class="layui-input" maxlength="2"
+                                        placeholder="开始编号" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="house2" lay-verify="required|noCheck" class="layui-input" maxlength="2"
+                                 placeholder="结束编号"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>库区编号</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="area1" lay-verify="required|noCheck" class="layui-input" maxlength="2"
+                                        placeholder="开始编号"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="area2" lay-verify="required|noCheck" class="layui-input" maxlength="2"
+                                    placeholder="结束编号"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>库位编号</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="location1" lay-verify="required|noCheck" class="layui-input" maxlength="2"
+                                       placeholder="开始编号"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="location2" lay-verify="required|noCheck" class="layui-input" maxlength="2"
+                                    placeholder="结束编号"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">层号</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="row1" lay-verify="noCheck" class="layui-input" maxlength="2"
+                                       placeholder="开始编号"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="row2" lay-verify="noCheck" class="layui-input" maxlength="2"
+                                   placeholder="结束编号"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">列号</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="col1" lay-verify="noCheck" class="layui-input" maxlength="2"
+                                       placeholder="开始编号"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="col2" lay-verify="noCheck" class="layui-input" maxlength="2"
+                                   placeholder="结束编号"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="save">保存并关闭</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveAdd">保存并新增</button>
+                <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script id="tplComOrg" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , laytpl = layui.laytpl
+                , myAjax = layui.myAjax;
+
+        form.verify({
+            noCheck: [/^[0-9A-Z]{0,2}$/, '请输入数字或大写字母']
+        });
+
+        //保存
+        form.on('submit(save)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/inventory/saveBatch.json', function () {
+                    layer.msg('保存成功');
+                    callParent.parentUse("location_list", "refresh");
+                    callParent.openTab("location_list");
+                    callParent.closeTab('location_add');
+                }, data.field, 'post');
+            }
+            return false;
+        });
+
+        //保存并新增
+        form.on('submit(saveAdd)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/inventory/saveBatch.json', function () {
+                    parent.$("#location_add").attr('src', 'admin/inventory/location_add.html');
+                }, data.field, 'post');
+            }
+            return false;
+        });
+
+        $("#cancel").click(function () {
+            callParent.openTab('location_list');
+            callParent.closeTab('location_add');
+        });
+
+        form.on('select(comOrg)', function (data) {
+            $("#hidComOrg").val(data.othis.find(".layui-this").html())
+        });
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcComOrg', 'tplComOrg', true);
+    });
+</script>
+
+</body>
+</html>

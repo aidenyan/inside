@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成员角色管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <style></style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <div class="layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="../user/add-use.html" class="layui-btn layui-btn-small"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>新增成员</a>
+                    <button class="layui-btn layui-btn-small remove">删除</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form">
+            <table class="layui-table" id="">
+                <colgroup>
+                    <col width="30">
+                    <col width="300">
+                    <col width="160">
+                    <col width="160">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                    <th class="">角色名称</th>
+                    <th class="">角色描述</th>
+                    <th class="">创建时间</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                <tr>
+                    <td><input name="" lay-skin="primary" type="checkbox"></i></td>
+                    <td>商品处理</td>
+                    <td>处理商品的人员</td>
+                    <td>2017-02-09 12:00</td>
+                    <td>
+                        <div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                <i class="layui-icon">&#xe642;</i>
+                            </button>
+                            <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                <i class="layui-icon">&#xe640;</i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="../layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl'], function () {
+        var form = layui.form()
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , $ = layui.jquery;
+
+        $(".remove").on('click', function () {
+            layer.confirm("确定删除角色?删除后不可恢复！",function () {
+
+            })
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拆单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list">
+    <div class="order_num">
+        <span>拆单数量</span>
+        <span class="icon-minus minus"></span>
+        <span class="num">0</span>
+        <span class="icon-plus plus"></span>
+    </div>
+
+    <!--原单数据-->
+    <div class="table_box">
+        <table class="layui-table text_left">
+            <thead>
+            <tr>
+                <td width="3%">序号</td>
+                <td width="12%">SKU编码</td>
+                <td width="9%">品牌</td>
+                <td width="">商品名称</td>
+                <td width="5%">单位</td>
+                <td width="10%">商品分类</td>
+                <td width="5%">销售单价</td>
+                <td width="5%">下单数量</td>
+                <td width="8%">未拆单数量</td>
+                <td width="8%">小计</td>
+            </tr>
+            </thead>
+            <tbody id="primitiveOrderList">
+            </tbody>
+        </table>
+    </div>
+
+    <div id="order_list">
+
+    </div>
+
+
+    <div class="mizone-bottom-btn botton_paddT">
+        <button class="layui-btn" id="saveOrderInfo">确定</button>
+        <button class="layui-btn" id="cansleDivideOrder">取消</button>
+    </div>
+	</div>
+ 
+<script type="text/javascript" src="../../js/common.js"></script>
+<script id="tplStorageInItems" type="text/html">
+    {{#  layui.each(d.storageItemDTOList, function(index, item){ }}
+    <tr>
+        <td class="proIndex">{{index+1}}</td>
+        <td class="proSku" sendGoods="{{item.sendGoods}}">{{item.skuCode}}</td>
+        <td class="proBrandName">{{item.brandName||''}}</td>
+        <td class="proName">{{item.productName}}</td>
+        <td class="proUnit">{{item.productUnit||''}}</td>
+        <td class="proCategoryName">{{item.categoryName||''}}</td>
+        <td class="proPrice">{{item.price}} </td>
+        <td class="proNum">{{item.num}} </td>
+		<td>0</td>
+		<td name="priceAmount" class="priceAmount">
+			{{(item.price || 0)*(item.num ||0)}}
+		</td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplOption" type="text/html">
+ 	<option value="">请选择</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="addOrder">
+   <div class="childOrder">
+       <!--分割线-->
+       <h2 class="title2">
+           <span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>
+           订单拆分
+       </h2>
+       <!--拆分订单一-->
+
+       <div class="table_box">
+           <table class="layui-table text_left">
+               <thead>
+               <tr>
+                   <td width="3%">序号</td>
+                   <td width="12%">SKU编码</td>
+                   <td width="9%">品牌</td>
+                   <td width="">商品名称</td>
+                   <td width="5%">单位</td>
+                   <td width="10%">商品分类</td>
+                   <td width="5%">销售单价</td>
+                   <td width="5%">数量</td>
+               </tr>
+               </thead>
+               <tbody>
+
+               {{# layui.each(d.itemList, function(index, item){ }}
+               <tr data-id="{{item.advertiseGroup}}">
+                   <td class="addCheckIndex">{{index+1}}</td>
+                   <td class="addSkuCode" addSendGoods="{{item.sendGoods}}">{{item.skuCode}}</td>
+                   <td>{{item.brandName||''}}</td>
+                   <td class="addProName">{{item.productName}}</td>
+                   <td>{{item.productUnit||''}}</td>
+                   <td>{{item.categoryName||''}}</td>
+                   <td class="addPrice">{{item.price}}</td>
+                   <td>
+                      <input type="number" min="1" name="addProNum"
+                  		class="layui-input small mizo-srarch-input addProNum" style="width:80px;text-align:center;"
+                   		value="0" lay-verify="required"/></td>
+                   </td>
+               </tr>
+
+               {{# }); }}
+
+               {{# if(d.length === 0){ }}
+               无数据
+               {{# } }}
+               </tbody>
+           </table>
+       </div>
+       <div class="showAddress">
+           <h2 class="title2">
+               <span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>
+               编辑收货地址
+               <span class="icon- sign userSelect" onclick="Public.editAddress(this)">&#xe62b</span>
+           </h2>
+			<div class="address" style="width: 100%;display: none" id="addressHtml">
+          <div class="layui-form poR">
+              <div class="layui-form-item mizone-order-item">
+                  <div class="layui-inline">
+                      <label class="layui-form-label mizone-order-label">收货人</label>
+                      <div class="layui-input-inline inputW338">
+                          <input type="text" class="layui-input consignee" value="">
+                      </div>
+                  </div>
+                  <div class="layui-inline">
+                      <label class="layui-form-label mizone-order-label">收货电话</label>
+                      <div class="layui-input-inline inputW338">
+                          <input type="text" class="layui-input phoneNo" value="">
+                      </div>
+                  </div>
+              </div>
+              <div class="layui-form-item mizone-order-item">
+                  <div class="layui-inline">
+                      <label class="layui-form-label mizone-order-label">地址</label>
+                      <div class="inputW338 layui-inline">    
+                          <div class="layui-input-inline inputW238">
+                              <select name="province" class="province" lay-filter="provinceFilter">
+                                  <option value="">请选择</option>
+                              </select>
+                          </div>
+                          <div class="layui-input-inline inputW238">
+                              <select name="city" class="city" lay-filter="cityFilter">
+                                  <option value="">请选择</option>
+                              </select>
+                          </div>
+                          <div class="layui-input-inline inputW238 layui-inline-last">
+                              <select name="sysarea" class="sysarea">
+                                  <option value="">请选择</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="layui-form-item mizone-order-item">
+                  <div class="layui-inline ">
+                      <label class="layui-form-label mizone-order-label">详细地址</label>
+                      <div class="layui-input-inline inputW438">
+                          <input type="text" class="layui-input fullAddress" value="">
+                      </div>
+                  </div>
+              </div>
+
+              <div class="layui-form-item mizone-order-item">
+                  <div class="layui-inline ">
+                      <label class="layui-form-label mizone-order-label">订单备注</label>
+                      <div class="layui-input-inline inputW438">
+                          <input type="text" class="layui-input sellerMessage" value="">
+                      </div>
+                  </div>
+              </div>
+              <!--<div class="button-change">编辑</div>-->
+          </div>
+      </div>
+       </div>
+   </div>
+</script>
+<script>
+    (function ($, window) {
+        var Public = {
+            editAddress: function (parent) {
+                var $this = $(parent), $address = $this.parent().siblings('.address');
+                if (this.isOpen) {
+                    $this.removeClass('open')
+                    $address.slideUp('fast');
+                    this.isOpen = false
+                    $this.html('&#xe62b')
+                } else {
+                    $address.slideDown('fast');
+                    this.isOpen = true
+                    $this.html('&#xe63d')
+                    $this.addClass('open')
+                }
+            },
+            editNum:function (parent) {
+                var $this=$(parent);
+                var cunt=0;
+                if(!$this.is('.input')){
+                    $this.addClass('input').html('<input type="text" value="'+ $(this).text() +'" />').find('input').focus().blur(function(){
+                        if($(this).val()>5){
+                            layer.tips('最大数值为5',$(this))
+                            $(this).parent().removeClass('input').html(5);
+                            $(this).val(5)
+                        }
+                        else {
+                            $(this).parent().removeClass('input').html($(this).val() || 0);
+                        }
+                        var price= $this.parent().find('.advertisePrice').html();
+                        $this.parent().find('.heji').html(price*$(this).val())
+                        console.log($this.parent().find('.advertisePrice').html())
+                    });
+                }
+            }
+        }
+        window.Public = Public
+    })(jQuery, window)
+</script>
+
+
+<script>
+     $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate','myAjax'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+            var myAjax = layui.myAjax;
+            form.on('select(provinceFilter)', function(data){
+    			changeProvince(data.elem,data.value);
+    			}); 
+    		form.on('select(cityFilter)', function(data){
+    			changeCity(data.elem,data.value);
+    			}); 
+            var id=params.get("id");
+            var platformId=params.get("source");
+            var toAddorderInfo={};
+            var areaId="";
+            var orderVersion="";
+			var normalItemList={};
+			var msgToclose=params.get("msgToclose");
+    		if(id!=null){
+    			myAjax.ajaxSend("/admin/order/info.json",function(data){
+    				if(data!=null&&data.result!=null){
+    					data=data.result;
+    					var skuCodes=new Array();
+    					var orderItemList=data.orderItemList;
+    					$.each(orderItemList,function(k,p){
+    						skuCodes.push(p.skuCode);
+    					})
+    					var address={
+    						'consignee':data.consignee,
+    						'phoneNo':data.phoneNo,
+    						'areaId':data.areaId,
+    						'fullAddress':data.address,
+    						'sellerMessage':data.sellerMessage
+    					}
+    					areaId=data.areaId;
+    					orderVersion=data.version;
+    					normalItemList=data.orderItemList;
+    					var toAddItemList=new Array();
+    					var orderProductInventoryList=data.orderProductInventoryList;
+    					var checkSkuCodeFlag=true;
+    					var orderItemInventoryListDetail=new Array();
+    					$.each(orderProductInventoryList,function(k,p){
+    						var normalSkuCode=p.skuCode;
+    						var checkSkuCode=p.checkSkuCode;
+    						if(checkSkuCode!=normalSkuCode){
+    							checkSkuCodeFlag=false;
+    						}
+    						var itemInfo={
+    								'skuCode':p.skuCode,
+    								'checkSkuCode':p.checkSkuCode,
+    								'productName':p.proName,
+    								'brandName':p.brandName,
+    								'productUnit':p.packageUnit,
+    								'categoryName':p.categoryName,
+    								'price':p.price,
+    								'num':p.buyNum,
+    								'saleInventory':p.saleNum,
+    								'sendGoods':p.sendGoods
+    						}
+    						orderItemInventoryListDetail.push(itemInfo);
+    					})
+    					var orderItemDetail={
+    						"storageItemDTOList":orderItemInventoryListDetail
+    					}
+    					laytpl($("#tplStorageInItems").html()).render(orderItemDetail, function (html) {
+    						$("#primitiveOrderList").html(html);
+    					});
+    					toAddorderInfo={
+             	   				'itemList':orderItemInventoryListDetail,
+             	   				'address':address
+             	   			}
+                 	   /* 	myAjax.ajaxTpl('/admin/order/getProductInfo.json?', 'primitiveOrderList', 'tplStorageInItems', true, function (data) {
+                 	   		$("#primitiveOrderList .proSku").each(function(){
+                 	   			var skuCode=$(this).html();
+                 	   			var obj=$(this);
+                 	   			$.each(orderItemList,function(k,p){
+                 	   				if(skuCode==p.skuCode){
+                 	   					obj.parent().find(".proPrice").html(p.price);
+                 	   					obj.parent().find(".proNum").html(p.quantity);
+                 	   					obj.parent().find(".priceAmount").html(p.quantity*p.price);
+                 	   					obj.parent().find(".proName").html(p.name);
+                 	   					var item={
+                 	   							'skuCode':skuCode,
+                 	   							'brandName':obj.parent().find(".proBrandName").html(),
+                 	   							'productName':obj.parent().find(".proName").html(),
+                 	   							'productUnit':obj.parent().find(".proUnit").html(),
+                 	   							'categoryName':obj.parent().find(".proCategoryName").html(),
+                 	   							'price':obj.parent().find(".proPrice").html(),
+                 	   					}
+                 	   				toAddItemList.push(item);
+                 	   				}
+                 	   			})
+                 	   		toAddorderInfo={
+                 	   				'itemList':toAddItemList,
+                 	   				'address':address
+                 	   			}
+                 	   		});
+                 	   	},{"skuCodes":skuCodes},'post') */
+    				}
+    			},{'id':id});
+    		}
+
+            var $num = $('.num'), num = 0;
+            //    阻止连续点击选中文本
+            $('.order_num').get(0).onselectstart = function () {
+                return false
+            }
+            $('.order_num').on('click', function (e) {
+                e = e || window.event
+                var $target = $(e.target || e.srcElement);
+                if ($target.is('.minus')) {
+                    if (num <= 0) {
+                        return
+                    }
+                    num--
+                    $num.text(num)
+                    $("#order_list>div").last().remove();
+                } else if ($target.is('.plus')) {
+                	var count=0;
+                	var addCount=0;
+                	$("#primitiveOrderList").find(".proNum").each(function(){
+                		var numCount=$(this).html();
+                		count+=parseInt(numCount);
+                	})
+                	$("#order_list").find(".addProNum").each(function(){
+                		var numaddCount=$(this).val();
+                		addCount+=parseInt(numaddCount==""?0:numaddCount);
+                	})
+                	if(count<=1){
+                		return layer.msg("原始订单商品数量只有一件，无需拆单");
+                	}
+                	if(count<=addCount){
+                		return layer.msg("原始订单商品数量已小于等于要分的订单的商品数量，无法再拆");
+                	}
+                    num++;
+                    $num.text(num);
+                    var getTpl=$('#addOrder').html();
+                    console.log(toAddorderInfo);
+                    laytpl(getTpl).render(toAddorderInfo, function (html) {
+                        $('#order_list').append(html);
+                        form.render()
+                    });
+//                    renderNum(toAddorderInfo.itemList)
+                   	var province=$("#order_list>div").last().find(".province");
+                   	var city=$("#order_list>div").last().find(".city");
+                   	var sysarea=$("#order_list>div").last().find(".sysarea");
+                   	var address=toAddorderInfo.address;
+                   	if(address!=null){
+                   		$("#order_list>div").last().find(".consignee").val(address.consignee);
+                   		$("#order_list>div").last().find(".phoneNo").val(address.phoneNo);
+                   		$("#order_list>div").last().find(".fullAddress").val(address.fullAddress);
+                   		$("#order_list>div").last().find(".sellerMessage").val(address.sellerMessage);
+                   	}
+                    if(areaId!=null){
+                    	getAreaSelect(areaId,province,city,sysarea)
+                    }else{
+                    	getProvinceList(province,city,sysarea);
+                    }
+                    $('#order_list .addProNum').on('change',function () {
+                    	if($(this).val()<0){
+                            $(this).val(0);
+                    		return false;
+                    	}
+                    	var addskuCode=$(this).parent().parent().find(".addSkuCode").html();
+                    	var addcheckIndex=$(this).parent().parent().find(".addCheckIndex").html();
+                    	var count=0;
+                    	var addCount=0;
+                    	$("#primitiveOrderList").find(".proSku").each(function(){
+                    		var checkIndex=$(this).parent().find(".proIndex").html();
+                    		if(addskuCode==$(this).html()&&addcheckIndex==checkIndex){
+                    		count=$(this).parent().find(".proNum").html();
+                    		}
+                    	})
+                    	$("#order_list").find(".addProNum").each(function(){
+                    		if($(this).parent().parent().find(".addSkuCode").html()==addskuCode&&$(this).parent().parent().find(".addCheckIndex").html()==addcheckIndex){
+                    		var numaddCount=$(this).val();
+                    		addCount=addCount-0+parseInt(numaddCount==""?0:numaddCount);
+                    		}
+                    	})
+                    	if(count<addCount){
+                            layer.tips('子订单该商品数量不能超过父订单',$(this))
+                            $(this).val(0);
+                    	}
+                    })
+                }
+            })
+
+//            商品下单数量渲染
+            function renderNum(data) {
+                 var $inputList=$('.addProNum');
+                 var addNum=$('.num').text();
+                $inputList.each(function (index,item) {
+                    if(index===0){
+                        $(item).val(data.num)
+                    }else {
+                        $(item).val(0)
+                    }
+                })
+                 console.log($inputList)
+                 console.log(addNum)
+                 console.log(data)
+            }
+          //获得省列表
+            getProvinceList=function(province,city,sysarea){
+            	city.parent().hide();
+            	sysarea.parent().hide();
+            	$.ajax({
+            		url : "/admin/area/listByParentId.json",
+            		type : "post",
+            		traditional : true,
+            		dataType : "json",
+            		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            		success : function(data) {
+            			var provinces=data.result;
+            			var option="<option value=''>请选择</option>";
+            			$.each(provinces, function (k, p) { 
+            				option+="<option value='"+p.id+"'>"+p.name+"</option>";
+            			})
+            			province.html(option);
+            			form.render("select");
+            		},
+            		error:function(message){
+            			layer.alert(message);
+            		}	
+            	})
+            }
+            getAreaSelect=function(areaId,province,city,sysarea){
+            	if(areaId==null){
+            		return false;
+            	}
+            	$.ajax({
+            		url : "/admin/area/listSelectArea.json",
+            		type : "post",
+            		traditional : true,
+            		data:{
+            			'areaId':areaId
+            		},
+            		dataType : "json",
+            		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            		success : function(data) {
+            			var areaList=data.result;
+            			areaSelect(areaId,areaList,province,city,sysarea);
+            		},
+            		error:function(message){
+            			layer.alert(message);
+            		}	
+            	})
+            }
+            areaSelect=function(areaId,areaList,province,city,sysarea){
+            	var provinces="<option value=''>请选择</option>";
+            	var citys="<option value=''>请选择</option>";
+            	var areas="<option value=''>请选择</option>";
+            	var parentTree="";
+            	$.each(areaList, function (k, p) {
+            		if(areaId==p.id){
+            			parentTree=p.parentTree;
+            		}
+            		if(p.parentId==null||p.parentId==""){
+            			provinces+="<option value='"+p.id+"'>"+p.name+"</option>";
+            		}else{
+            			if(p.parentTree!=null&&(p.parentTree.split(',')).length>3){
+            				areas+="<option value='"+p.id+"'>"+p.name+"</option>";
+            			}else{
+            				citys+="<option value='"+p.id+"' onchange='changeCity()'>"+p.name+"</option>";
+            			}
+            		}
+            	})
+            	province.html(provinces);
+            	city.html(citys);
+            	if(areas!="<option value=''>请选择</option>"){
+            		sysarea.html(areas);
+            	}
+            	var ids=new Array();
+            	var reg=new RegExp("/^[0-9]*$/");
+            	if(parentTree!=""){
+            		var pIds=parentTree.split(',')
+            		var pl=pIds.length;
+            		for(var i=0;i<pl;i++){
+            			if(pIds[i]!=""){
+            				ids.push(pIds[i])
+            			}
+            		}
+            	}
+            	if(ids.length>1){
+            		province.val(ids[0]);
+            		city.val(ids[1]);
+            		sysarea.val(areaId);
+            	}else{
+            		province.val(ids[0]);
+            		city.val(areaId);
+            		sysarea.parent().hide();
+            	}
+            	form.render("select");
+            }
+            
+            changeProvince=function(province,value){
+            	province.parentNode.nextElementSibling.nextElementSibling.children.sysarea.innerHTML="<option value=''>请选择</option>";
+            	province.parentNode.nextElementSibling.nextElementSibling.style.display="none";
+            	province.parentNode.nextElementSibling.children.city.innerHTML="<option value=''>请选择</option>";
+            	if(isNaN(value)){
+            		return false;
+            	}
+            	var provinceId =value;
+            	$.ajax({
+            		url : "/admin/area/listByParentId.json",
+            		type : "post",
+            		traditional : true,
+            		data:{
+            			'parentId':provinceId
+            		},
+            		dataType : "json",
+            		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            		success : function(data) {
+            			var citys=data.result;
+            			var option="<option value=''>请选择</option>";
+            			$.each(citys, function (k, p) { 
+            				option+="<option value='"+p.id+"' name='cityName'>"+p.name+"</option>";
+            			})
+            			province.parentNode.nextElementSibling.children.city.innerHTML=option;
+                    	province.parentNode.nextElementSibling.style.display="inline";
+            			form.render("select");
+            		},
+            		error:function(message){
+            			layer.alert(message);
+            		}	
+            	})
+            }
+            
+            changeCity=function(city,value){
+            	city.parentNode.nextElementSibling.children.sysarea.innerHTML="<option value=''>请选择</option>";
+            	if(isNaN(value)){
+            		return false;
+            	}
+            	var provinceId = value;
+            	$.ajax({
+            		url : "/admin/area/listByParentId.json",
+            		type : "post",
+            		traditional : true,
+            		data:{
+            			'parentId':provinceId
+            		},
+            		dataType : "json",
+            		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            		success : function(data) {
+            			var citys=data.result;
+            			if(citys!=null&&citys.length>0){
+            				option="<option value=''>请选择</option>";
+            				$.each(citys, function (k, p) { 
+            					option+="<option value='"+p.id+"'>"+p.name+"</option>";
+            				})
+            			city.parentNode.nextElementSibling.children.sysarea.innerHTML=option;
+            			city.parentNode.nextElementSibling.style.display="inline";
+            			form.render("select");
+            			}
+            		},
+            		error:function(message){
+            			layer.alert(message);
+            		}	
+            	})
+			}
+            $("#cansleDivideOrder").on("click",function(e){
+				if(msgToclose == "order_toBeCheck_list"){
+					callParent.openTab("order_toBeCheck_list");
+				}else{
+					callParent.openTab("order_list");
+				}
+     		    callParent.closeTab('order_divide'); 
+            })
+            var clickFlag=false;
+            var clickCount=0;
+            $("#saveOrderInfo").on("click",function(e){
+            	if($("#order_list .childOrder").length<2){
+            		return layer.msg("至少拆成2单");
+            	}else{
+            		var actualChildNum=0;
+            		$("#order_list .childOrder").each(function(){
+            			var countChildPro=0;
+            			$(this).find(".addProNum").each(function(){
+            				var thisProNum=$(this).val();
+            				if(thisProNum!=null&&thisProNum!=""){
+            					countChildPro=countChildPro+thisProNum;
+            				}
+            			})
+            			if(countChildPro>0){
+            				actualChildNum=actualChildNum+1;
+            			}
+            		})
+            		if(actualChildNum<2){
+            			return layer.msg("至少拆成2单,子单商品数量不能都为0");
+            		}
+            	}
+            	var count=0;
+            	var addCount=0;
+            	$("#primitiveOrderList").find(".proNum").each(function(){
+            		var numCount=$(this).html();
+            		count+=parseInt(numCount);
+            	})
+            	$("#order_list").find(".addProNum").each(function(){
+            		var numaddCount=$(this).val();
+            		addCount+=parseInt(numaddCount==""?0:numaddCount);
+            	})
+            	if(count!=addCount){
+            		return layer.msg("子订单商品数量与原单商品数量不相等，请校验商品数量");
+            	}
+            	var orderInfoList=[];
+            	$("#order_list .childOrder").each(function(){
+            		var orderItemList=new Array();
+            		var flag=false;
+            		$(this).find(".addSkuCode").each(function(){
+            			var obj=$(this);
+	            		var skuCode=obj.html();
+	            		var addSendGoods=(obj.attr("addSendGoods")==null||obj.attr("addSendGoods")==""||obj.attr("addSendGoods")=="null")?"false":obj.attr("addSendGoods")+"";
+	            		var addProName=obj.parent().find(".addProName").html();
+	            		var addPrice=obj.parent().find(".addPrice").html();
+	            		var addProNum=obj.parent().find(".addProNum").val();
+	            		var point=null;
+	            		var prodiscount=null;
+	            		$.each(normalItemList,function(k,p){
+	            			var normalSku=p.skuCode;
+	            			var normalSendGoods=p.sendGoods==null?"false":p.sendGoods+"";
+	            			var normalPoint=p.point;
+	            			var normalProDiscount=p.proDiscount;
+	            			var normalProNum=p.quantity;
+	            			if(skuCode==normalSku&&(addSendGoods==normalSendGoods)){
+	            				point=(addProNum/normalProNum)*normalPoint;
+	            				prodiscount=(addProNum/normalProNum)*normalProDiscount;
+	            			}
+	            		})
+	            		if(addSendGoods=="false"){
+	            			addSendGoods=null;
+	            		}
+	            		var orderItem={
+	            				'skuCode':skuCode,
+	            				'name':addProName,
+	            				'price':addPrice,
+	            				'quantity':addProNum,
+	            				'point':point,
+	            				'proDiscount':prodiscount,
+	            				'sendGoods':addSendGoods
+	            		}
+	            		if(addProNum!=null&&addProNum!=""&&addProNum!=0){
+	            		orderItemList.push(orderItem);
+	            		flag=true;
+	            		}
+            		})
+            	if(flag){
+            	var consignee=$(this).find(".consignee").val();
+            	var phoneNo=$(this).find(".phoneNo").val();
+            	var fullAddress=$(this).find(".fullAddress").val();
+            	var sellerMessage=$(this).find(".sellerMessage").val();
+            	var selectareaId=null;
+            	var province=$(this).find(".province");
+            	var city=$(this).find(".city");
+            	var sysarea=$(this).find(".sysarea");
+            	var address="";
+            	var distrinct=null;
+            	if(sysarea.val() != '' && !isNaN(sysarea.val())){
+            		selectareaId=sysarea.val();
+            		address=province.find("option:selected").text()+city.find("option:selected").text()+sysarea.find("option:selected").text();
+            		distrinct=sysarea.find("option:selected").text();
+            	}else if(city.val() != '' && !isNaN(city.val())){
+            		selectareaId=city.val();
+            		address=province.find("option:selected").text()+city.find("option:selected").text();
+            	}else{
+            		selectareaId=province.val();
+            		address=province.find("option:selected").text();
+            	}
+            	if(isNaN(selectareaId)){
+            		selectareaId=null
+            	}
+            	if(consignee==null||consignee==""||phoneNo==null||phoneNo==""||selectareaId==null||selectareaId==""||fullAddress==""||fullAddress==null){
+					return layer.msg("子订单收货人信息不能为空");
+				}
+				if((city.find("option").length>1&&city.find("option:selected").val=="")||(sysarea.find("option").length>1&&sysarea.find("option:selected").val()=="")){
+					return layer.msg("子订单所在地区请选择完整");
+				}
+            	var orderInfo={
+            			"parent":id,
+            			"consignee":consignee,
+            			"phoneNo":phoneNo,
+            			"province":province.find("option:selected").text(),
+            			"city":city.find("option:selected").text(),
+            			"distrinct":distrinct,
+            			"address":fullAddress,
+            			"fullAddress":address+fullAddress,
+            			"sellerMessage":sellerMessage,
+            			"areaId":selectareaId,
+            			"orderItemList":orderItemList
+            		}
+            	orderInfoList.push(orderInfo);
+            	}
+            		clickFlag=true;
+            	}) 
+            	var data={
+            			'orderId':id,
+            			'orderVersion':orderVersion,
+            			'listOrderInfo':orderInfoList
+            	}
+            	if(clickFlag&&clickCount==0){
+            		clickCount=1;
+            	$.ajax({
+            		url : "/admin/order/separateOrder.json",
+            		type : "post",
+            		traditional : true,
+            		data:JSON.stringify(data),
+            		dataType : "json",
+            		contentType : "application/json; charset=utf-8",
+            		success : function(data) {
+            			if(data.code == "0"){
+            				refreshHtml();
+            			}else{
+                			layer.alert(data.message);
+            				}
+            		},
+            		error:function(message){
+            			clickCount=0;
+            			layer.alert(message);
+            		}	
+            	})
+            	}
+            })
+            refreshHtml=function(){
+				callParent.parentUse("order_list", "search");
+				if(msgToclose == "order_toBeCheck_list"){
+					callParent.parentUse("order_toBeCheck_list", "search");
+					callParent.openTab("order_toBeCheck_list");
+				}else{
+					callParent.parentUse("order_list", "search");
+					callParent.openTab("order_list");
+				}
+    		    callParent.closeTab('order_divide'); 
+            }
+        })
+    }) 
+</script>
+
+</body>
+</html>

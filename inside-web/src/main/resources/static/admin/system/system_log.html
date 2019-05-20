@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>日志管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline po-r">
+                        <input type="text" name="createId" placeholder="操作人"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="search" id="search">搜索</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcObjType" name="objType">
+                                <option value="">选择模块</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcOperation" name="operationCode">
+                                <option value="">操作类型</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日期" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日期" id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="layui-form">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="110">
+                    <col width="180">
+                    <col width="120">
+                    <col width="150">
+                    <col width="150">
+                    <col width="180">
+                    <col >
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>操作</th>
+                    <th>操作员</th>
+                    <th>操作内容</th>
+                    <th>IP地址</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="pageContent">
+
+                </tbody>
+            </table>
+        </div>
+        <div id="pageNum"  style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../admin.js"></script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>{{item.id}}</td>
+        <td>{{item.operationContent}}</td>
+        <td>{{item.operationName}}</td>
+        <td>{{item.operationContent}}</td>
+        <td>{{item.operationIp}}</td>
+        <td>{{laydate.now(item.createTime,"YYYY/MM/DD hh:mm:ss")}}</td>
+        <td class="state_uhandle">
+            <a class=" view" value="{{item.id}}" onclick="viewInfo({{item.id}})" title="查看">     <i class="icon-uniE602"></i></a>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="viewInfo">
+<div class="layui-form form-box">
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">操作</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{{ d.result.operationCode }}" readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">操作员</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{{ d.result.operationName }}" readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{{ d.result.operationContent }}" readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">请求参数</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea operation_detail" readonly="readonly">{{ d.result.operationDetail }}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">请求结果</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea operation_result" readonly="readonly">{{ d.result.operationResult }}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">ip</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{{ d.result.operationIp }}" readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item dialog_form_item">
+        <label class="layui-form-label">创建日期</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{{laydate.now(d.result.createTime,"YYYY/MM/DD hh:mm:ss")}}" readonly="readonly">
+        </div>
+    </div>
+</div>
+</script>
+
+
+<script>
+    layui.config({
+	  base: '../../js/' //你的模块目录
+	}).extend({myAjax: 'myAjax'})
+	
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        //监听提交
+        form.on('submit(search)', function (data) {
+            myAjax.ajaxPage('/api/admin/sys/log/page.json', 'pageNum', 'pageContent', 'pageTpl', data.field);
+            return false;
+        });
+
+        myAjax.ajaxPage('/api/admin/sys/log/page.json', 'pageNum', 'pageContent', 'pageTpl');
+
+        //获取操作
+        myAjax.ajaxTpl("/api/admin/sys/log/operation", 'slcOperation', 'slcOptionOrg', true);
+
+        //获取模块
+        myAjax.ajaxTpl("/api/admin/sys/log/objType", 'slcObjType', 'slcOption', true);
+
+        //查看        
+        viewInfo=function(id){
+            //先清空
+            var url = "/api/admin/sys/log/info";
+            $.ajax({
+                url : url,
+                type : "post",
+                data:{"id":id},
+                traditional : true,
+                dataType : "json",
+                success : function(data) {
+                    try{
+                        data.result.operationDetail=Utils.JsonFormat(JSON.parse(data.result.operationDetail),1);
+                        data.result.operationResult=Utils.JsonFormat(JSON.parse(data.result.operationResult),1);
+                    }catch(e){
+
+                    }
+                	laytpl($("#viewInfo").html()).render(data, function(html){
+                		  layer.open({
+                              type: 1,
+                              title: "详情查看",
+                              btn: ['确定'],
+                              closeBtn: 0,
+                              area: '700px',
+                              shadeClose: true,
+                              content: html,
+                              yes: function(index){
+                                    layer.close(index)
+                                }
+                            })
+                	});
+                }
+            })
+        };
+        callParent.isLoadEnd("log_info_page");
+        callParent.register(function () {
+        	$("#search").click();
+        }, "search");
+    });
+</script>
+
+</body>
+</html>

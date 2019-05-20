@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>督导门店管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item ">
+                    <div class="layui-inline po-r">
+                        <div class="layui-input-inline" >
+                            <select id="category_select_id">
+                                <option value="-1">请选择区域</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline"  id="supervisorListSelect_div">
+                            <select id="supervisor_select_id">
+                                <option value="-1">请选择督导信息</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="select_time_type_id">
+                                <option value="0">创建时间</option>
+                                <option value="1">支付时间</option>
+                                <option value="2" selected="selected">发货时间</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="form_start_time">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="form_end_time">
+                        </div>
+                        <button id="btnSearch" class="layui-btn layui-btn-small">搜索
+                        </button>
+                        <button id="btnExport" class="layui-btn layui-btn-small export_supervisor_statistics" authority_code="export_supervisor_statistics">导出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td rowspan="1" colspan="1" field="name2">
+                                <div class="datagrid-cell datagrid-cell-c1-number" style="">序号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">督导姓名</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">督导区域</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">订单总金额</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">消费积分</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name12">
+                                <div class="datagrid-cell datagrid-cell-c1-w80" style="">消费现金金额</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name12">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">订单数</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name12">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">毛利</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name13">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">下单门店数</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name14">
+                                <div class="datagrid-cell datagrid-cell-c1-w80" style="">绑定门店总数</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" class="text-r"></div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:name}}</option>
+    {{/for}}
+
+</script>
+
+<script type="x-jsrender" id="j-statistic-list">
+    {{for result}}
+      <tr>
+    <td><div class="datagrid-cell datagrid-cell-c1-number">{{:index}}</td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" style="">{{:name}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w70"  style="">{{:categoryName}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w70">{{:receivableAmount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:pointPaid}}</div></td>
+        <td> <div class="datagrid-cell datagrid-cell-c1-w80" >{{:cashAmount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:orderCount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:grossProfit}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:userCount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w80" >{{:bindStoreCount}}</div></td>
+</tr>
+    {{/for}}
+          <tr>
+    <td colspan="3"><div class="datagrid-cell datagrid-cell-c1-w50">总计：</td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w70">{{:totalReceivableAmount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:totalPointPaid}}</div></td>
+        <td> <div class="datagrid-cell datagrid-cell-c1-w80" >{{:totalCashAmount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:totalOrderCount}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" >{{:totalGrossProfit}}</div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w70" ></div></td>
+    <td> <div class="datagrid-cell datagrid-cell-c1-w80" ></div></td>
+</tr>
+</script>
+<script type="x-jsrender" id="j-option-supervisor">
+    {{for result}}
+      <option value="{{:id}}">{{:supervisorName}}</option>
+    {{/for}}
+
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+                laypage = layui.laypage;
+        var laydate = layui.laydate;
+        var pageContent = null;
+        var start = {}, end = {}, currPageNo;
+        var start = {
+            max: laydate.now()
+            , istoday: false
+            , choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            min: laydate.now()
+            , max: '2099-06-16 23:59:59'
+            , istoday: false
+            , choose: function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        var categoryMap;
+        $('#form_start_time').click(function () {
+            start.elem = this;
+            laydate(start);
+        });
+        $('#form_end_time').click(function () {
+            end.elem = this;
+            laydate(end)
+        });
+        function loadCategory() {
+            if (!Utils.isNotNull(categoryMap)) {
+                ajaxsend({isCommon: false, type: 2}, "/admin/common/category/type.json", function (dataJson) {
+                    var categoryList = dataJson.result;
+                    categoryMap = new Map();
+                    for (var i = 0; i < categoryList.length; i++) {
+                        categoryMap.push(categoryList[i].id, categoryList[i]);
+                    }
+                    var jsRenderTpl = $.templates('#j-option'),
+                            finalTpl = jsRenderTpl(dataJson);
+                    $("#category_select_id").append(finalTpl);
+                    showTable()
+                    form.render();
+                })
+            }
+        }
+
+        function loadSupervisor() {
+                ajaxsend("", "/admin/common/supervisor/list.json", function (dataJson) {
+                    var jsRenderTpl = $.templates('#j-option-supervisor'),
+                            finalTpl = jsRenderTpl(dataJson);
+                    $("#supervisor_select_id").append(finalTpl);
+                    form.render();
+
+                })
+        }
+
+        function search() {
+            var data = {};
+            if ($("#category_select_id").val() - 0 > 0) {
+                data.categoryId = $("#category_select_id").val();
+            }
+            if ($("#supervisor_select_id").val() - 0 > 0) {
+                data.supervisorId = $("#supervisor_select_id").val();
+            }
+            data.type = $("#select_time_type_id").val();
+            data.startDate = $("#form_start_time").val();
+            data.endDate = $("#form_end_time").val();
+            ajaxsend(data, "/admin/supervisor/statistic/supervisor.json", function (dataJson) {
+                pageContent = dataJson;
+                if(Utils.isNotNull(pageContent.incidental)){
+                    $("#supervisor_select_id").val(pageContent.incidental)
+                    $("#supervisor_select_id").attr("disabled","disabled")
+                }
+                checkLocalAuthority(dataJson)
+                showTable();
+                form.render();
+            })
+        }
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["export_supervisor_statistics"]);
+        }
+        function showTable() {
+            if (Utils.isNotNull(categoryMap)&&Utils.isNotNull(pageContent)) {
+                var dataJson = pageContent;
+                var statisticInfoList = dataJson.result;
+                var totalReceivableAmount=0;
+                var totalPointPaid=0;
+                var totalCashAmount=0;
+                var totalOrderCount=0;
+                var totalGrossProfit=0;
+                for (var i = 0; i < statisticInfoList.length; i++) {
+                    var statisticInfo = statisticInfoList[i];
+                    statisticInfo.index = i + 1;
+                    if(Utils.isNotNull( categoryMap.get(statisticInfo.categoryId))){
+                        statisticInfo.categoryName = categoryMap.get(statisticInfo.categoryId).name;
+                    }
+                    statisticInfo.cashAmount = statisticInfo.receivableAmount - statisticInfo.pointPaid;
+                    totalReceivableAmount+=statisticInfo.receivableAmount;
+                    totalPointPaid+=statisticInfo.pointPaid;
+                    totalCashAmount+=statisticInfo.cashAmount
+                    totalOrderCount+=statisticInfo.orderCount;
+                    totalGrossProfit+=statisticInfo.grossProfit;
+                    statisticInfo.pointPaid=Utils.scale( statisticInfo.pointPaid,2);
+                    statisticInfo.cashAmount=Utils.scale( statisticInfo.cashAmount,2);
+                    statisticInfo.receivableAmount=Utils.scale( statisticInfo.receivableAmount,2);
+                    statisticInfo.grossProfit=Utils.scale( statisticInfo.grossProfit,2);
+                }
+                dataJson.totalReceivableAmount=Utils.scale( totalReceivableAmount,2);
+                dataJson.totalPointPaid=Utils.scale( totalPointPaid,2);
+                dataJson.totalCashAmount=Utils.scale( totalCashAmount,2);
+                dataJson.totalGrossProfit=Utils.scale( totalGrossProfit,2);
+                dataJson.totalOrderCount=totalOrderCount
+                var jsRenderTpl = $.templates('#j-statistic-list'),
+                        finalTpl = jsRenderTpl(dataJson);
+                $("#page_tbody").html(finalTpl);
+                form.render();
+            }
+        }
+        function loadDate(){
+            var date=new Date();
+            var month=(date.getMonth()+1);
+            if(month<10){
+                month="0"+month;
+            }
+            var formatDate=date.getFullYear()+"-"+month+"-01";
+            $('#form_start_time').val(formatDate);
+        }
+        loadDate()
+        loadSupervisor();
+        loadCategory();
+        search();
+        $("#btnSearch").click(function(){
+            search();
+        })
+        $("#btnExport").click(function(){
+            var paramStr="";
+            paramStr+="&type="+ $("#select_time_type_id").val();
+            if ($("#category_select_id").val() - 0 > 0) {
+                paramStr+="&categoryId="+$("#category_select_id").val()
+
+            }
+            if ($("#supervisor_select_id").val() - 0 > 0) {
+                paramStr+="&supervisorId="+$("#supervisor_select_id").val();
+            }
+            paramStr+="&endDate="+ $("#form_end_time").val();
+            paramStr+="&startDate="+ $("#form_start_time").val();
+            window.open("/admin/supervisor/export/supervisor.json?" + paramStr, "_blank");
+        })
+    });
+</script>
+</body>
+</html>

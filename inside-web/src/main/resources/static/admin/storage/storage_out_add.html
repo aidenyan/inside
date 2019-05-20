@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>出库单管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form class="layui-form" action="">
+            <input id="hidId" type="hidden" name="id"/>
+            <input id="hidNo" type="hidden" name="storageOutInNo"/>
+            <input id="hidWarehouseName" type="hidden" name="warehouseName"/>
+            <input id="hidRevWarehouseName" type="hidden" name="revWarehouseName"/>
+            <input id="hidTrackingName" type="hidden" name="trackingName"/>
+            <!--<div class="infor-show">
+                <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                <span>出库单信息</span>
+            </div>
+            <hr>-->
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>出库单信息</span>
+            </div>
+            <div class="layui-form purchaseContent" id="storageOutContent">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>出库类型</label>
+                        <div class="layui-input-inline">
+                            <select id="slcOperType" name="operType" lay-filter="operType" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>出库仓库</label>
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId" lay-filter="warehouse" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">收货仓库</label>
+                        <div class="layui-input-inline">
+                            <select id="slcRevWarehouse" name="revWarehouseId" lay-filter="revWarehouse">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>收货人</label>
+                        <div class="layui-input-inline">
+                            <input id="txtConName" type="text" name="conName" class="layui-input"
+                                   lay-verify="required|enChar" placeholder="限输中文或英文">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" lay-verify="sysarea">
+                    <label class="layui-form-label padd_top" ><span style="color:red">*</span>收货地区</label>
+                    <div class="layui-input-inline select_width106" id="proviceList">
+                        <select id="province" lay-filter="provinceFilter">
+                            <option value="">请选择省</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline select_width106" style="display: none" id="cityList">
+                        <select id="city" lay-filter="cityFilter" lay-verify="required">
+                            <option value="">请选择市</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline select_width106" style="display: none" id="areaList">
+                        <select id="sysarea">
+                            <option value="">请选择县/区</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>详细地址</label>
+                        <div class="layui-input-inline">
+                            <input id="txtAddress" type="text" name="address" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top"><span style="color:red">*</span>收货电话</label>
+                        <div class="layui-input-inline">
+                            <input id="txtPhone" type="text" name="phone" class="layui-input"
+                                   lay-verify="required|phone">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">物流公司</label>
+                        <div class="layui-input-inline">
+                            <select id="slcTracking" name="trackingId" lay-filter="tracking">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">物流单号</label>
+                        <div class="layui-input-inline">
+                            <input id="txtTrackingNo" type="text" name="trackingNo" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">物流费用</label>
+                        <div class="layui-input-inline">
+                            <input id="txtPrice" type="text" name="price" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label padd_top">备注</label>
+                        <div class="layui-input-inline">
+                            <input id="txtRemark" type="text" name="remark" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="infor-show">
+                <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                <span>商品信息</span>
+            </div>
+            <hr>-->
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>商品信息</span>
+            </div>
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_commodity"> <i class="layui-icon"
+                                                                                                style="vertical-align: middle">
+                    &#xe61f;</i>添加商品</a>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th width="550px;">SKU编码/商品名称</th>
+                        <th width="100px;">品牌</th>
+                        <th width="50px;">单位</th>
+                        <th width="200px;">商品分类</th>
+                        <th width="100px;">出库数量</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="storageOutItemsContent">
+                    </tbody>
+                    <tr>
+                        <td>合计</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td id="tdTotalNum"></td>
+                        <!--<td></td>-->
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="save">保存并关闭</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveAdd">保存并新增</button>
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="saveApproval">提交审核</button>
+                <button id="cancel" class="layui-btn layui-btn-small">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="layui-form dialog" id="form_addCommodity" style="display: none">
+    <form>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label padd_top" style="width: 30px;">品牌</label>
+                <div class="layui-input-inline">
+                    <select id="slcBrand" name="brandId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <label class="layui-form-label padd_top" style="width: 60px;">商品分类</label>
+                <div class="layui-input-inline">
+                    <select id="slcProductType" name="typeId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline ">
+                <input type="text" name="inputStr" placeholder="商品编码/SKU编码" style="width: 250px;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+        </div>
+    </form>
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                <th>SKU编码</th>
+                <th>品牌</th>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>商品分类</th>
+                <th>库存</th>
+            </tr>
+            </thead>
+            <tbody id="proListContent">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script id="tplProList" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td><input name="skuCodes" lay-skin="primary" type="checkbox" value="{{item.skuCode}}"></td>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.productName}}</td>
+        <td>{{item.productUnit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td>{{item.inventoryNum}}</td>
+    </tr>
+    {{#  }); }}
+    {{#  if(d.length == 0){ }}
+    <tr>
+        <td colspan="7" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="tplOperType" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script id="tplWarehouse" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplOption" type="text/html">
+    <option value="-1">全部</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script id="tplOptionT" type="text/html">
+    <option value=""></option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+
+<script id="tplStorageOutItems" type="text/html">
+    {{#  layui.each(d.storageItemDTOList, function(index, item){ }}
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input class="proSku" type="hidden" name="storageItemMap[{{item.skuCode}}].skuCode"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="" placeholder="商品名称/SKU编码" value="{{item.skuCode}} / {{item.productName}}"
+                       class="layui-input small mizo-srarch-input productSearch" style="width: 100%" lay-verify="required"/>
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.productUnit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td>
+            <input type="number" min="1" name="storageItemMap[{{item.skuCode}}].num" max="{{item.num || 0 }}"
+                   class="layui-input small mizo-srarch-input proNum" style="width:100px;"
+                   value="{{item.num || '' }}" lay-verify="required|min|max"></td>
+        <!-- <td><input type="text" name="storageItemMap[{{item.skuCode}}].locationNo"
+                    class="layui-input small mizo-srarch-input"
+                    value="{{item.locationNo || '' }}"></td>-->
+        <td class="state_uhandle">
+            <div class="">
+                <button class="delete" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplAddItems" type="text/html">
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input type="text" name="" placeholder="商品名称/SKU编码" style="width: 100%;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input productSearch">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="delete" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+<!--name="{{item.name}}" brand="{{item.brandId}}" unit="{{item.unit}}" type="" supplier=""-->
+<script id="tplProductLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li skucode="{{item.skuCode}}">{{item.skuCode}} / {{item.productName}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+<script type="text/javascript" src="../../common/js/area.js"></script>
+
+<script>
+    var form;
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        form = layui.form();
+        var layer = layui.layer
+                , $ = layui.jquery
+                , laytpl = layui.laytpl
+                , myAjax = layui.myAjax;
+
+        form.verify({
+            enChar: [/^[\u4e00-\u9fa5a-zA-Z]+$/, '请输入中文或英文'],
+            min: function (value, item) {
+                var result = "";
+                var vmin = $(item).attr('min') - 0;
+                if (value < vmin) {
+                    result = "请选择一个不小于" + vmin + "的值";
+                }
+                return result;
+            },
+            max: function (value, item) {
+                var result = "";
+                var vmax = $(item).attr('max') - 0;
+                if (value > vmax) {
+                    result = "库存不足";
+                }
+                return result;
+            },
+            price: [/^\d+(?:\.\d{1,2})?$/, '金额格式错误']
+        });
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        form.on('select(provinceFilter)', function (data) {
+            changeProvince(data.value);
+        });
+        form.on('select(cityFilter)', function (data) {
+            changeCity(data.value);
+        });
+
+        //保存
+        form.on('submit(save)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/storage/outSave.json', function () {
+                    layer.msg('保存成功');
+                    callParent.parentUse("storage_out_lis", "refresh");
+                    callParent.openTab("storage_out_lis");
+                    callParent.closeTab('storage_out_add');
+                }, $.extend(data.field, {'areaId': getselectAreaId()}), 'post');
+            }
+            return false;
+        });
+
+        //提交审核
+        form.on('submit(saveApproval)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/storage/outSave.json', function () {
+                    layer.msg('提交成功');
+                    callParent.parentUse("storage_out_lis", "refresh");
+                    callParent.openTab("storage_out_lis");
+                    callParent.closeTab('storage_out_add');
+                }, $.extend(data.field, {'areaId': getselectAreaId(),'operFlag':1}), 'post');
+            }
+            return false;
+        });
+
+        //保存并新增
+        form.on('submit(saveAdd)', function (data) {
+            if (checkSave()) {
+                myAjax.ajaxSend('/storage/outSave.json', function () {
+                    //layer.alert('保存成功');
+                    parent.$("#storage_out_add").attr('src', 'admin/storage/storage_out_add.html');
+                }, $.extend(data.field, {'areaId': getselectAreaId()}), 'post');
+            }
+            return false;
+        });
+
+        form.on('select(warehouse)', function (data) {
+            $("#hidWarehouseName").val(data.othis.find(".layui-this").html());
+            myAjax.getTpl('storageOutItemsContent', 'tplAddItems', {"result": []});
+        });
+
+        form.on('select(tracking)', function (data) {
+            $("#hidTrackingName").val(data.othis.find(".layui-this").html());
+        });
+
+        form.on('select(revWarehouse)', function (data) {
+            $("#hidRevWarehouseName").val(data.othis.find(".layui-this").html());
+            myAjax.ajaxSend('/admin/common/warehouse/get.json', function (dataJson) {
+                $("#txtConName").val(dataJson.result.legalPerson);
+                $("#txtPhone").val(dataJson.result.contactPhone);
+                $("#txtAddress").val(dataJson.result.address);
+                getAreaSelect(dataJson.result.areaId);
+            }, {'companyOrgId': data.value});
+        });
+
+        form.on('select(operType)', function (data) {
+            if (data.value == 5 || data.value == 3) {
+                $("#slcRevWarehouse").attr('disabled', false);
+            } else {
+                $("#slcRevWarehouse").attr('disabled', true);
+                $("#slcRevWarehouse").val('');
+                $("#hidRevWarehouseName").val('');
+            }
+            form.render("select");
+        });
+
+        $("#cancel").click(function () {
+            callParent.openTab('storage_out_lis');
+            callParent.closeTab('storage_in_add');
+        });
+
+        form.on('submit(search)', function (data) {
+            var wareId = $("#slcWarehouse").val();
+            if (wareId != null && wareId != '') {
+                var varSku = [];
+                $("#storageOutItemsContent").find(".proSku").each(function () {
+                    varSku.push($(this).val());
+                });
+                myAjax.ajaxTpl('/storage/listOutProduct.json', 'proListContent', 'tplProList', false, null, $.extend(data.field, {
+                    "notInSku": varSku,
+                    "warehouseId": wareId
+                }), 'post');
+            } else {
+                layer.alert('请选择出库仓库');
+            }
+            return false;
+        });
+
+        $("#storageOutItemsContent").on('click', '.delete', function () {
+            $(this).closest('tr').remove();
+            totalNum();
+        });
+
+        var varTr;
+        $(document).on('click', '.change', function () {
+            varTr = $(this).closest("tr");
+            var wareId = $("#slcWarehouse").val();
+            if (wareId != null && wareId != '') {
+                $("#proListContent").html('');
+                $("#form_addCommodity").find('input[type="checkbox"]').attr('checked', false);
+                layer.open({
+                    title: "添加商品"
+                    , type: 1
+                    , content: $("#form_addCommodity")            //弹窗内容
+                    , area: ["800px", "500px"]         //设置窗体高度 和宽度
+                    , btn: ["确定", "取消"]
+                    , closeBtn: 0                      //取消右上角关闭按钮
+                    , btnAlign: 'r'
+
+                    , success: function (layero, index) {
+                        //获取分类
+                        myAjax.ajaxTpl("/admin/common/category/list.json", 'slcProductType', 'tplOption');
+                        //获取品牌
+                        myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'tplOption');
+
+                        layero.addClass('layui-form');
+                        layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '');
+                        form.render();
+                    }
+                    , yes: function (index, item) {
+                        myAjax.ajaxTpl('/storage/getOutItemDTOList.json?warehouseId=' + wareId, 'storageOutItemsContent', 'tplStorageOutItems', true, function () {
+                            layer.close(index);
+                            varTr.remove();
+                            $("#storageOutItemsContent .proNum").eq(0).keyup();
+                        }, $(item.selector + " input[name='skuCodes']:enabled:checked").serialize());
+                    }
+                });
+            } else {
+                layer.alert('请选择出库仓库');
+            }
+            return false;
+        });
+
+        $("#storageOutItemsContent").on('keyup', '.productSearch', function () {
+            var varThis = $(this);
+            varThis.prev().val('');
+
+            var wareId = $("#slcWarehouse").val();
+            if (wareId != null && wareId != '') {
+                var varSku = [];
+                $("#storageOutItemsContent").find(".proSku").each(function () {
+                    varSku.push($(this).val());
+                });
+                myAjax.ajaxSend('/storage/listOutProduct.json', function (dataJson) {
+                    var getTpl = $("#tplProductLi").html();
+                    laytpl(getTpl).render(dataJson.result, function (html) {
+                        varThis.parent().children('.proSearchDiv').each(function () {
+                            $(this).remove();
+                        });
+                        var varDivPL = '<div class="proSearchDiv" style="height: auto;">' + html + '</div>';
+                        if (dataJson.result != null && dataJson.result != '') {
+                            varThis.next().after(varDivPL);
+                            varTr = varThis.closest("tr");
+                            $(".proSearchDiv").find('li').click(function () {
+                                var vSkuCode = $(this).attr('skucode');
+                                myAjax.ajaxTpl('/storage/getOutItemDTOList.json?skuCodes=' + vSkuCode + '&warehouseId=' + wareId, 'storageOutItemsContent', 'tplStorageOutItems', true, function () {
+                                    varTr.remove();
+                                    $("#storageOutItemsContent .proNum").eq(0).keyup();
+                                });
+                                $(this).closest('div').remove();
+                            });
+                        }
+                    });
+                }, {"inputStr": varThis.val(), "notInSku": varSku, "warehouseId": wareId}, 'post');
+            } else {
+                layer.alert('请选择出库仓库');
+            }
+        });
+
+        $("#storageOutItemsContent").on('blur', '.productSearch', function () {
+            var varThis = $(this);
+            var hideSku = varThis.prev().val();
+            if (hideSku == '') {
+                varThis.val('');
+            }
+        });
+
+        var varId = params.get('storageOutId');
+        if (varId != null) {
+            myAjax.ajaxSend("/storage/getOut.json?id=" + varId, function (data) {
+                $("#hidNo").val(data.result.storageOutInNo);
+                $("#hidId").val(varId);
+                $("#hidWarehouseName").val(data.result.warehouseName);
+                $("#txtRemark").val(data.result.remark);
+                //获取出库类型
+                myAjax.ajaxTpl("/storage/operTypeOut.json", 'slcOperType', 'tplOperType', true, function(){
+                    $("#slcOperType").val(data.result.operType);
+                });
+                //获取出库仓库
+                myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'tplWarehouse', true, function () {
+                    $("#slcWarehouse").val(data.result.warehouseId);
+                });
+                //获取收货仓库
+                myAjax.ajaxTpl("/admin/common/warehouse/listAll.json", 'slcRevWarehouse', 'tplWarehouse', true, function () {
+                    if (data.result.operType == 5 || data.result.operType == 3) {
+                        $("#slcRevWarehouse").attr('disabled', false);
+                        $("#slcRevWarehouse").val(data.result.revWarehouseId);
+                        $("#hidRevWarehouseName").val(data.result.revWarehouseName);
+                    } else {
+                        $("#slcRevWarehouse").attr('disabled', true);
+                        $("#slcRevWarehouse").val('');
+                        $("#hidRevWarehouseName").val('');
+                    }
+                });
+                //获取出库明细
+                myAjax.getTpl('storageOutItemsContent', 'tplStorageOutItems', data, false, function () {
+                    $("#storageOutItemsContent .proNum").eq(0).keyup();
+                    showBody();
+                });
+            });
+            myAjax.ajaxSend("/storage/getLogisticsInfo.json?id=" + varId, function (data) {
+                $("#hidTrackingName").val(data.result.trackingName);
+                $("#txtTrackingNo").val(data.result.trackingNo);
+                $("#txtPrice").val(data.result.price);
+                $("#txtConName").val(data.result.conName);
+                $("#txtAddress").val(data.result.address);
+                $("#txtPhone").val(data.result.phone);
+                //获取快递
+                myAjax.ajaxTpl("/express/listAll.json", 'slcTracking', 'tplOptionT', false, function(){
+                    $("#slcTracking").val(data.result.trackingId);
+                });
+                getAreaSelect(data.result.areaId);
+            });
+        } else {
+            //获取出库仓库
+            myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'tplWarehouse', true);
+            //获取收货仓库
+            myAjax.ajaxTpl("/admin/common/warehouse/listAll.json", 'slcRevWarehouse', 'tplWarehouse', true);
+            //获取出库类型
+            myAjax.ajaxTpl("/storage/operTypeOut.json", 'slcOperType', 'tplOperType', true);
+            //获取快递
+            myAjax.ajaxTpl("/express/listAll.json", 'slcTracking', 'tplOptionT');
+            getProvinceList();
+        }
+
+        $("#add_commodity").click(function () {
+            myAjax.getTpl('storageOutItemsContent', 'tplAddItems', {"result": []}, true);
+        });
+
+        function totalNum() {
+            var varNum = 0;
+            $("#storageOutItemsContent .proNum").each(function () {
+                varNum = $(this).val() - 0 + varNum;
+            });
+            $("#tdTotalNum").text(varNum);
+        }
+
+        $("#storageOutItemsContent").on("keyup change", ".proNum", function () {
+            totalNum();
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>盘点明细</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <input type="text" name="inputStr" placeholder="SKU编码/商品名称"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr class="datagrid-header-row">
+                                <td><div class="datagrid-cell datagrid-cell-c1-number text-c">序号</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w100" name="warehouse_name">所在仓库</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-order_num" name="sku_code">SKU编码</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-order_num" >商品条码</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w100" >品牌</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w200 " name="product_name">商品名称</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-number text-c" name="product_unit">单位</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w60" name="product_category">商品类别</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w80" name="sn">库位编码</div></td>
+                                <!--<td><div class="sort datagrid-cell datagrid-cell-c1-w100" name="batch_no">入库批次</div></td>-->
+                                <!--<td><div class="datagrid-cell datagrid-cell-c1-w60" name="sale_num">销售库存</div></td>-->
+                                <td><div class="datagrid-cell datagrid-cell-c1-w60" name="src_inv_num">实际库存</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w80" >初盘数量</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w80" >复盘数量</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w60" >盘亏盘盈</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w60" >入库数量</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w60" >出库数量</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+        <div class="btn-group">
+            <button id='cancel'>返回</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+   <tr>
+        <td><div class="datagrid-cell datagrid-cell-c1-number text-c">{{(index+1)}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.skuCode}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.proSn}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.brandName}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w200 over_hid" title="{{item.productName}}">{{item.productName}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-number text-c">{{item.productUnit}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.productCategory}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w80">{{item.sn}}</div></td>
+        <!--<td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.batchNo || 0}}</div></div></td>-->
+        <!--<td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.saleNum || 0}}</div></td>-->
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.srcInvNum}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w80">{{item.invNum || 0}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w80">{{item.invReplayNum || 0}}</div></td>
+        {{# if(item.num != 0 && item.num!=null){}}
+        <td><div class="datagrid-cell datagrid-cell-c1-w60" style="color:red;">{{item.num || 0}}</div></td>
+        {{# }else{}}
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.num || 0}}</div></td>
+        {{#}}}
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.inNum || 0}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.outNum || 0}}</div></td>
+    </tr>
+    {{#  }); }}
+
+    {{{#  if(d.length == 0){ }}
+    <tr>
+        <td colspan="10" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+
+        var varId = params.get('checkNo');
+        var vMod = params.get('isMod');
+        if (varId != null) {
+            //保存
+            form.on('submit(save)', function (data) {
+                layer.confirm('确认保存吗?', {icon: 3, title: '提示'}, function (index) {
+                    if (checkSave()) {
+                        myAjax.ajaxSend('/inventoryCheck/save.json', function () {
+                            layer.msg('保存成功');
+                            callParent.parentUse("inventory_recode", "refresh");
+                            callParent.openTab("inventory_recode");
+                            callParent.closeTab('inv_check_detail');
+                        }, $.extend(data.field, {'id': varId}), 'post');
+                    }
+                    layer.close(index);
+                });
+                return false;
+            });
+
+            //提交审核
+            form.on('submit(saveApproval)', function (data) {
+                layer.confirm('确认提交审核吗?', {icon: 3, title: '提示'}, function (index) {
+                    if (checkSave()) {
+                        myAjax.ajaxSend('/inventoryCheck/toApproval.json', function () {
+                            layer.msg('提交成功');
+                            callParent.parentUse("inventory_recode", "refresh");
+                            callParent.openTab("inventory_recode");
+                            callParent.closeTab('inv_check_detail');
+                        }, $.extend(data.field, {'id': varId}), 'post');
+                    }
+                    layer.close(index);
+                });
+                return false;
+            });
+
+            $("#pageContent").on('click', '#cancel', function () {
+                callParent.openTab("inventory_recode");
+                callParent.closeTab('inv_check_detail');
+            });
+
+            $("#cancel").click(function () {
+                if(params.get('from')=='manager'){
+                    callParent.openTab("inventory_check_manage");
+                    callParent.closeTab('inventory_check_detail');
+                } else if(params.get('from')=='app'){
+                    callParent.openTab("inventory_check_app");
+                    callParent.closeTab('inventory_check_detail');
+                } else if(params.get('from')=='appSec'){
+                    callParent.openTab("inventory_check_app_sec");
+                    callParent.closeTab('inventory_check_detail');
+                } else if(params.get('from')=='replay'){
+                    callParent.openTab("inventory_check_replay");
+                    callParent.closeTab('inventory_check_detail');
+                }else{
+                    callParent.openTab("inventory_check_record");
+                    callParent.closeTab('inventory_check_detail');
+                }
+            });
+
+            //查询、排序
+            var vSeaData;
+            var orderObj = new Order(function () {
+                pageOrder(orderObj.setOption(vSeaData));
+            });
+
+            function pageOrder(data) {
+                myAjax.ajaxPage('/inventoryCheck/findDetails.json?checkNo=' + varId, 'pageNum', 'pageContent', 'pageTpl', data);
+            }
+
+            form.on('submit(search)', function (data) {
+                vSeaData = data.field;
+                pageOrder(vSeaData);
+                return false;
+            });
+
+            pageOrder();
+
+            callParent.isLoadEnd("inv_check_detail");
+            callParent.register(function () {
+                pageOrder();
+                $("input[name='inputStr']").val('');
+            }, "refresh");
+        }
+
+    });
+</script>
+</body>
+</html>

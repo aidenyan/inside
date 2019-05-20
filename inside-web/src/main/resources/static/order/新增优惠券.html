@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>促销管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../layui/layui.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <ul class="invoiceMsg promotions">
+        <li>
+            <div class="wp14 text_right">标题：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" value="1000元代金券">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">说明：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" value="单笔消费实付满5000元,下月享受1000元返利优惠">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">最小消费金额：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input" value="满5000元减50元">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">最大消费金额：</div>
+            <div class="wp32">
+                <input type="text" class="layui-input" value="满5000元减50元">
+            </div>
+            <div class="wp32">
+                <input type="checkbox" name="" value="" title="是否含积分消费" lay-skin="primary" checked="">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">有效开始时间：</div>
+            <div class="wp32 ">
+                <input class="layui-input" placeholder="开始日" id="LAY_demorange_s">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">有效结束时间：</div>
+            <div class="wp32">
+                <input class="layui-input" placeholder="截止日" id="LAY_demorange_e">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">优惠券发放时间：</div>
+            <div class="wp32">
+                <input class="layui-input" placeholder="截止日" id="LAY_demorange_t">
+            </div>
+
+        </li>
+        <li>
+            <div class="wp14 text_right">每个订单限用张数：</div>
+            <div class="wp32">
+                <input class="layui-input" placeholder="每个订单限用张数" value="1">
+            </div>
+        </li>
+
+        <li>
+            <div class="wp14 text_right">允许使用积分：</div>
+            <div class="wp32 ">
+                <input type="checkbox" name="" value="" title="" lay-skin="primary">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">赠送优惠券：</div>
+            <div class="wp80">
+                <input type="checkbox" name="like1[write]" lay-skin="primary" title="10元优惠券(2017-3.1-2.17.3.8)">
+                <input type="checkbox" name="like1[write]" lay-skin="primary" title="免运费券(2017-3.1-2.17.3.8)">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">允许参加会员等级：</div>
+            <div class="wp80 ">
+                <input type="checkbox" name="like1[write]" lay-skin="primary" title="全部">
+                <input type="checkbox" name="like1[write]" lay-skin="primary" title="白金会员">
+                <input type="checkbox" name="like1[write]" lay-skin="primary" title="黄金会员">
+                <input type="checkbox" name="like1[write]" lay-skin="primary" title="普通会员">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">允许参加商品分类：</div>
+            <div class="wp80 ">
+                <span class="cursor_p">点击选择商品分类</span>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">允许参加商品品牌：</div>
+            <div class="wp80 ">
+                <span class="cursor_p">点击选择商品品牌</span>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">使用规则：</div>
+            <div class="wp80 ">
+                <textarea placeholder="此介绍，不对外展示，仅对本次促销作说明，方便其他同事查看。" class="layui-textarea">
+                    1、单笔订单满5000元-50元，直接在支付时扣减。2、每个会员享受一次促销机会。3、仅允许白金会员参与。
+                </textarea>
+            </div>
+        </li>
+        <li>
+            <div class="mizone-bottom-btn">
+                <button class="layui-btn">保存并继续</button>
+                <button class="layui-btn">保存并关闭</button>
+                <button class="layui-btn">取消</button>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+
+            var start = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+
+            var end = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            }
+
+            $('#LAY_demorange_s').click(function () {
+                start.elem = this;
+                laydate(start);
+            })
+
+            $('#LAY_demorange_e').click(function () {
+                end.elem = this;
+                laydate(end)
+            })
+        })
+    })
+</script>
+</body>
+</html>

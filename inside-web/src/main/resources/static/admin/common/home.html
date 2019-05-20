@@ -1,0 +1,418 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <title>首页</title>
+    <style>
+        html{
+            overflow-x: hidden;
+        }
+        /*清除浮动样式*/
+        .cf:after {
+            clear: both;
+            content: "";
+            display: block;
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+        }
+
+        .cf {
+            zoom: 1;
+        }
+
+        .main-top > div {
+            padding-bottom: 30px;
+        }
+
+        .main-top ul li {
+            float: left;
+        }
+
+        .main-top-1 > ul > li {
+           /* width: 232px;
+            height: 70px;*/
+            width: 244px;
+            height: 100px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            border-radius: 2px;
+            margin-right: 25px;
+            padding-left: 10px;
+           /* margin-right: 28px;
+            padding: 30px 0 0 12px;*/
+
+        }
+
+        .main-top-1 > ul > li:last-child {
+            margin-right: 0;
+        }
+
+        .main-top-1 ul li p {
+            font-size: 24px;
+            color: #fff;
+            padding-top: 24px;
+        }
+
+        .main-top-1 ul li.red {
+            background: url("../../common/image/home/red_1.png") no-repeat center;
+        }
+
+        .main-top-1 ul li.yellow {
+            background: url("../../common/image/home/yellow_1.png") no-repeat center;
+        }
+
+        .main-top-1 ul li.green {
+            background: url("../../common/image/home/green_1.png") no-repeat center;
+        }
+
+        .main-top-1 ul li.blue {
+            background: url("../../common/image/home/blue_1.png") no-repeat center;
+        }
+
+        .main-top-1 ul li span {
+            font-size: 12px;
+            color: #fff;
+            padding-top: 8px;
+        }
+
+        .main-top-2 ul li {
+            width: 200px;
+            height: 64px;
+            border: 1px solid #cbd1d6;
+            border-radius: 2px;
+            margin-right: 13px;
+            text-align: center;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .main-top-2 ul li.active {
+            border-color: #009cff;
+        }
+
+        .main-top-2 ul li.active p, .main-top-2 ul li.active span {
+            color: #009cff;
+        }
+
+        .main-top-2 ul li:last-child {
+            margin-right: 0;
+        }
+
+        .main-top-2 ul li p {
+            text-align: center;
+            font-size: 24px;
+            color: #2b3241;
+            padding: 10px 0 3px 0;
+
+        }
+
+        .main-top-2 ul li span {
+            font-size: 12px;
+            color: #565c6a;
+        }
+
+        .main-top-2 > ul.top {
+            margin-bottom: 12px;
+        }
+
+        .main-buttom {
+            border: 1px solid #e6e6e6;
+        }
+
+        .main-buttom > div.top p {
+            font-size: 14px;
+            color: #565c6a;
+            font-weight: 600;
+            margin: 11px;
+        }
+
+        .main-buttom > div.top i {
+            vertical-align: middle;
+        }
+
+        .main-nav {
+            margin: 11px 11px 0;
+
+        }
+
+        .main-nav ul li {
+            float: left;
+            height: 28px;
+            line-height: 28px;
+            border-bottom: 3px solid transparent;
+            font-size: 12px;
+            color: #565c6a;
+        }
+
+        .main-nav ul li a {
+            color: #565c6a;
+            padding: 8px 20px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .main-nav ul li a:hover {
+            color: #009cff;
+            border-color: #009cff;
+        }
+
+        .main-nav ul li.fr {
+            float: right;
+        }
+
+        li.fr select {
+            width: 100px;
+            height: 26px;
+            color: #2b3241;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .chartContainer {
+            height: 300px;
+        }
+
+        .home-select {
+            width: 100%;
+            margin-bottom: 20px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0 30px;
+        }
+
+        .home-select:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .home-select li {
+            width: 22%;
+            height: 100px;
+            margin-right: 4%;
+            float: left;
+            font-size: 18px;
+            position: relative;
+            zoom: 1;
+            text-align: left;
+            background-color: #428bcb;
+            /*background: url("../common/image/home/red_1.png") no-repeat center;*/
+            background-size: 100% 100px;
+        }
+
+        .home-select li:last-of-type, .home-select li.li-small:last-of-type {
+            margin-right: 0;
+        }
+
+        .home-select li.li-small {
+            width: 18%;
+            height: 80px;
+            margin-right: 2.5%;
+        }
+
+        .home-select li a {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+            position: absolute;
+            font-size: 100%;
+            border: 1px solid #000;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .home-select li .home-select-child {
+            width: 50%;
+            height: 60%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            font-size: 100%;
+        }
+
+        .title-h2 {
+            height: 45px;
+            line-height: 45px;
+            color: #888;
+            font-size: 18px;
+        }
+
+        .topList ul {
+            width: 100%;
+            height: 100%;
+            zoom: 1;
+            font-size: 12px;
+        }
+
+        .topList ul:after {
+            display: block;
+            content: "";
+            height: 0;
+            overflow: visible;
+            clear: both;
+        }
+
+        /*.topList ul li {
+            width: 45%;
+            margin-right: 5%;
+            float: left;
+            margin-bottom: 20px;
+           !* background-color: #ebebeb;*!
+        }*/
+        .home-comtent-wraper{
+            position: absolute;
+            top:0;
+            bottom: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="content-wrpper home-comtent-wraper">
+    <div class="list">
+        <div class="main-top">
+            <div class="main-top-1">
+                <ul class="cf">
+                    <li class="red">
+                        <p id="amount"></p>
+                        <span>今日成交金额</span>
+                    </li>
+                    <li class="yellow">
+                        <p id="totalAmount"></p>
+                        <span>累计成交金额</span>
+                    </li>
+                    <li class="green">
+                        <p id="newUsers"></p>
+                        <span>今日新增客户(位)</span>
+                    </li>
+                    <li class="blue">
+                        <p id="totalUsers"></p>
+                        <span>累计客户(位)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="main-top-2">
+                <ul class="cf top">
+                    <li><a href="javascript:void(0);" code="order_list"><p id="orders"></p><span>今日订单数</span></a></li>
+                    <li><p id="backOrders"></p><span>缺货订单</span></li>
+                    <li><p id="pendingPurchase"></p><span>待审采购单</span></li>
+                    <li><a href="javascript:void(0);" code="returns_exchange"><p id="exchange"></p><span>待换货订单</span></a></li>
+                    <li><a href="javascript:void(0);" code="product_page"><p id="commodity"></p><span>商品数量</span></a></li>
+                </ul>
+                <ul class="cf">
+                    <li><p id="toPayOrders"></p><span>待支付订单</span></li>
+                    <li><a href="javascript:void(0);" code="order_waitingfordelivery_list"><p id="waitingDelivery"></p><span>待发货订单</span></a></li>
+                    <li><a href="javascript:void(0);" code="order_toBeCheck_list"><p id="pendingOrders"></p><span>待审核订单</span></a></li>
+                    <li><p id="inventory"></p><span>库存数量</span></li>
+                    <li><a href="javascript:void(0);" code="purchase_stock"><p id="warningInventory"></p><span>库存预警</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <h2 class="title-h2">统计</h2>
+        <div class="main-buttom">
+            <div class="layui-tab layui-tab-brief top" lay-filter="">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">销售</li>
+                    <li>销售TOP10</li>
+                    <li>库存</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show chartContainer">
+                         <div id="main" style="width:100%;height:350px;"></div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="topList">
+                            <ul class="topList-ul" id="rank"></ul>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">内容3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="rankTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <li class="topList-li">
+        <div class="topList-li-content">
+            <i class="mizone-title{{index++}} mizone-title-icon"></i>
+            <div class="topList-li-content-right">
+                <span class="test-first">{{item.name}}</span>
+                <p class="test-right"><span>{{item.quantity}}条/</span><span>￥{{item.price}}</span></p>
+            </div>
+         </div>
+     </li>
+    {{#  }); }}
+</script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script src="../../js/echarts.min.js"></script>
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'laytpl', 'element','myAjax'], function () {
+        var form = layui.form(), element = layui.element(), layer = layui.layer, laytpl = layui.laytpl,myAjax = layui.myAjax;
+     
+        $(".main-top-2").on('click', 'li a', function (e) {
+        	var code=$(this).attr("code");
+        	$('.side-menu li a',parent.document).each(function(){
+        		if($(this).attr("code") == code){
+        			callParent.openTab($(this).attr("code"), 0, $(this).find("span").text(), $(this).attr("href"), true);
+        			return false;
+        		}
+        	});
+            return false;
+        })
+        
+            function loadContent(){
+
+
+                // 基于准备好的dom，初始化echarts实例
+                
+               var myChart = echarts.init(document.getElementById('main'));
+                // 指定图表的配置项和数据
+                myChart.setOption({
+                    title : {
+                        text : ''
+                    },
+                    tooltip : {},
+                    legend : {
+                        data : [ '销量' ]
+                    },
+                    xAxis : {
+                        data : []
+                    },
+                    yAxis : {},
+                    series : [ {
+                        name : '销量',
+                        type : 'bar',
+                        data : []
+                    } ]
+                });
+                myChart.showLoading();
+
+                
+
+            }    
+            loadContent();
+            
+            callParent.isLoadEnd("home_dashboard");
+            callParent.register(function () {
+
+            }, "search");
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>盘点审核</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <select id="slcWarehouse" name="warehouseId">
+                            <option value="-1">选择仓库</option>
+                        </select>
+                    </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                    <div class="layui-inline">
+                        <input type="text" name="inputStr" placeholder="盘点单号/盘点人"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td><div class="datagrid-cell datagrid-cell-c1-number">序号</div></td>
+                            <td><div class="sort datagrid-cell datagrid-cell-c1-tel_num" name="check_no">盘点单号</div></td>
+                            <td><div class="sort datagrid-cell datagrid-cell-c1-w300" name="warehouse_name">盘点仓库</div></td>
+                            <td><div class=" datagrid-cell datagrid-cell-c1-w60" >盘点类型</div></td>
+                            <td><div class=" datagrid-cell datagrid-cell-c1-w60" >SKU数量</div></td>
+                            <td><div class="sort datagrid-cell datagrid-cell-c1-w60" name="create_name">盘点人</div></td>
+                            <td><div class="sort datagrid-cell datagrid-cell-c1-time" name="create_time">盘点时间</div></td>
+                            <td><div class=" datagrid-cell datagrid-cell-c1-w60" name="profit">状态</div></td>
+                            <td><div class="datagrid-cell datagrid-cell-c1-w100">操作</div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <!--
+        <div id="pageNum" style="text-align:right"></div>
+        -->
+        <!--table 分页-->
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value" lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><div class="datagrid-cell datagrid-cell-c1-number">{{(index+1)+(d.pageSize*(d.pageNo-1))}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-tel_num">{{item.checkNo}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w300">{{item.warehouseName}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">
+            {{# if(item.type==1){}}
+            全盘
+            {{# }else{}}
+            动盘
+            {{#}}}
+        </div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.skuNum || 0}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.createName}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-time">
+            {{# if(item.createTime !=null){}}
+            {{laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}
+            {{# }else{}}
+            -
+            {{#}}}    
+        </div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">
+            {{# if(item.status==0){}}
+            初始
+            {{# }else if(item.status==1){}}
+            待初审
+            {{# }else if(item.status==2){}}
+            初审通过
+            {{# }else if(item.status==3){}}
+            初审拒绝
+            {{# }else if(item.status==4){}}
+            终审通过
+            {{# }else if(item.status==5){}}
+            终审拒绝
+            {{# }else if(item.status==6){}}
+            完成
+            {{# }else if(item.status==7){}}
+            撤回
+            {{# }else if(item.status==8){}}
+            关闭
+            {{# }else if(item.status==9){}}
+            初始
+            {{# }else if(item.status==10){}}
+            待复盘
+            {{# }else if(item.status==11){}}
+            复盘
+            {{#}}}
+        </div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w100">
+                <button class="view" val="{{item.checkNo}}" title="查看">
+                    <i class="icon-uniE602"></i>
+                </button>
+                {{# if(item.status ==10){}}
+                <button class="update" val="{{item.checkNo}}" title="编辑">
+                    <i class="icon-bianji"></i>
+                </button>
+                <!--    
+                <button class="pass" val="{{item.checkNo}}" title="提交">
+                    <i class="icon-zhengque"></i>
+                </button>
+                -->
+                {{# }}}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length === 0){ }}
+    <tr>
+        <td colspan="8" style="text-align: center;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+                var start = {}, end = {}
+        $('#startDate').click(function () {
+            start.elem = this;
+            start.format = 'YYYY-MM-DD';
+            start.min = undefined;
+            if (!Utils.isNotBlack($("#endDate").val())) {
+                start.max = undefined;
+            } else if (!Utils.isNotNull(start.max)) {
+                start.max = laydate.now();
+            }
+            start.choose = function (datas) {
+                end.min = datas; //结束日选好后，重置开始日的最大日期
+            }
+            start.start = "";
+            start.istoday = false
+            laydate(start);
+        })
+        $('#endDate').click(function () {
+            end.elem = this;
+            end.format = 'YYYY-MM-DD';
+            end.max = undefined;
+            if (!Utils.isNotBlack($("#startDate").val())) {
+                end.min = undefined;
+            } else if (!Utils.isNotNull(end.min)) {
+                end.min = laydate.now();
+            }
+            end.choose = function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+            laydate(end);
+        })        
+
+        //查看
+        $("#pageContent").on("click", ".view", function () {
+            callParent.openTab("inv_check_detail", 0, "盘点明细", "admin/inventory/inventory_check_detail.html?checkNo=" + $(this).attr('val')+"&from=replay", true);
+        });
+
+        //编辑
+        $("#pageContent").on("click", ".update", function () {
+            callParent.openTab("inv_check_detail", 0, "编辑盘点", "admin/inventory/inventory_check_replay_edit.html?checkNo=" + $(this).attr('val')+"&from=replay", true);
+        });
+        
+        //通过
+        $("#pageContent").on("click", ".pass", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认提交吗?', {icon: 3, title: '提示'}, function (index) {
+                if (checkSave()) {
+                    myAjax.ajaxSend("/inventoryCheck/toApproval.json?checkNo=" + varId, function (dataJson) {
+                        refresh();
+                    });
+                }
+                layer.close(index);
+            });
+        });
+
+        //拒绝
+        $("#pageContent").on("click", ".reject", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认拒绝吗?请输入原因：<input type="text" class="layui-input" id="txtAR" />', {icon: 3, title: '提示'}, function (index) {
+                if (checkSave()) {
+                    myAjax.ajaxSend("/inventoryCheck/cancelCheck.json?checkNo=" + varId + '&approvalRemark=' + $("#txtAR").val(), function (dataJson) {
+                        refresh();
+                        layer.msg('审核拒绝');
+                    });
+                }
+                layer.close(index);
+            });
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxPage('/inventoryCheck/list.json', 'pageNum', 'pageContent', 'pageTpl', $.extend(data, {status: 10}));
+        }
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            pageOrder(vSeaData);
+            return false;
+        });
+
+        $(".page_size_value").change(function(){
+            $("#btnSearch").click();
+        })
+
+        pageOrder();
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg', true);
+
+        callParent.isLoadEnd("inventory_check_replay");
+        callParent.register(function () {
+             pageOrder();
+             $("input[name='inputStr']").val('');
+             $("#slcWarehouse").val('');
+             $("input[name='startDate']").val('');
+             $("input[name='endDate']").val('');
+        }, "refresh");
+    });
+</script>
+</body>
+</html>

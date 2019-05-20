@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>物流打包</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+</head>
+<body>
+<div class="container-wrap">
+    <div class="title">
+        <p>订单发货</p>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">订单号</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+            <input type="text" class="text-in" id="orderSn" disabled="disabled">
+        </div>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">快递单</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+            <input type="text" class="text-in no1" id="trackingNo" onfocus="this.select()">
+        </div>
+    </div>
+    <div class="container-list order-check-bottom10">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">条码</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8;padding-right: 0">
+            <input type="text" class="text-in no2" id="proSn" onfocus="this.select()">
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 4">
+            <input type="text" class="text-in no3" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" onBlur="change3(this)">
+        </div>
+    </div>
+    <div class="tab-wrap">
+        <table class="ui-table">
+            <thead>
+            <tr class="ui-thead-bg">
+                <td class="wid40 paddL break-all">商品条码</td>
+                <td class="wid40 tex-c ">商品名称</td>
+                <td class="wid20 tex-c">待/已</td>
+            </tr>
+            </thead>
+            <tbody id="proInfoList">
+            </tbody>
+        </table>
+        <div class="bar"></div>
+        <table class="ui-table logistics-list">
+            <thead>
+            <tr class="ui-thead-bg">
+                <td class="wid50 paddL">物流单号</td>
+                <td class="wid50 tex-c">状态</td>
+            </tr>
+            </thead>
+            <tbody id="logisticsList">
+            </tbody>
+        </table>
+    </div>
+     <div class="container-item" style="flex: 2">
+           <input type="button" class="text-in btn" id="completeScan" value="完成">
+    </div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../js/orderCheck.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script id="logisticsTPL" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td class="wid50 paddL break-all">{{item.trackingNo||""}}</td>
+        <td class="wid50 tex-c {{item.trackingNo}}">{{item.trackingNo==null?"":changeStatus(item.status)}}</td>
+    </tr>
+    {{#  }); }}
+    {{#  if(d.length == 0){ }}
+   <tr aglin='center'><td colspan="2">无数据</td></tr>
+    {{#  } }}
+</script>
+<script id="proInfoTPL" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td class="wid50 paddL">{{item.proSn||""}}</td>
+        <td class="wid50 tex-l">{{item.proName||""}}</td>
+        <td class="wid50 tex-c">{{item.buyNum||0}}/<span class="checkNum" buyNum="{{item.buyNum||0}}" skuCode="{{item.skuCode}}">0</span></td>
+    </tr>
+    {{#  }); }}
+    {{#  if(d.length == 0){ }}
+   <tr aglin='center'><td colspan="3">无数据</td></tr>
+    {{#  } }}
+</script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>已发货订单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+
+                    <div class="layui-inline po-r">
+                       <div class="layui-input-inline">
+                    	<select id="searchSeletParam">
+							<option value="sn">订单编号</option>
+							<option value="productName">商品名称</option>
+							<option value="consignee">收货人</option>
+							<option value="accountNo">会员账号</option>
+							<option value="phoneNo">收货人电话</option>
+							<option value="skuCode">sku编码</option>
+							<option value="trackNo">运单号</option>
+						</select>
+						</div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-small" onclick="exportOut()">导出</button>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="platformList" name="warehouseId">
+                                <option value="">选择平台</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcStatus" name="status">
+                                <option value="">选择状态</option>
+                            </select>
+                        </div>
+                         <div class="layui-input-inline">
+                            <select id="warehouseList" lay-filter="warehouseList">
+                                <option value="">选择仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                             <select id="expressList">
+                                <option value="">选择物流网点</option>
+                            </select>
+                        </div>
+                         <div class="layui-input-inline">
+                            <select id="flagList">
+                                <option value="-1">选择旗标</option>
+                                <option value="1">红</option>
+                                <option value="2">黄</option>
+                                <option value="3">绿</option>
+                                <option value="4">蓝</option>
+                                <option value="5">紫</option>
+                            </select>
+                        </div>
+                         <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form">
+            <table class="layui-table" id="table2">
+                <thead>
+                <tr>
+                    &lt;!&ndash;<th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>&ndash;&gt;
+                    <th class="width40">序号</th>
+                    <th class="sort width140" name="info.sn">订单编号</th>
+                    &lt;!&ndash; <th>商品总额</th> &ndash;&gt;
+                    <th class="width70">应收金额</th>
+                    <th class="width70">促销金额</th>
+                    <th class="width70">优惠金额</th>
+                    <th class="width70">调整金额</th>
+                    <th class="width100">积分抵扣金额</th>
+                    <th class="width100">运单号</th>
+                    <th class="width70">物流公司</th>
+                    <th class="sort width70" name="info.warehouse_id">发货仓库</th>
+                    <th class="width50">收货人</th>
+                    <th class="width100">收货电话</th>
+                    <th class="sort width70" name="info.source">平台</th>
+                    <th class="sort width70" name="info.consign_time">发货时间</th>
+                    <th class="width50">状态</th>
+                    <th class="width50">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+
+                </tbody>
+            </table>
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td rowspan="1" colspan="1" field="name2">
+                                <div class="datagrid-cell datagrid-cell-c1-number" style="">序号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="relationInfo.sn" style="">订单编号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">运单号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name12">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">物流公司</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name13" >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="relationInfo.warehouse_id" style="">发货仓库</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-user_name" style="">收货人</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name13" >
+                                <div class="datagrid-cell datagrid-cell-c1-tel_num" style="">收货电话</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name13" >
+                                <div class="datagrid-cell datagrid-cell-c1-w70 sort" name="relationInfo.source" style="">平台</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name14" >
+                                <div class="datagrid-cell datagrid-cell-c1-time sort" name="relationInfo.consign_time" style="">发货时间</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name15" >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="relationInfo.pay_status" style="">支付状态</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name15" >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="relationInfo.status" style="">订单状态</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name15" >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="relationInfo.consign_status" style="">发货状态</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value"  lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+        <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/orderInfo/orderDeliveryList.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <!--<td>{{# if(item.status == 0){ }}<input name="" lay-skin="primary" type="checkbox">{{# } }}</td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-number">{{(index+1)+(d.pageSize*(d.pageNo-1))}}</div></td>
+        <td class="trDetail consignee" warehouseId="{{item.warehouseId}}"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.sn}}</div></td>
+ 		{{#  if(item!=null &&item.logisticsList!=null&&item.logisticsList.length>0){ }}
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.logisticsList[0].trackingNo||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.logisticsList[0].trackingName||'-'}}</div></td>
+		{{#  } }}
+ 		{{#  if(item==null ||item.logisticsList==null||item.logisticsList.length<1){ }}
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">-</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">-</div></td>
+		{{#  } }}
+		
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-user_name">{{item.consignee || '-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-tel_num">{{item.phoneNo || '-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">{{item.sourceName || '-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.consignTime,'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{changePayStatus(item.payStatus)}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{changeStatus(item.status)}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{changeConsignStatus(item.consignStatus)}}</div></td>
+        <td class="state_uhandle">
+                <div class="datagrid-cell datagrid-cell-c1-order_num">
+                    <button class=" delete" val="{{item.id}}" onclick="orderDetail({{item.id}})" title="查看">
+                        <i class="icon-uniE602"></i>
+                    </button>
+                    {{# if(item.status != 8){ }}
+                    <button class="returnExchangeBtn" val="{{item.id}}" onclick="returns({{item.id}},false)" title="退货" {{# if(!hasReturnExchange){ }}style="display:none;"{{#  } }}>
+                        <i class="icon-tuihuo"></i>
+                    </button>
+                    <button class="returnExchangeBtn" val="{{item.id}}" onclick="returns({{item.id}},true)" title="换货" {{# if(!hasReturnExchange){ }}style="display:none;"{{#  } }}>
+                        <i class="icon-huanhuo"></i>
+                    </button>
+                    {{#  } }}
+                </div>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+           <tr aglin='center'><td colspan="13"><div class="null-show"></div></td></tr>
+    {{#  } }}
+</script>
+<script id="tplOrderProductInventoryInfo" type="text/html">
+    <td colspan="13" class="purchaseItemContent">
+        <div>
+            <p class="trDetail-title">订单商品库存详情</p>
+        </div>
+        <div style="">
+            <table class="layui-table">
+                <thead>
+                <tr>
+ 					<th>序号</th>
+                    <th>商品编号</th>
+                    <th>商品名称</th>
+                    <th>商品价格</th>
+                    <th>销售库存</th>
+                    <th>实际库存</th>
+                    <th>下单数量</th>
+                    <th>退货数量</th>
+                    <th>小计</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d, function(index, item){ }}
+                <tr {{#  if(item.storageStatus!=null&&item.storageStatus==false||(item.skuCode!=item.checkSkuCode)){ }} style="color:red" {{#	 } }}>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode||''}}</td>
+                    <td>{{item.proName||''}}{{item.skuCode==item.checkSkuCode&&item.skuCode!=''?'':'(没有本地商品信息)'}}</td>
+                    <td>{{item.price==null?'':item.price}}</td>
+                    <td>{{item.saleNum==null?'':item.saleNum}}</td>
+                    <td>{{item.inventoryNum==null?'':item.inventoryNum}}</td>
+                    <td>{{item.buyNum || ''}}</td>
+                    <td>{{item.rejectedNum || ''}}</td>
+                    <td>{{item.countPrice==null?'':item.countPrice}}</td>
+                </tr>
+                {{# }); }}
+				{{# if(d==null||d.length === 0){ }}
+      			 <tr aglin='center' style="color:red"><td colspan="9">没有对应的本地商品信息，请检查本地数据库中是否有该商品</td></tr>
+    			{{# } }}
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+<script id="platformTpl" type="text/html">
+<option value="-1">选择平台</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+ {{#  }); }}
+</script>
+<script id="statusTpl" type="text/html">
+<option value="-1">选择状态</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.value}}">{{item.desc}}</option>
+ {{#  }); }}
+</script>
+<script id="warehouseListTpl" type="text/html">
+<option value="-1">选择仓库</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+ {{#  }); }}
+</script>
+<script id="expressListTpl" type="text/html">
+<option value="-1">选择物流网点</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}-{{item.address}}</option>
+ {{#  }); }}
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

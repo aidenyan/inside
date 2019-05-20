@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../common/css/amazeui.css?v=2.12">
+    <link rel="stylesheet" href="../../layui/css/layui.css?v=2.12">
+    <link rel="stylesheet" href="../../common/css/common.css?v=2.12">
+    <link rel="stylesheet" href="../../common/css/font-style.css?v=2.12">
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add_brand" class="layui-btn layui-btn-small brand_save_upda"
+                       authority_code="brand_save_upda"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加品牌</a>
+                    <a href="javascript:void(-1);" id="add_common_brand"
+                       class="layui-btn layui-btn-small brand_save_common"
+                       authority_code="brand_save_common"> <i class="layui-icon" style="vertical-align: middle">
+                        &#xe61f;</i>添加公共品牌</a>
+                    <button class="layui-btn layui-btn-small brand_deleted" authority_code="brand_deleted"
+                            id="brand_deleted">删除
+                    </button>
+                    <input type="text" name="title" id="search_content" placeholder="品牌名称"
+                           autocomplete="off" class="layui-input small mizo-srarch-input key_up_enable">
+                    <button class="layui-btn layui-btn-small" id="search_id">搜索</button>
+                </div>
+            </div>
+        </div>
+        <!--table 数据-->
+        <!--<div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <thead>
+                <tr>
+                    <th class="checked width30"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                    <th class="tab_sku sort Width300" name="brand.name">品牌名称</th>
+                    <th class="tab_img width80">品牌图片</th>
+                    <th class="tab_pinpai sort width100" name="brand.order_num"><a href="">排序</a></th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                </tbody>
+            </table>
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-checkbox" style="">
+                                    <input type="checkbox" lay-skin="primary" lay-filter="allChoose">
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="brand.name" style="">
+                                    品牌名称
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3" class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="alias" style="">品牌别名
+                                </div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-w100" style="">品牌图片</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="point_play">是否仅积分支付</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-w50 sort" name="order_num">排序</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num " style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <!--table 分页-->
+        <div class="cf">
+            <div id="pager" style="text-align:right"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td class="checked">
+    <div class="datagrid-cell datagrid-cell-c1-checkbox" style="">
+    <input type="checkbox" class="{{if isCommon}}common{{/if}}" lay-skin="primary" id="{{:id}}">
+    </div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-order_num">{{:name}}</div></td>
+	<td><div class="datagrid-cell datagrid-cell-c1-order_num">{{:alias}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w100" style="">{{if logoPathUrl}}
+        <img src="{{:logoPathUrl}}"   style="width:30px;"/>
+        {{/if}}</div>
+     </td>
+
+    <td><div class="datagrid-cell datagrid-cell-c1-w100">{{if pointPlay}}是{{else}}否{{/if}}</div></td>
+    <td><div class="datagrid-cell datagrid-cell-c1-w50">{{:orderNum}}</div></td>
+    <td class="state_uhandle">
+    <div class="datagrid-cell datagrid-cell-c1-order_num " style="">
+        <a  brand="{{:id}}" class="update brand_save_upda brand_save_common" {{if isCommon}}authority_code="brand_save_common"{{else}}authority_code="brand_save_upda"{{/if}}  title="编辑">
+           <i class="icon-bianji"></i>
+        </a>
+         {{if !isCommon}}
+        <a class="  delete brand_deleted"   brand="{{:id}}" authority_code="brand_deleted"  title="删除">
+           <i class="icon-delete"></i>
+        </a>
+        {{/if}}
+         <a class=" update brand_info"   brand="{{:id}}" authority_code="brand_info"  title="查看" {{if isCommon}}n_authority_code="brand_save_common"{{else}}n_authority_code="brand_save_upda"{{/if}}>
+          <i class="icon-search"></i>
+        </a>
+    </div>
+    </td>
+</tr>
+{{/for}}
+
+</script>
+
+<script type="x-jsrender" id="j-edit-content">
+<form class="layui-form dialog" id="form1" style="display: none">
+    <input type="hidden" id="form_id" value="{{:id}}" >
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>品牌名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input  lay-verify="required|brandName" type="tel" id="form_name"  placeholder="请输入品牌名称"  maxlength="49"   value="{{:name}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+	<div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top"><span style="color:red">*</span>品牌别名</label>
+            <div class="layui-input-inline detailedAddress">
+                <input  lay-verify="required|brandAlias" type="tel" id="form_alias"  placeholder="请输入品牌别名"  maxlength="49"   value="{{:alias}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">品牌图片</label>
+            <div class="layui-input-inline detailedAddress">
+                <!--<input type="file" name="file" class="layui-upload-file">-->
+                <a href="javascript:;" class="file" id="select_file_a">
+                    选择上传文件
+                    <input type="file" name="file"   id="bran_url_id">
+                      <span  class="showFileName" id="select_img"></span>
+                </a>
+                  {{if logoPathUrl!=null && logoPathUrl.length>0}}
+                   <a href="{{:logoPathUrl}}" target="_blank" class="file">
+                    <span class="showFileName"  file_url='{{:logoPathUrl}}'>已上传的图片</span>
+                    </a>
+                    {{/if}}
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">描述</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea placeholder="请输入品牌描述信息" maxlength="100" id="form_brand_desc" class="layui-textarea">{{:brandDesc}}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+     <label class="layui-form-label padd_top">排序</label>
+        <div class="layui-inline">
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" placeholder="请输入品牌的排序"  maxlength="5"   name="" id="form_order_num"  lay-verify="num"  value="{{:orderNum}}" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" lay-filter="test1">
+        <label class="layui-form-label padd_top"></label>
+        <div class="layui-inline detailedAddress">
+            <input  value="1" type="checkbox" title="是否仅积分支付" name="form_point_play" {{if pointPlay==true}}checked="checked"{{/if}} lay-skin="primary"/>
+        </div>
+    </div>
+    <input type="hidden" id="form_submit" lay-submit lay-filter="form_submit" />
+</form>
+
+</script>
+
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        var form = layui.form();
+        var layer = layui.layer,
+            laypage = layui.laypage;
+        var currPageNo, isCommon;
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $('.datagrid-body').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        form.verify({
+            num: function (value, item) {
+                var message = $(item).attr("message")
+                if (!Utils.isNotNull(message)) {
+                    message = "";
+                }
+                if (Utils.isNotBlack(value)) {
+                    if (!/^(([0-9])|([1-9][0-9]+))$/.test(value)) {
+                        return message + '必须为正整数';
+                    }
+                }
+            }, brandNum: function (value, item) {
+                if (!/^[0-9]{3}$/.test(value)) {
+                    return "品牌编码必须为3位数的数字";
+                } else {
+                    var result = "";
+                    ajaxsend({
+                        brandId: $("#form_id").val(),
+                        brandNum: value,
+                        isCommon: isCommon
+                    }, "/admin/brand/checkBrandNum.json", function (dataJson) {
+                        formDateTime = new Date().getTime();
+                        if (!dataJson.result) {
+                            result = "品牌编码与后台重复！";
+                        }
+                    }, "get", false);
+                    if (Utils.isNotBlack(result)) {
+                        return result;
+                    }
+                }
+            },
+            brandName: function (value, item) {
+                value = $.trim(value);
+                var result = "";
+                ajaxsend({
+                    brandId: $("#form_id").val(),
+                    brandName: value,
+                    isCommon: isCommon
+                }, "/admin/brand/checkBrandName.json", function (dataJson) {
+                    formDateTime = new Date().getTime();
+                    if (!dataJson.result) {
+                        result = "品牌名称与后台重复！";
+                    }
+                }, "get", false);
+                if (Utils.isNotBlack(result)) {
+                    return result;
+                }
+            }
+        })
+
+        $("#add_brand").click(function () {
+            openEditContent("新增品牌");
+        });
+
+        //添加公共品牌
+        $("#add_common_brand").click(function () {
+            openEditContent("新增品牌", undefined, undefined, undefined, undefined, "/admin/brand/common/save/update.json");
+        });
+
+        //批量删除
+        $("#brand_deleted").click(function () {
+            var idList = new Array();
+            var selectCommon = false;
+            $("#page_tbody input[type='checkbox']").each(function () {
+                if (Utils.isNotNull(checkBox($(this), $(this).attr("id")))) {
+                    if (!$(this).hasClass("common")) {
+                        idList.push(checkBox($(this), $(this).attr("id")));
+                    } else {
+                        selectCommon = true;
+                    }
+                }
+            })
+            if (Utils.isNotNull(idList) && idList.length > 0) {
+                layer.confirm("确定要删除所选品牌吗？", {
+                    icon: 3,
+                    title: '提示',
+                    'closeBtn': 0,
+                    area: ['430px', '240px']
+                }, function () {
+                    ajaxsend({ids: idList}, "/admin/brand/deleted.json", function () {
+                        layer.alert("删除成功!", function (index) {
+                            layer.close(index);
+                            search(currPageNo);
+                        });
+
+                    })
+                })
+            } else {
+                if (selectCommon) {
+                    layer.alert("您所选择的都是公共品牌，请选择非公共品牌！", function (index) {
+                        layer.close(index);
+                    });
+                } else {
+                    layer.alert("请选择要删除的非公共品牌！", function (index) {
+                        layer.close(index);
+                    });
+                }
+
+            }
+
+        });
+
+        var orderObj = new Order(function (obj) {
+            search();
+        }, "brand.create_time");
+        $("#search_id").click(function () {
+            search();
+        });
+
+        $("#search_content").keyup(function (event) {
+            if (event.keyCode == "13") {
+                search();
+            }
+        });
+
+        function search(pageNo, is) {
+            if (!Utils.isNotNull(pageNo)) {
+                pageNo = 1;
+            }
+            currPageNo = pageNo;
+            var pageSize = 15;
+            var brandName = $.trim($("#search_content").val());
+            var option = {pageNo: pageNo, pageSize: pageSize, brandName: brandName};
+            option = orderObj.setOption(option);
+            ajaxsend(option, "/admin/brand/page.json", function (dataJson) {
+                var data = dataJson;
+                createTableData(data)
+                checkLocalAuthority(data);
+                if (is) {
+                    layer.msg('已刷新为最新数据！！', {
+                        time: 300
+                    })
+                }
+                form.render('checkbox'); //
+                laypage({
+                    cont: "pager",
+                    curr: dataJson.result.pageNo
+                    , pages: dataJson.result.totalPage
+                    , skip: true
+                    , jump: function (jumpObj, first) {
+                        if (!first) {
+                            search(jumpObj.curr);
+                        }
+                    }
+                })
+            })
+        }
+
+        function createTableData(data) {
+            /*获取模板*/
+            var jsRenderTpl = $.templates('#j-con-list'),
+                /*绑定数据*/
+                finalTpl = jsRenderTpl(data.result);
+            $('#page_tbody').html(finalTpl)
+            $("#checkTba").tableCheck('success');
+            checkLocalAuthority(data);
+            bindListButton();
+        }
+
+        //列表操作绑定事件
+        function bindListButton() {
+            $("#page_tbody .state_uhandle a").click(function () {
+                var url = "";
+                var data = {}
+                if ($(this).attr("authority_code") == "brand_deleted") {
+                    url = "/admin/brand/deleted.json";
+                    data.ids = $(this).attr("brand");
+                    layer.confirm("确定要删除该品牌吗？", {
+                        icon: 3,
+                        title: '提示',
+                        'closeBtn': 0,
+                        area: ['430px', '240px']
+                    }, function () {
+                        ajaxsend(data, url, function (dataJson) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index)
+                                search(currPageNo);
+                            })
+                        })
+                    })
+                } else if ($(this).attr("authority_code") == "brand_save_upda" || $(this).attr("authority_code") == "brand_save_common") {
+                    var url = "/admin/brand/save/update.json";
+                    if ($(this).attr("authority_code") == "brand_save_common") {
+                        url = "/admin/brand/common/save/update.json";
+                    }
+
+                    openEditContent("修改品牌", {id: $(this).attr("brand")}, "/admin/brand/info.json", function (dataJson) {
+                        return dataJson.result;
+                    }, undefined, url);
+                } else if ($(this).attr("authority_code") == "brand_info") {
+                    openEditContent("品牌信息", {id: $(this).attr("brand")}, "/admin/brand/info.json", function (dataJson) {
+                        return dataJson.result;
+                    }, function (dataJson) {
+                        if (!Utils.isContain(dataJson.authorityCodeList, "brand_save_upda") || !Utils.isContain(dataJson.authorityCodeList, "brand_save_common")) {
+                            $("#form1 input").attr("disabled", "disabled");
+                            $("#form_brand_desc").attr("disabled", "disabled");
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    })
+                }
+            });
+        }
+
+        function checkBox($box, checkValue, notCheckValue) {
+            if ($box.is(':checked')) {
+                return checkValue;
+            } else {
+                return notCheckValue;
+            }
+        }
+
+        function openEditContent(title, paramter, url, dataDeal, openAfterDeal, updateUrl) {
+            var isUpdate = true;
+            if (Utils.isBlank(updateUrl)) {
+                updateUrl = "/admin/brand/save/update.json";
+            } else {
+                isCommon = true;
+            }
+            dialog.open({
+                paramter: paramter,
+                url: url,
+                dataDeal: dataDeal,
+                id: "j-edit-content",
+                removeId: "form1",
+                bind: function () {
+                    //选择文件显示
+                    $("#select_file_a").on("change", "input[type='file']", function () {
+                        var filePath = $(this).val();
+                        if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1) {
+                            var arr = filePath.split('\\');
+                            var fileName = arr[arr.length - 1];
+                            $("#select_img").html("已选择文件" + fileName);
+                        }
+                    })
+                },
+
+                openDilog: function (dataJson) {
+                    // if (Utils.isNotNull(dataJson.result) && Utils.isNotNull(dataJson.result.isRevise) && dataJson.result.isRevise) {
+                    //     $("#form_brand_num").attr("disabled", "disabled");
+                    // }
+                    if (Utils.isNotNull(openAfterDeal)) {
+                        isUpdate = openAfterDeal.call(this, dataJson);
+                    }
+                    var btn = ["确定", "取消"]
+                    if (!isUpdate) {
+                        btn = ["取消"]
+                    }
+                    layer.open({
+                        title: title,
+                        type: 1,
+                        content: $("#form1"),
+                        area: ["600px", "420px"],
+                        btn: btn,
+                        closeBtn: 0,
+                        btnAlign: 'r',
+                        yes: function (index, item) {
+                            if (isUpdate) {
+                                form.on("submit(form_submit)", function () {
+                                    if (isUpdate) {
+                                        uploadFile(updateUrl, function (dataJson) {
+                                            layer.alert(title + "成功！", function (alertIndex) {
+                                                layer.close(alertIndex);
+                                                layer.close(index);
+                                                search(currPageNo)
+                                            })
+                                        }, {
+                                            fileId: "bran_url_id",
+                                            data: {
+                                                name: $("#form_name").val(),
+                                                alias: $("#form_alias").val(),
+                                                orderNum: $("#form_order_num").val(),
+                                                id: $("#form_id").val(),
+                                                pointPlay: $('input[name="form_point_play"]').is(':checked'),
+                                                brandDesc: $("#form_brand_desc").val()
+                                            }
+                                        });
+                                    } else {
+                                        layer.close(index);
+                                    }
+                                    return false;
+                                })
+                                $("#form_submit").click();
+                            } else {
+                                layer.close(index);
+                            }
+                        },
+                        btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                    form.render('checkbox', 'test1');
+                }
+            });
+        }
+
+        function checkLocalAuthority(data) {
+            checkAuthority(data.authorityCodeList, ["brand_deleted", "brand_save_upda", "brand_info", "brand_save_common"]);
+        }
+
+        search();
+        callParent.isLoadEnd("brand_page");
+        callParent.register(function () {
+            var isRefresh = true;
+            search(currPageNo, isRefresh)
+        }, "search");
+    })
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 160, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

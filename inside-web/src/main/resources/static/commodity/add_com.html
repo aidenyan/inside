@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加商品</title>
+    <link rel="stylesheet" href="../common/css/amazeui.css">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <!--<link rel="stylesheet" href="../common/css/main.css">-->
+    <script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../layui/layui.js"></script>
+
+    <!--<script src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.js"></script>-->
+    <style>
+        .content-wrpper {
+            min-width: 1120px;
+            padding: 20px;
+            position: relative;
+            height: 100%;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 338px;
+        }
+
+        .layui-input-block {
+            margin-left: 165px;
+            width: 864px;
+        }
+
+        .layui-form-label {
+            width: 135px;
+        }
+
+        .layui-form-checkbox[lay-skin="primary"] span {
+            padding-right: 6px;
+        }
+
+        span.explain {
+            font-size: 12px;
+            color: #999999;
+        }
+
+        .commodityAttributes .layui-input-inline {
+            width: 800px;
+        }
+
+        .commodityAttributes .layui-input-inline .layui-form-checkbox[lay-skin="primary"] span {
+            padding-right: 52px;
+        }
+
+        .layui-table td, .layui-table th {
+            padding: 0;
+            text-align: center;
+            min-height: 20px;
+            line-height: 30px;
+        }
+
+        .layui-table input {
+            border: 0;
+        }
+
+        .btnBottom {
+            width: 100%;
+            text-align: center;
+            position: absolute;
+        }
+
+        .el-progress {
+            position: relative;
+            line-height: 1;
+        }
+
+        .el-progress-bar {
+            padding-right: 50px;
+            display: inline-block;
+            vertical-align: middle;
+            width: 100%;
+            margin-right: -55px;
+            box-sizing: border-box;
+        }
+
+        .el-progress-bar__outer {
+            height: 6px;
+            border-radius: 100px;
+            background-color: #e4e8f1;
+            overflow: hidden;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .el-progress__text {
+            font-size: 14px;
+            color: #48576a;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            line-height: 1;
+        }
+
+        .el-progress-bar__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            border-radius: 2px 0 0 2px;
+            background-color: #20a0ff;
+            text-align: right;
+            border-radius: 100px;
+            line-height: 1;
+        }
+
+        .icon-loading1 {
+            display: inline-block;
+            font-size: 30px;
+            color: #009cff;
+        }
+
+
+        .choise .layui-form-select {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="">
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">基本属性</li>
+            <li>商品介绍</li>
+            <li>商品属性</li>
+            <li>商品套装</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="infor-show">
+                    <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                    <span>基础信息</span>
+                </div>
+                <hr>
+                <div class="layui-form mizone-form">
+                    <div class="layui-form-item mizone-form-item">
+                        <div>
+                            <label class="layui-form-label padd_top">商品名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="商品名称"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">SKU编码</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="phone" lay-verify="phone" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">商家编码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="email" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">分组选择框</label>
+                            <div class="layui-input-inline">
+                                <select name="">
+                                    <option value="a">Apple</option>
+                                    <option value="b" selected>Banana</option>
+                                    <option value="o">Orange</option>
+                                    <option value="m" selected>Mango</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">搜索选择框</label>
+                             <!--<div class="layui-input-inline choise">
+                                 <select name="modules"  lay-verify="required" lay-search>
+                                     <option value="">直接选择或搜索选择</option>
+                                     <option value="1">layer</option>
+                                     <option value="2">form</option>
+                                     <option value="3">layim</option>
+                                     <option value="4">element</option>
+                                 </select>
+                                 &lt;!&ndash;<select multiple id="am-select">
+                                     <option value="a">Apple</option>
+                                     <option value="b" selected>Banana</option>
+                                     <option value="o">Orange</option>
+                                     <option value="m" selected>Mango</option>
+                                 </select>&ndash;&gt;
+                             </div>-->
+                            <div class="am-selected am-dropdown  am-active" id="am-selected" style="width: 338px">
+                                <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                       id="am-selected-btn" placeholder="请选择">
+                                <i class="edge"></i>
+                                <div class="am-selected-content am-dropdown-content"
+                                     style="min-width: 338px;display: none">
+                                    <div class="am-selected-search">
+                                        <input autocomplete="off" class="am-form-field am-input-sm">
+                                    </div>
+                                    <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto">
+                                        <li class=""><span
+                                                class="am-selected-text">Apple</span> <i
+                                                class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Banana</span> <i
+                                                class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Orange</span> <i
+                                                class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Mango</span> <i
+                                                class="am-check icon-duigou"></i></li>
+                                        <li class=""  ><span class="am-selected-text">iPhone</span><i
+                                                class="am-check icon-duigou"></i>
+                                        </li>
+                                        <li class="" ><span
+                                                class="am-selected-text">iMac</span> <i
+                                                class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook Pro</span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook Pro</span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook Pro</span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook Pro</span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook  </span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook Pro</span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                        <li class="" ><span class="am-selected-text">Macbook Pro</span>
+                                            <i
+                                                    class="am-check icon-duigou"></i></li>
+                                    </ul>
+                                    <div class="am-selected-hint"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单位</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="phone" lay-verify="phone" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">重量</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="email" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">包装数量</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="phone" lay-verify="phone" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">包装单位</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="email" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">上架平台</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="" lay-skin="primary" title="小车门店" checked="">
+                                <input type="checkbox" name="" lay-skin="primary" title="大车门店">
+                                <input type="checkbox" name="" lay-skin="primary" title="小车经销商" disabled="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">小车经销商销售积分</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="email" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">销售单价</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="phone" lay-verify="phone" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">起订数量</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="email" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+
+                    </div>
+                </div>
+
+
+                <div class="infor-show">
+                    <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                    <span>设置信息</span>
+                </div>
+                <hr>
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">标签</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="" lay-skin="primary" title="小车商城新品上市" checked="">
+                                <input type="checkbox" name="" lay-skin="primary" title="大车热销">
+                                <input type="checkbox" name="" lay-skin="primary" title="大车最新">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">标签</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="" lay-skin="primary" title="上架" checked="">
+                                <input type="checkbox" name="" lay-skin="primary" title="赠品">
+                                <input type="radio" name="" lay-skin="primary" title="男">
+                                <input type="radio" name="" lay-skin="primary" title="女">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="infor-show">
+                    <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                    <span>商品图片</span> <span class="explain">*请至少上传一张商品图片(800*800像素),最多上传5张</span>
+                </div>
+                <hr>
+
+                <div class="layui-form">
+                    <div class="mizone-upload-case">
+                        <div class="mizone-upload-list">
+                            <!--<img src="../common/image/wKgeS1ib-UOALKcqAAAJhQ-7X_E814_80x80.png" alt="">
+                            <div class="mizone-upload-list-cover">
+                                <i class="layui-icon">&#xe603;</i>
+                                <i class="layui-icon">&#xe602;</i>
+                                <i class="layui-icon">&#xe642;</i>
+                                <i class="layui-icon">&#xe640;</i>
+                            </div>-->
+                            <i class="icon-loading1 layui-anim-rotate"></i>
+                        </div>
+                        <div class="mizone-upload-list">
+                            <img src="../common/image/wKgeS1ib-UOALKcqAAAJhQ-7X_E814_80x80.png" alt="">
+                            <div class="mizone-upload-list-cover">
+                                <i class="layui-icon">&#xe603;</i>
+                                <i class="layui-icon">&#xe602;</i>
+                                <i class="layui-icon">&#xe642;</i>
+                                <i class="layui-icon">&#xe640;</i>
+                            </div>
+                        </div>
+                        <div class="mizone-upload">
+                            <div class="mizone-upload-drag">
+                                <i class="layui-icon">&#xe654;</i>
+                                <input type="file" name="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-progress el-progress--line">
+                        <div class="el-progress-bar">
+                            <div class="el-progress-bar__outer" style="height: 2px;">
+                                <div class="el-progress-bar__inner" style="width: 64%;"><!----></div>
+                            </div>
+                        </div>
+                        <div class="el-progress__text" style="font-size: 12.8px;">64%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <textarea class="" id="editor_id" name="content"></textarea>
+            </div>
+            <div class="layui-tab-item">
+                <div class="infor-show">
+                    <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                    <span>商品属性</span>
+                </div>
+                <hr>
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline commodityAttributes">
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="" lay-skin="primary" title="商品品种" checked="">
+                                <input type="checkbox" name="" lay-skin="primary" title="机油规格">
+                                <input type="checkbox" name="" lay-skin="primary" title="机油容积">
+                                <input type="checkbox" name="" lay-skin="primary" title="衣服颜色" checked="">
+                                <input type="checkbox" name="" lay-skin="primary" title="生产产地">
+                                <input type="checkbox" name="" lay-skin="primary" title="尺寸">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="infor-show">
+                    <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                    <span>商品属性值设置</span> <span class="explain">*属性值请不要重复设置</span>
+                </div>
+                <hr>
+
+                <div class="layui-form">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="200">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="168">
+                            <col width="170">
+                            <col width="120">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="">SKU编码</th>
+                            <th class="">品种</th>
+                            <th class="">规格</th>
+                            <th class="">容积</th>
+                            <th class="">销售单价</th>
+                            <th class="">说明</th>
+                            <th class="">备注</th>
+                            <th class="">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="page_tbody">
+                        <tr>
+                            <td>
+                                <!--<input type="text" class="layui-input">-->
+                                <div class="mizone-input-number">
+                                    <div class="mizone-input-number-handler-wrap">
+                                        <i class="layui-icon" onselectstart="return false;"
+                                           style="-moz-user-select:none;">&#xe619;</i>
+                                        <i class="layui-icon" onselectstart="return false;"
+                                           style="-moz-user-select:none;">&#xe61a;</i>
+                                    </div>
+                                    <div class="mizone-input-number-input">
+                                        <input type="text" class="layui-input">
+                                    </div>
+                                    <dl class="mizone-input-up">
+                                        <dd>ssss</dd>
+                                        <dd>ssss</dd>
+                                        <dd>ssss</dd>
+                                        <dd>ssss</dd>
+                                    </dl>
+                                </div>
+                            </td>
+                            <td class="layui-form">
+                                <div class="layui-input-inline">
+                                    <select name="" lay-verify="required" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                        <option value="1">嘉实多</option>
+                                        <option value="2">嘉实多</option>
+                                        <option value="3">嘉实多</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="layui-form">
+                                <div class="layui-input-inline">
+                                    <select name="" lay-verify="required" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                        <option value="1">半合成机油</option>
+                                        <option value="2">半合成机油</option>
+                                        <option value="3">半合成机油</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="layui-form">
+                                <div class="layui-input-inline">
+                                    <select name="" lay-verify="required" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                        <option value="1">1L</option>
+                                        <option value="2">20L</option>
+                                        <option value="3">40L</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>￥300.00</td>
+                            <td>说明会显示在终端说明会</td>
+                            <td>商品备注</td>
+                            <td>
+                                <div class="layui-btn-group">
+                                    <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                        <i class="layui-icon">&#xe61f;</i>
+                                    </button>
+                                    <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                        <i class="layui-icon">&#xe640;</i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="infor-show">
+                    <i class="layui-icon" style="color:#60be3e;">&#xe620;</i>
+                    <span>商品套装</span>
+                </div>
+                <hr>
+
+                <div class="">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="100">
+                            <col width="300">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="168">
+                            <col width="170">
+                            <col width="120">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="">序号</th>
+                            <th class="">SKU编码/商品名称</th>
+                            <th class="">品牌</th>
+                            <th class="">单位</th>
+                            <th class="">商品分类</th>
+                            <th class="">数量</th>
+                            <th class="">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabContent">
+                        <tr>
+                            <td>294814321441</td>
+                            <td class=""></td>
+                            <td class=""></td>
+                            <td class=""></td>
+                            <td>￥300.00</td>
+                            <td>说明会显示在终端说明会</td>
+                            <td>
+                                <div class="layui-btn-group">
+                                    <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                        <i class="layui-icon">&#xe61f;</i>
+                                    </button>
+                                    <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                        <i class="layui-icon">&#xe640;</i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="mizone-bottom-btn">
+            <button class="layui-btn">确定</button>
+            <button class="layui-btn">取消</button>
+        </div>
+    </div>
+</div>
+<!--<script type="text/javascript" src="../../common/lib/jsrender.js"></script>-->
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><input type="checkbox" id="{{:id}}"/></td>
+    <td>{{:code}}</td>
+    <td>{{:name}}</td>
+    <td>{{:name}}</td>
+    <td>{{:status}}</td>
+    <td>{{:id}}</td>
+    <td>{{:id}}</td>
+    <td>{{:id}}</td>
+    <td>{{:id}}</td>
+    <td class="state_uhandle">
+        <a href="javascript:;">下架</a>
+        <a href="javascript:;">禁用</a>
+        <a href="javascript:;">编辑</a>
+    </td>
+</tr>
+{{/for}}
+
+
+
+
+
+</script>
+<button id="get">get</button>
+<script type="text/html" id="add_tr">
+    <tr>
+        <td></td>
+    </tr>
+</script>
+<script charset="utf-8" src="../common/editor/kindeditor-all.js"></script>
+<script charset="utf-8" src="../common/editor/lang/zh-CN.js"></script>
+<script>
+    KindEditor.ready(function (K) {
+        window.editor = K.create('#editor_id', {
+            width: '100%',
+            height: '400px'
+        });
+    });
+    $('#get').click(function () {
+        var conent = editor.html();
+        console.log(conent)
+    })
+</script>
+<script type="text/javascript">
+    $(window).ready(function () {
+        /*创建富文本编辑器*/
+        layui.use(['layer', 'layedit', 'element'], function () {
+            var layedit = layui.layedit;
+            var layer = layui.layer;
+            var element = layui.element();
+            var laytpl = layui.laytpl;
+            layedit.set({
+                uploadImage: {
+                    url: '../json/uploade.json' //接口url
+                    , type: 'post' //默认post
+                }
+            });
+            var index = layedit.build("com_uploade", {
+                uploadImage: {
+                    url: "../json/uploade.json",
+                    type: "post"  //默认post
+                }
+            })
+
+            var active = {
+                content: function () {
+                    layer.msg(layedit.getContent(index))
+                },
+                text: function () {
+                    layer.msg(layedit.getText(index))
+                },
+                selection: function () {
+                    layer.msg(layedit.getSelection(index))
+                }
+            }
+            $('.site-demo-layedit').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+
+        })
+
+        $('.layui-table').on('click', '.update', function () {
+            $('#tabContent').append($('<tr><td>s</td><td>s</td><td>s</td><td>s</td><td>s</td><td>s</td><td><div class="layui-btn-group"><button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick=""><i class="layui-icon">&#xe61f;</i></button><button class="layui-btn layui-btn-small delete" value="{{item.id}}"><i class="layui-icon">&#xe640;</i></button></div></td></tr>'))
+        })
+
+        $('.layui-table').on('click', '.delete', function () {
+            console.log($(this).parents('tr'))
+            $(this).parents('tr').remove()
+        })
+    })
+
+</script>
+<script>
+
+    (function ($,win) {
+        $.fn.selectMy=function () {
+            var ary = [];
+            $('#am-selected').on('click', '.am-selected-btn', toggleSelect)
+            $('#am-selected').on('click', '.am-selected-list li', checkedLi)
+            $('#am-selected').on('click', '.am-input-sm', choiseList)
+            //    点击select之外地方隐藏下拉展示
+            $(document).click(function () {
+                $('.am-dropdown-content').hide();
+                $('#am-selected-btn').removeClass('am-selected-btn-selected');
+            })
+            //    点击input时阻止事件冒泡
+            function choiseList(e) {
+                e = e || window.event;
+                e.stopPropagation()
+            }
+            //    点击btn隐藏和展示下拉框
+            function toggleSelect(e) {
+                e = e || window.event;
+                $(this).toggleClass('am-selected-btn-selected')
+                $('.am-dropdown-content').toggle();
+                $('.am-selected-search input').focus()
+                e.stopPropagation();
+            }
+            //    选中当前li添加样式
+            function checkedLi(e) {
+                var $this = $(this);
+                e = e || window.event;
+                var $list=$('.am-selected-list li')
+                $(this).toggleClass('am-checked')
+                for(var i=0,len=$list.length;i<len;i++){
+                    if($($list[i]).hasClass('am-checked')){
+                        ary.push($($list[i]).find('> span').html())
+                    }
+                }
+                $('#am-selected-btn').val(ary.join(','))
+                console.log(ary)
+                ary=[];
+                e.stopPropagation();
+            }
+
+            $('.am-form-field').on('input',function () {
+                var $this=$(this);
+                var keyWord=$this.val();
+                var reg = new RegExp(keyWord);
+                $('.am-selected-list li').hide()
+                $('.am-selected-list li').filter(function (index,item) {
+                    return $(item).children('span').text().match(reg)
+                }).show()
+            })
+        }
+    })(jQuery,window)
+    $('#am-selected').selectMy()
+</script>
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+<script src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.js"></script>
+
+</body>
+</html>

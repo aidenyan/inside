@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>出库管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmStorageOut">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline">
+                        <a href="javascript:;" id="storageOutAdd" class="layui-btn layui-btn-small"> <i
+                                class="layui-icon"
+                                style="vertical-align: middle">
+                            &#xe61f;</i>新增出库单</a>
+                        <input id="btnExport" class="layui-btn layui-btn-small" type="button" value="导出">
+                    </div>
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="出库单号/操作人/SKU"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId">
+                                <option value="-1">选择出库仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcInWarehouse" name="inWarehouseId">
+                                <option value="-1">选择调拨仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcOperType" name="operType">
+                                <option value="-1">选择出库类型</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="s.storage_out_in_no">出库单号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num">关联单号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " >出库类型</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="s.rev_warehouse_name">收货单位</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80 sort" name="l.con_name">联系人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80 sort" name="l.phone">联系电话</div>
+                            </td>
+                           <!-- <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="l.tracking_name">物流方式</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="tracking_no">运单号</div>
+                            </td>-->
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort" name="s.warehouse_name">出库仓库</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">初审人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">初审时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">终审人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">终审时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">创建人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w80">操作人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time sort" name="s.modify_time">维护时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w50 " >出库状态</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70" >操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value"  lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<div id="editExpressHtml" style="display: none">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label"><span style="color:red">*</span>物流公司</label>
+            <div class="layui-input-inline" style="width:220px">
+                <select id="expressList"  lay-filter="expressChange">
+                    <option value="">物流公司</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label"><span style="color:red">*</span>运单号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="inputExpressNo" id="maxExpressNo" autocomplete="off" class="layui-input" style="width:220px">
+                <input type="hidden" id="hideWarehouseId">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="checkbox" id="checkElectricExpress" title="电子面单">
+            <input type="checkbox" id="checkPrint" title="重置打印机">
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+<script type="text/javascript" src="../../js/print/print.js"></script>
+<script type="text/javascript" src="../../js/print/printChild.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <!--<td><input name="" lay-skin="primary" type="checkbox"></td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.storageOutInNo}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.relationNo || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.operTypeStr}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.revWarehouseName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.conName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.conTel || ''}}</div></td>
+        <!--<td class="trDetail">{{item.trackingName || ''}}</td>-->
+        <!--<td class="trDetail">{{item.trackingNo || ''}}</td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.firstName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.firstTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.secondName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.secondTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.createName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80">{{item.confirmedName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.modifyTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.statusStr}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+                {{# if(item.status == 0 || item.status == 5){ }}
+
+                <button class="update" val="{{item.id}}" title="编辑">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class="delete" val="{{item.id}}" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+
+                {{# } }}
+            {{# if(item.status == 1 || item.status == 6){ }}
+
+                <button class=" print" val="{{item.id}}" sn="{{item.storageOutInNo}}"
+                        count="{{item.printCount || 0}}" title="打印">
+                    <i class="icon-print"></i>
+                </button>
+                <button class="view" val="{{item.id}}" wid="{{item.warehouseId}}" title="物流单号">
+                    <i class="icon-uniE602"></i>
+                </button>
+
+            {{# } }}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length === 0){ }}
+    <tr>
+        <td colspan="11" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplStorageItem" type="text/html">
+    <td colspan="16" class="purchaseItemContent">
+        <div>
+            <p class="trDetail-title">出库明细</p>
+        </div>
+        <div>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商品编码</th>
+                    <th>品牌</th>
+                    <th>商品名称</th>
+                    <th>单位</th>
+                    <th>出库数量</th>
+                    <th>出库库位</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d.storageItemDTOList, function(index, item){ }}
+                <tr>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.brandName}}</td>
+                    <td>{{item.productName}}</td>
+                    <td>{{item.productUnit}}</td>
+                    <td>{{item.num}}</td>
+                    <td>{{item.locationStr}}</td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <td>备注</td>
+                    <td colspan="13">{{d.remark || ''}}</td>
+                </tr>
+                {{# if(d.firstRemark != null && d.firstRemark != ''){ }}
+                <tr>
+                    <td>初审拒绝原因：</td>
+                    <td colspan="11">{{d.firstRemark || ''}}</td>
+                </tr>
+                {{# } }}
+                {{# if(d.secondRemark != null && d.secondRemark != ''){ }}
+                <tr>
+                    <td>终审拒绝原因：</td>
+                    <td colspan="11">{{d.secondRemark || ''}}</td>
+                </tr>
+                {{# } }}
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+<script id="tplPrint" type="text/html">
+    <input id="hidPrintCount" type="hidden" value="{{d.printCount}}"/>
+    <div class="box">
+        <div class="header">
+            <div><h3>杭州中策车空间汽车服务有限公司出库单</h3></div>
+            <div style="font-size: 14px">
+                <ul class="cf">
+                    <li><h4 style="font-size: 18px">{{d.conName}}</h4></li>
+                    <li><h4>{{d.conTel}}</h4></li>
+                </ul>
+                <ul class="cf">
+                    <li style="width: 550px;"><i>收货地址:</i><span>{{d.address}}</span></li>
+                </ul>
+                <ul class="cf">
+                    <li><i>出库单号:</i><span>{{d.storageOutInNo}}</span></li>
+                    <li><i>打印日期:</i><span>{{laydate.now()}}</span></li>
+                    <li><i>总重量:</i><span>{{d.weight}}kg</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="content">
+            <table>
+                <tr class="bot">
+                    <th width="30">序号</th>
+                    <th width="150">SKU编码</th>
+                    <th width="380">商品名称</th>
+                    <th width="100">库位编码</th>
+                    <th width="40">数量</th>
+                    <th width="60">包装数量</th>
+                </tr>
+                {{# layui.each(d.storageItemDTOList, function(index, item){ }}
+                <tr rowspan="2">
+                    <th>{{index + 1}}</th>
+                    <td>{{item.skuCode}}</td>
+                    <td style="text-align: left;">{{item.productName}}</td>
+                    <td>{{# layui.each(item.locationList, function(index1, item1){ }}{{item1.locationNo}}({{item1.num}})<br>{{# }); }}</td>
+                    <td>{{item.num}}{{item.productUnit}}</td>
+                    <td>{{item.packQuantity}}</td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <th class="total" colspan="6">总计{{d.storageItemDTOList.length}}件</th>
+                </tr>
+                {{# if (d.remark != null && d.remark != '') { }}
+                <tr>
+                    <th class="message" colspan="6">备注:{{d.remark}}</th>
+                </tr>
+                {{# } }}
+            </table>
+        </div>
+    </div>
+</script>
+<script id="tplLogis" type="text/html">
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>物流单号</th>
+                <th>物流名称</th>
+                <th>联系人</th>
+                <th>联系电话</th>
+                <th>地址</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#  layui.each(d.result, function(index, item){ }}
+            <tr>
+                <td>{{item.trackingNo}}</td>
+                <td>{{item.trackingName}}</td>
+                <td>{{item.conName}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{item.fullAddress}}</td>
+                <td class="state_uhandle"><button title="打印快递单" onclick='printExpress({{item.id}}, {{d.searchMap.wid}}, this)'>
+                    <i class="icon-number5"></i>
+                </button></td>
+            </tr>
+            {{#  }); }}
+            </tbody>
+        </table>
+    </div>
+</script>
+<script id="expressListTpl" type="text/html">
+    {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}" code="{{item.code}}" isWaybill="{{item.isWaybill}}">{{item.name}}-{{item.address}}</option>
+    {{#  }); }}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        //新增
+        $("#storageOutAdd").click(function () {
+            callParent.openTab("storage_out_add", 0, "编辑出库单", "admin/storage/storage_out_add.html", true);
+        });
+
+        //打印
+        var LODOP; //声明为全局变量
+        var varCss = '* { margin: 0;padding: 0 } ul, li {list-style: none;margin-right: 20px;}' +
+                'table {display: block;border-collapse: collapse;width: 760px;font-size: 14px;}' +
+                '.box {width: 760px;position: relative;}i{font-style: normal;}.cf:before, .cf:after {display: table;content:"" ;clear: both;}' +
+                'li {float: left;}td {text-align: center;padding-left: 4px;height: 20px;word-wrap:break-word;word-break:break-all}' +
+                'h3 {height: 50px;line-height: 50px;width: 760px;text-align: center;}div ul {width: 760px;line-height: 26px;}' +
+                '.message {text-align: left;padding-left: 5px;height: 30px;}.total {text-align: right;padding: 10px 30px 0 0;border-top: 1px dashed #000;}' +
+                '.bot th, .bot td {border-bottom: 1px dashed #000;height: 30px;}.border th, .border td {border: 1px dashed #000;}.content td{border-bottom: 1px dashed #000;}';
+
+        function print(varHtml, varSn) {
+            LODOP = getLodop();
+            LODOP.PRINT_INIT("");
+            var strBodyStyle = "<style>" + varCss + "</style>";
+            var strFormHtm1 = strBodyStyle + "<body>" + varHtml + "</body>";
+            LODOP.ADD_PRINT_BARCODE(50, 580, 170, 60, '128A', varSn);
+            LODOP.SET_PRINT_PAGESIZE(1, "240mm", "140mm", "");
+            LODOP.ADD_PRINT_HTM(5, 20, "100%", "100%", strFormHtm1);
+            LODOP.PREVIEW();
+            //LOOP.PRINT();
+        }
+
+        $("#pageContent").on('click', '.print', function () {
+            var $this = $(this);
+            var varId = $this.attr("val");
+            var varSn = $this.attr("sn");
+            var count = $this.attr("count");
+            var mes = "";
+            if (count == 0) {
+                mes = "是否打印？";
+            } else {
+                mes = "已打印" + count + "次，是否继续？";
+            }
+            layer.confirm(mes, {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/storage/printOut.json?id=" + varId, function (dataJson) {
+                    $this.attr("count", dataJson.result.printCount);
+                    var getTpl = $("#tplPrint").html();
+                    laytpl(getTpl).render(dataJson.result, function (html) {
+                        print(html, varSn);
+                    });
+                    layer.close(index);
+                });
+            });
+        });
+
+        $("#pageContent").on('click', '.view', function () {
+            var $this = $(this);
+            var varId = $this.attr("val");
+            var vWid = $this.attr("wid");
+            myAjax.ajaxSend("/storage/findTrack.json?id=" + varId + "&wid=" + vWid, function (dataJson) {
+                var getTpl = $("#tplLogis").html();
+                laytpl(getTpl).render(dataJson, function (html) {
+                    layer.open({
+                        title: "物流信息"
+                        , type: 1
+                        , content: html            //弹窗内容
+                        , area: ["800px", "500px"]         //设置窗体高度 和宽度
+                        , btn: ["关闭"]
+                        , closeBtn: 0                      //取消右上角关闭按钮
+                        , btnAlign: 'r'
+                        , yes: function (index, item) {
+                            layer.close(index);
+                        }
+                    });
+                });
+            });
+        });
+
+        $("#btnExport").click(function () {
+            var startDate = $.trim($("#startDate").val());
+            var endDate = $.trim($("#endDate").val());
+            if ((new Date(endDate) - new Date(startDate)) > (365 * 24 * 60 * 60 * 1000)) {
+                layer.alert("结束时间与开始时间不能相差大于一年！");
+                return false;
+            }else {
+                window.open("/storage/exportOut.json?" + $("#frmStorageOut").serialize(), "_blank");
+            }
+            return false;
+        });
+
+        //编辑
+        $("#pageContent").on("click", ".update", function () {
+            var varId = $(this).attr('val');
+            callParent.openTab("storage_out_add", 0, "编辑出库单", "admin/storage/storage_out_add.html?storageOutId=" + varId, true);
+        });
+
+        //删除
+        $("#pageContent").on("click", ".delete", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认删除吗?', {icon: 3, title: '提示'}, function (index) {
+                myAjax.ajaxSend("/storage/delete.json?id=" + varId, function (dataJson) {
+                    var refPage = $("#pageNum").find(".layui-laypage-skip");
+                    if (refPage.length > 0) {
+                        var pNo = refPage.val();
+                        if ($("#pageContent").find("tr").length == 1) {
+                            pNo = pNo - 1;
+                        }
+                        myAjax.ajaxPage('/storage/outList.json', 'pageNum', 'pageContent', 'pageTpl', $.extend($("#frmStorageOut").serializeJson(), {'pageNo': pNo, "params_order_name":"modify_time","params_order_type":"0"}));
+                    } else {
+                        $('#btnSearch').click();
+                    }
+                    layer.msg('删除成功');
+                });
+            });
+        });
+
+        $(".page_size_value").change(function(){
+            $("#btnSearch").click();
+        });
+
+        form.on('select(expressChange)', function(data){
+            var warehouseId=$("#hideWarehouseId").val();
+            myAjax.ajaxSend("/express/selectOrgExpressNo.json",function(data){
+                $("#maxExpressNo").val(data.result);
+            },{'warehouseId': warehouseId,'expressId':data.value})
+        });
+
+        printExpress=function(varId, vWid, vThis){
+            var vTr = $(vThis).closest('tr').children();
+            myAjax.ajaxTpl("/express/listAll.json", 'expressList', 'expressListTpl',false,function(){
+                if($("#expressList").val()==null||$("#expressList").val()<0){
+                    return layer.msg("没有物流网点信息!", {
+                        time: 0, //不自动关闭
+                        btn: ['去配置', '取消'],
+                        shade: 0.6,//遮罩透明度
+                        shadeClose:true,//点击遮罩关闭层
+                        yes: function(index){
+                            callParent.openTab("transportation_express", 0, "物流网点", "admin/logistics/company.html", true);
+                        }
+                    });
+                }
+                myAjax.ajaxSend("/express/selectOrgExpressNo.json",function(data){
+                    $("#maxExpressNo").val(data.result);
+                    $("#hideWarehouseId").val(vWid);
+                    layer.open({
+                        type: 1,
+                        title:'快递单打印',
+                        content: $("#editExpressHtml"),           //弹窗内容
+                        area: ["450px", "300px"],         //设置窗体高度 和宽度
+                        btn: ["确定", "取消"],
+                        closeBtn: 0,                      //取消右上角关闭按钮
+                        btnAlign: 'r',
+                        success:function (layero, index) {
+                            layero.addClass('layui-form');
+                            layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                            form.render();
+                        },
+                        yes: function(index){
+                            var e=false;
+                            var checkSendFlag=false;
+                            if($("#checkElectricExpress").is(":checked") && $(("#expressList")).find("option:selected").attr("isWaybill") === 'true'){
+                                e=true;
+                                checkSendFlag=true;
+                            }else{
+                                if($("#maxExpressNo").val()!=null && $("#maxExpressNo").val()!=''){
+                                    checkSendFlag=true;
+                                }else{
+                                    checkSendFlag=false;
+                                    return layer.msg("非电子面单运单号不能为空");
+                                }
+                            }
+                            var data={
+                                "logisId":varId,
+                                "trackingNo":$("#maxExpressNo").val(),
+                                "expressOrgId":$("#expressList").val(),
+                                "e":e,
+                                "wid":vWid
+                            }
+                            if(checkSendFlag){
+                                $.ajax({
+                                    type: 'post',
+                                    url: '/storage/printExpress.json',
+                                    data: data,
+                                    traditional : true,
+                                    dataType: "json",
+                                    success: function (dataJson) {
+                                        if (dataJson.code == "0") {
+                                            createPrint(dataJson.result);
+                                            vTr.eq(0).html(dataJson.result.logisticCode);
+                                            vTr.eq(1).html(dataJson.result.deliveryCorpName);
+                                            layer.close(index);
+                                        } else {
+                                            layer.alert(dataJson.message);
+                                        }
+                                    },
+                                    error: function () {
+                                        layer.alert("系统错误请联系管理员");
+                                    }
+                                });
+                            }
+                        }
+                    })
+                },{'warehouseId': vWid,'expressId':$("#expressList").val()})
+            });
+        }
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            if(!Utils.isNotNull(data)){
+                data = {"params_order_name":"modify_time","params_order_type":"0"};
+            }
+            myAjax.ajaxPage('/storage/outList.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            $.extend(vSeaData,{"params_order_name":"modify_time","params_order_type":"0"});
+            pageOrder(vSeaData);
+            return false;
+        });
+        pageOrder();
+
+        //明细
+        $(document).on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            var varCon = $("#storageItemContent");
+            if (varCon.length == 0) {
+                varThis.parent('tr').after('<tr id="storageItemContent" val="' + varId + '"></tr>');
+                varThis.parent().addClass('bg');
+                myAjax.ajaxTpl("/storage/findItems.json?storageId=" + varId, 'storageItemContent', 'tplStorageItem');
+            } else {
+                varCon.remove();
+                varThis.parent().removeClass('bg');
+                if (varCon.attr('val') != varId) {
+                    varThis.parent().siblings('tr.bg').removeClass('bg')
+                    varThis.parent().addClass('bg');
+                    varThis.parent('tr').after('<tr id="storageItemContent" val="' + varId + '"></tr>');
+                    myAjax.ajaxTpl("/storage/findItems.json?storageId=" + varId, 'storageItemContent', 'tplStorageItem');
+                }
+            }
+        });
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg', true);
+
+        //获取调拨仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcInWarehouse', 'slcOptionOrg', true);
+
+        //获取出库类型
+        myAjax.ajaxTpl("/storage/operTypeOut.json", 'slcOperType', 'slcOption', true);
+
+        callParent.isLoadEnd("storage_out_lis");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+<!--<script type="text/javascript">
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

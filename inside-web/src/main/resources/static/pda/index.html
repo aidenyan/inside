@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document2017/8/7 0007</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/basic.css">
+    <style>
+        .item-list .item{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-wrap">
+    <ul class="item-list">
+        <li class="">
+            <div class="item">
+                <a href="pages/bc_choice.html" code="inventory_list" >波次捡货</a>
+            </div>
+        </li>
+        <li class="">
+            <div class="item">
+                <a href="pages/order_check.html" code="inventory_list">订单发货</a>
+            </div>
+        </li>
+        <li>
+            <div class="item">
+                <a href="pages/storage_adjust.html" code="inventory_list">商品移库</a>
+            </div>
+        </li>
+        <li>
+            <div class="item">
+                <a href="pages/inventory_check_list.html" code="inventory_list">库存盘点</a>
+            </div>
+        </li>
+        <li>
+            <div class="item">
+                <a href="pages/purchase_storage.html" code="">采购入库</a>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../common/js/jquery.util.js"></script>
+<script type="text/javascript" src="../common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="../common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="../common/lib/jsrender.js"></script>
+<script type="text/javascript" src="../common/js/common/ajaxsend.js"></script>
+<script type="text/javascript" src="../common/js/common/map.js"></script>
+<script type="text/javascript" src="../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../common/js/common/authority.js"></script>
+<script type="text/javascript" src="../common/js/common/order.js"></script>
+<script type="text/javascript" src="../common/js/common/dialog.js"></script>
+<script type="text/javascript" src="../common/lib/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../common/js/child.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['form', 'laypage', 'layedit', 'laydate'], function () {
+        ajaxsend("", "/admin/common/menu/list.json", function (dataJson) {
+            if(Utils.isNotNull(dataJson)&&Utils.isNotNull(dataJson.result)&&dataJson.result.length){
+                var codeList=dataJson.result;
+                var $showItem=$('.item a');
+                $.each(codeList,function (index,item) {
+                    var code=item.code
+                    $showItem.each(function (index,item) {
+                        if($(item).attr('code')===code){
+                            $(this).parent().show()
+                        }
+                    })
+                })
+            }
+        });
+    });
+</script>
+
+
+</html>

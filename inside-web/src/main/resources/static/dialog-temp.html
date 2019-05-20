@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="common/css/sccl.css">
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+
+    <!--<link rel="stylesheet" href="common/bootstrap-3.3.5/css/bootstrap.css">-->
+
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div id="form1" action="" class="layui-form layui-form-pane" style="display: block;min-width: 670px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品属性</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入商品属性" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品描述</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入商品描述信息" class="layui-textarea"> </textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="输入地址" class="layui-input">
+            </div>
+            <div class="caozuo">
+                <span class="icon-C1"></span>
+                <span class="icon-C2"></span>
+                <span class="icon-C3"></span>
+                <span class="icon-C4"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" placeholder="输入地址" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类选择</label>
+            <div class="layui-input-block">
+                <select name="quiz">
+                    <option value="">请选择问题</option>
+                    <option value="你工作的第一个城市">你工作的第一个城市</option>
+                    <option value="北极">北极</option>
+                    <option value="你最喜欢的老师">你最喜欢的老师</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">范围</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">行内表单</label>
+                <div class="layui-input-block">
+                    <select name="quiz">
+                        <option value="">请选择问题</option>
+                        <option value="你工作的第一个城市">你工作的第一个城市</option>
+                        <option value="你的工号" disabled>你的工号</option>
+                        <option value="你最喜欢的老师">你最喜欢的老师</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">select分组</label>
+                <div class="layui-input-block">
+                    <select name="ss">
+                        <option value="">请选择问题</option>
+                        <optgroup label="城市记忆">
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                        </optgroup>
+                        <optgroup label="学生时代">
+                            <option value="你的工号" disabled>你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">复选框</label>
+            <div class="layui-input-inline">
+                <label for="" class="label-Mr">选择<input type="checkbox" name="" lay-skin="primary" title="选择" checked=""
+                                                        class="input-Ml"></label>
+                <label for="" class="label-Mr">不选<input type="checkbox" name="" lay-skin="primary" title="不选" checked=""
+                                                        class="input-Ml"></label>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">单选框</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女" checked>
+                <input type="radio" name="sex" value="中型" title="中" disabled>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否选择</label>
+            <div class="layui-input-block" class="layui-input">
+                <input type="checkbox">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传图片</label>
+            <div class="layui-input-block">
+                <div class="layui-box layui-upload-button"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="form_addUse" style="display: block">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">成员信息</li>
+            <li>账户管理</li>
+            <li>权限设置</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">*成员编号</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">组织姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">*工作岗位</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">联系邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">*联系电话</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">入职时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所在地区</label>
+                        <div class="layui-input-inline">
+                            <select name="">
+                                <option value="">请选择省</option>
+                                <option value="浙江" selected="">浙江省</option>
+                                <option value="你的工号">江西省</option>
+                                <option value="你最喜欢的老师">福建省</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="">
+                                <option value="">请选择市</option>
+                                <option value="杭州">杭州</option>
+                                <option value="宁波" disabled="">宁波</option>
+                                <option value="温州">温州</option>
+                                <option value="温州">台州</option>
+                                <option value="温州">绍兴</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="">
+                                <option value="">请选择县/区</option>
+                                <option value="西湖区">西湖区</option>
+                                <option value="余杭区">余杭区</option>
+                                <option value="拱墅区">临安市</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">*详细地址</label>
+                            <div class="layui-input-inline detailedAddress">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">账号</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">登录密码</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">重复密码</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否启用</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="启用" checked="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">超级管理员</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="启用" checked="">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">其选择平台</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车品台" checked="">
+                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="大车品台" checked="">
+                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车品台" checked="">
+                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车经销商" checked="">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <table class="layui-table" style="width: 600px; ">
+                            <colgroup>
+                                <col width="200">
+                                <col width="400">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>选择仓库</th>
+                                <th>选择角色</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="layui-form">
+                                <td>
+                                    <div class="mizo-width">
+                                        <div class="layui-input-inline mizo-width-left">
+                                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="杭州总仓"
+                                                   checked="">
+                                            <input type="checkbox" name="like1[read]" lay-skin="primary" title="富阳分仓">
+                                            <input type="checkbox" name="like1[game]" lay-skin="primary" title="福州分仓">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mizo-width">
+                                        <div class="layui-input-inline mizo-width-right">
+                                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="订单管理角色"
+                                                   checked="">
+                                            <input type="checkbox" name="like1[read]" lay-skin="primary" title="商品管理角色">
+                                            <input type="checkbox" name="like1[game]" lay-skin="primary" title="仓库管理角色">
+                                            <input type="checkbox" name="like1[game]" lay-skin="primary"
+                                                   title="角色列表随着左">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<form action="" id="form2" class="layui-form">
+    <select name="" id="">
+        <option value="">选择所有</option>
+    </select>
+    <span><input type="text" class="layui-input-inline"
+                 style="height: 36px;border: 1px solid #e3e3e3;width: 324px;border-radius: 4px;border-right: 0"
+                 placeholder="商品名称/SKU编码"></span>
+    <span><input type="submit" style="border: 1px solid #4dc9b9;height: 36px;background-color: #fff"></span>
+</form>
+-->
+
+
+<div class="layui-btn" id="add1">1</div>
+<div class="layui-btn" id="add2">2</div>
+<div class="layui-btn" id="add3">3</div>
+<div class="layui-btn" id="add4">4</div>
+<div class="layui-btn" id="add5">5</div>
+<div class="layui-btn" id="radioCheck"></div>
+<script src="common/lib/jquery-1.9.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    $().ready(function () {
+        layui.use(['form', 'layer', 'laytpl'], function () {
+            var form = layui.form(), layer = layui.layer, laytpl = layui.laytpl;
+            $("#add1").click(function () {
+                layer.open({
+                    title: "新增平台"                 //弹窗标题
+                    , type: 1
+                    , content: $("#form_addUse")            //弹窗内容
+                    , area: ["671px", "286px"]         //设置窗体高度 和宽度
+                    , btn: ["确定", "取消"]
+                    , closeBtn: 0
+                    , btnAlign: 'c'                   // 按钮的显示位置
+                    , yes: function (index, item) {
+                        layer.close(index)
+                        console.log(item)
+                    }
+                })
+            });
+
+            $("#add2").click(function () {
+                layer.alert("保存成功", {
+                    time: 2000, shade: 0,
+                    btn: '',
+                    skin: 'layui-layer-lan',
+                    end: function () {
+                        console.log('a')
+                    }
+                })                       //提示框
+            })
+
+            $("#add3").click(function () {           //询问提示框
+                layer.confirm("fddd", {
+                    closeBtn: 0
+                    , btnAlign: 'c'
+
+
+                }, function () {
+                    //success
+                }, function () {
+
+                })
+            });
+
+            $('#add5').click(function () {
+                layer.msg('保存成功！！<br> aaa', {
+                    time: 0,
+                    skin: 'layui-layer-lan'
+
+                }, function () {
+                    console.log($(this))
+                })
+            });
+
+            $('#radioCheck').click(function () {
+                console.log($('input[value="男"]'));
+                $('input[value="女"]').prop('checked', true);
+                form.render();
+                console.log($('input[value="男"]').prop('checked'));
+            })
+        });
+    })
+
+</script>
+
+</body>
+</html>

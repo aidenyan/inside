@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运费模板</title>
+   <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+
+                </div>
+                <form>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <a href="javascript:void(-1);" id="add" class="layui-btn layui-btn-small"> <i class="layui-icon" style="vertical-align: middle">
+                            </i>新增模版</a>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="expressOperation" name="expressOrgId">
+                                <option value="">选择物流公司</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="status">
+                                <option value="">选择状态</option>
+                                <option value="false">禁用</option>
+                                <option value="true">启用</option>
+                            </select>
+                        </div>
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        
+    <!--table 数据-->
+    <div class="layui-form">
+        <table class="layui-table">
+            <colgroup>
+                <col width="250">
+                <col width="140">
+                <col width="140">
+                <col width="140">
+                <col width="180">
+                <col width="70">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>模版名称</th>
+                <th>重量范围(KG)</th>
+                <th>首重(KG)</th>
+                <th>续重(KG)</th>
+                <th>有效期</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="page_tbody">
+            </tbody>
+        </table>
+        </div>
+
+    <!--分页条-->
+    <div class="cf">
+        <div id="pageNum"></div>
+    </div>
+
+    </div>
+</div>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>{{item.name==null?'':item.name}}</td>
+        <td>{{item.startWeight==null?'':item.startWeight}}-{{item.endWeight==null?'':item.endWeight}}</td>
+        <td>{{item.startStandard==null?'':item.startStandard}}</td>
+        <td>{{item.addStandard==null?'':item.addStandard}}</td>
+        <td>{{item.startTime==null?'':laydate.now(item.startTime,'YYYY-MM-DD')}}至{{item.endTime==null?'':laydate.now(item.endTime,'YYYY-MM-DD')}}</td>
+        <td>{{item.status==null?'初始':item.status==true?'启用':'禁用'}}</td>
+        <td class="state_uhandle">
+                {{#  if(item.status == null){ }}
+                    <button class=" update" value="{{item.id}}" title="编辑"><i class="icon-bianji"></i></button>
+                    <button class=" changeStatus" value="{{item.id}}" title="启用"><i class="icon-zhengque"></i></button>
+                {{# } else if(item.status ==true){ }}
+                    <button class=" view" value="{{item.id}}" title="查看"><i class="icon-uniE602"></i></button>
+                    <button class=" copy" value="{{item.id}}" title="复制"><i class="icon-uniE606"></i></button>
+                    <button class=" changeStatus" value="{{item.id}}" title="禁用"><i class="icon-uniE617"></i></button>
+                {{# } else { }}
+                    <button class=" view" value="{{item.id}}" title="查看"><i class="icon-uniE602"></i></button>
+                {{#  } }}
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+        <tr aglin='center'><td colspan="7"><div class="null-show"></div></td></tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/javascript">
+layui.config({
+  base: '../../js/' //你的模块目录
+}).extend({myAjax: 'myAjax'})
+
+layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], function () {
+    form = layui.form();element = layui.element();layer=layui.layer;laytpl = layui.laytpl;myAjax = layui.myAjax;laydate = layui.laydate;
+    
+    ajaxsend("","/express/listAll.json", function (dataJson) {
+        if(dataJson.code=="0"){
+           laytpl($("#slcOption").html()).render(dataJson.result, function (html) {
+               $("#expressOperation").append(html);
+               form.render()
+           });
+        }
+    })
+    form.verify({
+    	code: [/^[a-zA-Z]{2,10}$/,'编号格式不正确，为2到10位字母']
+    });
+    
+    $("#add").click(function () {
+        callParent.openTab("deliveryTemplate_add", 0, "新增运费模版", "admin/logistics/add_deliveryTemplate.html", true);
+    });
+    
+    $("#page_tbody").on("click",".update", function() {
+        callParent.openTab("deliveryTemplate_update", 0, "修改运费模版", "admin/logistics/add_deliveryTemplate.html?id="+$(this).val(), true);
+    })
+    
+    $("#page_tbody").on("click",".view", function() {
+        callParent.openTab("deliveryTemplate_update", 0, "查看运费模版", "admin/logistics/add_deliveryTemplate.html?id="+$(this).val(), true);
+    })
+    
+    $("#page_tbody").on("click",".copy", function() {
+        var id=$(this).val();
+        ajaxsend({"id": id}, "/deliveryTemplate/copy.json", function (dataJson) {
+            layer.msg(dataJson.message);
+            search();
+        })
+    })
+    
+    $("#page_tbody").on("click",".changeStatus", function() {
+    	var id=$(this).val();
+    	layer.confirm("此操作后不能修改，确定操作？", {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']},function (index) {
+            ajaxsend({"id": id}, "/deliveryTemplate/changeStatus.json", function (dataJson) {
+            	layer.msg(dataJson.message);
+            	if(dataJson.result){
+            		search();
+            	}
+            })
+            layer.close(index);
+        })
+    })
+    
+    function search(data) {
+        myAjax.ajaxPage('/deliveryTemplate/list.json','pageNum','page_tbody','pageTpl',data);
+    }
+
+    form.on('submit(search)', function (data) {
+        search(data.field);
+        return false;
+    });
+    search();
+    
+    callParent.isLoadEnd("delivery_templatet");
+    callParent.register(function () {
+    	search();
+    }, "search");
+});
+</script>
+</body>
+</html>

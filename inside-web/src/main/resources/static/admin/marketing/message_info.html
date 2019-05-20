@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>促销管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <form>
+        <ul class="invoiceMsg promotions" id="message_content_ul">
+
+        </ul>
+        <div class="btnBottom " style="text-align: center">
+            <button class="layui-btn layui-btn-norma form_submit " lay-submit lay-filter="form_submit">确定</button>
+            <button class="layui-btn layui-btn-primary" id="cancel">取消</button>
+
+        </div>
+    </form>
+</div>
+<div id="select_category" style="display: none"></div>
+<div id="select_brand" style="display: none"></div>
+<div id="user_reg_list" style="display: none">
+
+</div>
+<script type="x-jsrender" id="edit_content">
+      <input type="hidden" class="layui-input" id="form_message_id"value="{{:id}}">
+     <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>标题：</div>
+            <div class="wp32 ">
+                <input type="text" class="layui-input closeUpdate" id="form_title" lay-verify="required" maxlength="35" value="{{:title}}">
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right">发送内容：</div>
+            <div class="wp32">
+                 <textarea lay-verify="required" maxlength="135" id="form_content"  class="layui-textarea closeUpdate">{{:content}}</textarea>
+            </div>
+        </li>
+        <li>
+            <div class="wp14 text_right"><span style="color:red">*</span>发送开始时间：</div>
+            <div class="wp32 ">
+                <input class="layui-input closeUpdate" placeholder="发送开始时间"   lay-verify="required"  maxlength="50" id="form_start_time"  value="{{:sendTimeStr}}">
+            </div>
+        </li>
+       {{if sendEndTimeStr}}
+         <li>
+            <div class="wp14 text_right">发送完成时间：</div>
+            <div class="wp32">
+                <input class="layui-input closeUpdate" placeholder="发送完成时间"     maxlength="20" id="form_end_time"  value="{{:sendEndTimeStr}}">
+            </div>
+         </li>
+      {{/if}}
+        <li>
+            <div class="wp14 text_right">消息类型：</div>
+            <div class="wp32 ">
+                  <input type="radio"  class="closeUpdate" lay-filter="message_type" name="type" value="0" title="短信消息" id="type_check_message" {{if type==0||type!=1}}checked=""{{/if}}>
+                  <input type="radio"   class="closeUpdate" lay-filter="message_type" name="type" value="1" title="APP消息"   {{if type==1}}checked=""{{/if}}>
+            </div>
+        </li>
+        <li {{if type!=1}}sytle="display:none"{{/if}} id="app_type_div">
+            <div class="wp14 text_right">APP类型：</div>
+            <div class="wp32 ">
+                  <input type="radio" name="appType" class="closeUpdate"  id="app_type_check_small"  value="0" title="小车"  {{if type==0||type!=1}}checked=""{{/if}}>
+                  <input type="radio" name="appType"  class="closeUpdate"  id="app_type_check_big" value="1" title="大车"  {{if type==1}}checked=""{{/if}}>
+            </div>
+        </li>
+         <li>
+            <div class="wp14 text_right">发送规则：</div>
+            <div class="wp32 ">
+                <select id="reg_list_select" name="regId"  class="closeUpdate" data-value="{{:regId}}" >
+                      <option value="">请选择规则</option>
+                </select>
+            </div>
+        </li>
+         <li>
+            <div class="wp14 text_right">发送规则：</div>
+            <div class="wp32 ">
+                 <a href="javascript:void(-1);" id="look_user_id">查看用户信息</a>
+            </div>
+        </li>
+</script>
+<script type="x-jsrender" id="j-option">
+    {{for result}}
+      <option value="{{:id}}">{{:regName}}</option>
+    {{/for}}
+</script>
+<script type="x-jsrender" id="j-user-send-tr">
+ <div class="layui-form">
+  <table class="layui-table" style="high" >
+                <colgroup>
+                    <col width="160">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="tab_sku sort" name="brand.name">用户名称</th>
+                     <th class="tab_sku sort" name="brand.name">用户号码</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                {{for result}}
+      <tr>
+     <td>{{:memberName}}</td>
+      <td>{{:mobile}}</td>
+    </tr>
+    {{/for}}
+   </tbody>
+  </table>
+        </div>
+   <div class="cf">
+            <div id="user_pager" style="text-align:right"></div>
+        </div>
+</script>
+<script type="text/javascript" src="../admin.js"></script>
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl','laypage', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+            laypage = layui.laypage;
+            var messageInfo;
+            var id = Utils.getHrefValue("id");
+            var start = {
+                min: laydate.now(),
+                format: 'YYYY-MM-DD hh:mm:ss'
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                ,istime:true
+
+            };
+            form.on("radio(message_type)",function(){
+                 if($(this).val()=="0"){
+                     $("#app_type_div").hide();
+                 }else{
+                     $("#app_type_div").show();
+                 }
+            });
+            function selectAppType(){
+                if(Utils.checkBox( $("#type_check_message"),true,false)){
+                    $("#app_type_div").hide();
+                }else{
+                    $("#app_type_div").show();
+                }
+            }
+
+
+            $("#cancel").click(function () {
+                callParent.openTab("marketing_message");
+                callParent.closeTab("marketing_message_add");
+            });
+
+            form.on("submit(form_submit)", function () {
+
+
+                data= {
+                    title: $("#form_title").val(),
+                    content: $("#form_content").val(),
+                    sendTime: $("#form_start_time").val(),
+                    type:Utils.checkBox( $("#type_check_message"),0,1),
+                    regId: $("#reg_list_select").val()
+                };
+
+                if(Utils.checkBox($("#app_type_check_small"),true,false)||Utils.checkBox($("#app_type_check_big"),true,false)){
+                    data.appType = Utils.checkBox( $("#app_type_check_small"),0,1)
+                }
+                ajaxsend(data, "/admin/marketing/message/save.json", function (dataJson) {
+                    if ($.trim($("#form_message_id").val()) == "") {
+                        layer.alert("新增成功", {}, function () {
+                            callParent.parentUse("marketing_message", "search");
+                            callParent.openTab("marketing_message");
+                            callParent.closeTab("marketing_message_add");
+                        });
+                    } else {
+                        layer.alert("修改成功", {}, function (index) {
+                            callParent.parentUse("marketing_message", "search");
+                            layer.close(index)
+                        });
+                    }
+                }, "post_get");
+                return false;
+            });
+             function loadRegData(){
+                 url = "/admin/marketing/message/reg/list.json";
+                 var couponId = $(this).attr("coupon");
+                 ajaxsend("", url, function (dataJson) {
+                     var jsRenderTpl = $.templates('#j-reg-list'),
+                     /*绑定数据*/
+                             finalTpl = jsRenderTpl({couponId: couponId});
+                     $("#reg_list").html(finalTpl);
+                     jsRenderTpl = $.templates('#j-option');
+                     /*绑定数据*/
+                     finalTpl = jsRenderTpl(dataJson);
+                     $("#reg_list_select").append(finalTpl);
+                     $("#reg_list_select").val($("#reg_list_select").attr("data-value"));
+                     form.render();
+                 });
+             }
+            function loadInitData() {
+                if (Utils.isNotBlack(id)) {
+                    ajaxsend({messageId: id}, "/admin/marketing/message/info.json", function (dataJson) {
+                        messageInfo = dataJson.result;
+                        messageInfo.sendTimeStr = Utils.formatTime(Utils.createTimeByLong(messageInfo.sendTime), "YYYY-MM-DD");
+                        messageInfo.sendEndTimeStr = Utils.formatTime(Utils.createTimeByLong(messageInfo.sendEndTime), "YYYY-MM-DD");
+                        var jsRenderTpl = $.templates('#edit_content'),
+                        /*绑定数据*/
+                                finalTpl = jsRenderTpl(messageInfo);
+                        $("#message_content_ul").html(finalTpl);
+                        loadRegData()
+                        selectAppType();
+                        closeUpdate()
+                        $("#look_user_id").click(function(){
+                            searchUser();
+                        })
+                    }, undefined, false);
+                } else {
+                    var jsRenderTpl = $.templates('#edit_content'),
+                    /*绑定数据*/
+                            finalTpl = jsRenderTpl({});
+                    $("#message_content_ul").html(finalTpl);
+                    loadRegData()
+                    selectAppType();
+                    $("#look_user_id").click(function(){
+                        searchUser();
+                    })
+                }
+
+
+                bindEvent();
+            }
+
+
+            function bindEvent() {
+                $('#form_start_time').click(function () {
+                    start.elem = this;
+                    laydate(start);
+                });
+            }
+            function closeUpdate(){
+                $(".closeUpdate").attr("disabled","disabled");
+                 $(".form_submit").hide();
+            }
+            loadInitData();
+
+            function searchUser(pageNo) {
+                var isOpen=false;
+                if (!Utils.isNotNull(pageNo)) {
+                    isOpen=true;
+                    pageNo = 1;
+                }
+                currPageNo = pageNo;
+                var pageSize = 30;
+                var option = {pageNo: pageNo, pageSize: pageSize};
+                var regListId = $("#reg_list_select").val();
+                if (Utils.isBlank(regListId)) {
+                    layer.alert("请选择发放用户的规则");
+                    return;
+                } else {
+                    option.regId = regListId;
+                   if(Utils.isNotBlack(id)){
+                       option.type=1;
+                       option.regId=id
+                   }
+                    ajaxsend(option, "/admin/marketing/message/send_user/list.json", function (dataJson) {
+                        var jsRenderTpl = $.templates('#j-user-send-tr'),
+                        /*绑定数据*/
+                                finalTpl = jsRenderTpl(dataJson.result);
+                        $("#user_reg_list").html(finalTpl);
+                        if(isOpen){
+                            layer.open({
+                                title: "用户列表",
+                                type: 1
+                                , content: $("#user_reg_list")
+                                , btn: ["确定"]
+                                , area: ["600px", "390px"]
+                                , closeBtn: 0
+                                , btnAlign: 'r',
+                                success: function () {
+                                    form.render();
+                                }
+                                , yes: function (index, item) {
+                                    layer.close(index);
+                                    $("#user_reg_list").html("");
+                                }
+                            })}
+                        laypage({
+                            cont: "user_pager",
+                            curr: dataJson.result.pageNo
+                            , pages: dataJson.result.totalPage
+                            , skip: true
+                            , jump: function (jumpObj, first) {
+                                if (!first) {
+                                    searchUser(jumpObj.curr);
+                                }
+                            }
+                        })
+                    })
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

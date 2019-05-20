@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document2017/8/3 0003</title>
+    <script src="LodopFuncs.js"></script>
+    <!--<script src="../js/print/print.js"></script>-->
+    <object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+        <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+    </object>
+</head>
+<body style="margin: 0;padding: 0">
+<a href="javascript:;" onclick="print1()">打印</a>
+<a href="javascript:;" onclick="print2()">打印2</a>
+<div id="codePrint" style="width: 200px;margin: 0 auto">
+<div class="" style="width: 150px;text-align: center">
+    <!--<p style="display: inline-block;font-size: 10px;margin: 0;padding: 0;text-align: center">杭州中策汽车服务有限公司</p>-->
+    <div style="padding-top: 45px;width: 100%;margin: 0;font-size: 0">
+        <!--<span style="font-size: 10px;display: block;line-height: 1">商品编码:1234567890</span>-->
+        <span style="font-size: 10px;display: block;line-height: 1">杭州中策汽车服务有限杭州中策汽车服务有限杭州中策汽车服务有限</span>
+        <span style="display: block;font-size: 10px">批次码:12345678</span>
+        <span style="display: block;font-size: 10px">单据号:A12345678901234</span>
+    </div>
+</div>
+</div>
+<script>
+    var LODOP;
+    function print1() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("");
+        var html=document.getElementById('codePrint').innerHTML;
+        for(var i=0;i<3;i++){
+            LODOP.SET_PRINT_PAGESIZE(1, '40mm', '30mm', "");
+            LODOP.NewPage();
+            /*LODOP.SET_PRINT_PAGESIZE(1, "40mm", "30mm", "");*/         //28px 相当于7.41mm   -->906px
+            LODOP.ADD_PRINT_HTM(2, "2", "96%", '100%', html);
+            LODOP.ADD_PRINT_BARCODE(1,"5mm","30mm","10.44mm","128Auto","12345678901");
+        }
+        LODOP.PREVIEW();
+    }
+
+    function print2() {
+        window.print()
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jimmy.dao.sys.mapper.DepartmentInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jimmy.dao.sys.entity.DepartmentInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="department_name" property="departmentName" jdbcType="VARCHAR"/>
+        <result column="department_short_name" property="departmentShortName" jdbcType="VARCHAR"/>
+        <result column="area_id" property="areaId" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="full_address" property="fullAddress" jdbcType="VARCHAR"/>
+        <result column="legal_person" property="legalPerson" jdbcType="VARCHAR"/>
+        <result column="contact_tel" property="contactTel" jdbcType="VARCHAR"/>
+        <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="wechat" property="wechat" jdbcType="VARCHAR"/>
+        <result column="agent_code" property="agentCode" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="TINYINT"/>
+        <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="parent_tree" property="parentTree" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="INTEGER"/>
+        <result column="modify_id" property="modifyId" jdbcType="INTEGER"/>
+        <result column="org_status" property="orgStatus" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, department_name, department_short_name, area_id, address, full_address, legal_person, 
+    contact_tel, contact_phone, email, wechat, agent_code, level,
+    parent_id, parent_tree, remark, deleted, create_time, modify_time, create_id, modify_id, 
+    org_status
+  </sql>
+    <select id="find" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_department_info
+        where id = #{id} and deleted=0
+    </select>
+    <select id="list" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_department_info
+        where deleted=0
+    </select>
+
+
+    <select id="listDepartment" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_department_info c
+        where c.deleted=0
+        <if test="departmentName != null">
+            and (c.department_name LIKE concat(concat('%',#{departmentName}),'%') or c.agent_code LIKE
+            concat(concat('%',#{departmentName}),'%'))
+        </if>
+        limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="countDepartment" resultMap="BaseResultMap" >
+        select
+        count(id)
+        from t_department_info c
+        where c.deleted=0
+        <if test="departmentName != null">
+            and (c.department_name LIKE concat(concat('%',#{departmentName}),'%') or c.agent_code LIKE
+            concat(concat('%',#{departmentName}),'%'))
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.jimmy.dao.sys.entity.DepartmentInfo">
+        insert into t_department_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="departmentName != null">
+                department_name,
+            </if>
+            <if test="departmentShortName != null">
+                department_short_name,
+            </if>
+            <if test="areaId != null">
+                area_id,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="fullAddress != null">
+                full_address,
+            </if>
+            <if test="legalPerson != null">
+                legal_person,
+            </if>
+            <if test="contactTel != null">
+                contact_tel,
+            </if>
+            <if test="contactPhone != null">
+                contact_phone,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="wechat != null">
+                wechat,
+            </if>
+            <if test="agentCode != null">
+                agent_code,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="parentTree != null">
+                parent_tree,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            deleted,
+            create_time,
+            modify_time,
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="modifyId != null">
+                modify_id,
+            </if>
+
+
+            <if test="orgStatus != null">
+                org_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="departmentName != null">
+                #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentShortName != null">
+                #{departmentShortName,jdbcType=VARCHAR},
+            </if>
+            <if test="areaId != null">
+                #{areaId,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="fullAddress != null">
+                #{fullAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="legalPerson != null">
+                #{legalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="contactTel != null">
+                #{contactTel,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="wechat != null">
+                #{wechat,jdbcType=VARCHAR},
+            </if>
+
+
+            <if test="agentCode != null">
+                #{agentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=TINYINT},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="parentTree != null">
+                #{parentTree,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            0,
+            now(),
+            now(),
+            <if test="createId != null">
+                #{createId,jdbcType=INTEGER},
+            </if>
+            <if test="modifyId != null">
+                #{modifyId,jdbcType=INTEGER},
+            </if>
+            <if test="orgStatus != null">
+                #{orgStatus,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateProperty" parameterType="com.jimmy.dao.sys.entity.DepartmentInfo">
+        update t_department_info
+        <set>
+            <if test="departmentName != null">
+                department_name = #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentShortName != null">
+                department_short_name = #{departmentShortName,jdbcType=VARCHAR},
+            </if>
+            <if test="areaId != null">
+                area_id = #{areaId,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="fullAddress != null">
+                full_address = #{fullAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="legalPerson != null">
+                legal_person = #{legalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="contactTel != null">
+                contact_tel = #{contactTel,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="wechat != null">
+                wechat = #{wechat,jdbcType=VARCHAR},
+            </if>
+
+            <if test="bankId != null">
+                bank_id = #{bankId,jdbcType=SMALLINT},
+            </if>
+            <if test="agentCode != null">
+                agent_code = #{agentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=TINYINT},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="parentTree != null">
+                parent_tree = #{parentTree,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+                modify_time = now(),
+            <if test="modifyId != null">
+                modify_id = #{modifyId,jdbcType=INTEGER},
+            </if>
+            <if test="orgStatus != null">
+                org_status = #{orgStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jimmy.dao.sys.entity.DepartmentInfo">
+    update t_department_info
+    set department_name = #{departmentName,jdbcType=VARCHAR},
+      department_short_name = #{departmentShortName,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      full_address = #{fullAddress,jdbcType=VARCHAR},
+      legal_person = #{legalPerson,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      wechat = #{wechat,jdbcType=VARCHAR},
+
+      agent_code = #{agentCode,jdbcType=VARCHAR},
+      level = #{level,jdbcType=TINYINT},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      parent_tree = #{parentTree,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      modify_time =now(),
+      modify_id = #{modifyId,jdbcType=INTEGER},
+      org_status = #{orgStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

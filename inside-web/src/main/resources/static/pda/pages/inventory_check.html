@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>盘点</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/basic.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+</head>
+<body>
+<div class="container-wrap" style="height: 100%">
+    <div class="tab-wrap" style="height: 40%;overflow-y: auto;overflow-x: hidden">
+        <table class="ui-table">
+            <thead>
+            <tr class="ui-thead-bg">
+                <td class=" tex-c padd0" width="20%">库位</td>
+                <td class=" tex-c padd0" width="30%">商品条码</td>
+                <td class=" tex-c padd0" width="50%">名称</td>
+            </tr>
+            </thead>
+            <tbody id="pageContent">
+            </tbody>
+        </table>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+    <div class="bar"></div>
+    <form>
+        <div class="layui-form">  
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">当前商品</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                <div style="display: table-cell;vertical-align: middle;line-height: 1;font-size: 12px;height: 40px">
+                    <p id="productName"></p>
+                </div>
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">库位编码</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input id="sn" type="text" name="sn" class="text-in no1" >
+                </div>
+            </div>
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">商品条码</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input id="skuCode" type="text" name="skuCode" class="text-in no2" >
+                </div>
+            </div>
+            <div class="container-list order-check-bottom10">
+                <div class="container-item text-wrap" style="flex: 2">
+                    <p class="bold">数量</p>
+                </div>
+                <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+                    <input id="invNum" type="text" name="invNum" class="text-in no3">
+                </div>
+            </div>
+
+            <div class="container-list ">
+                <div class="container-item text-wrap" style="border: 0;padding-left: 0">
+                    <input type="button" id="save" value="提&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交" class="btn" style="width: 95%;border-radius: 10px" lay-submit="" lay-filter="save">
+                    <input type="hidden" id="replay" value="提&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交" class="btn" style="width: 95%;border-radius: 10px" lay-submit="" lay-filter="replay">
+                    <input type="hidden" id="submit" value="完&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;成" class="btn" style="width: 95%;border-radius: 10px" lay-submit="" lay-filter="submit">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    {{# if((item.invNum == '' || item.invNum == null)||(params.get('status')==10&&(item.invReplayNum == null||item.invReplayNum == ''))){}}
+    <tr id="{{item.id}}" class="uncheck">
+        <td class="tex-c break-all padd0">{{item.sn}}</td>
+        <td class="tex-c break-all padd0">{{item.skuCode}}</td>
+        <td class="tex-l padd0">{{item.productName}}</td>
+    </tr>
+    {{#} else {}}
+    <tr id="{{item.id}}" style="background-color: #ebebeb" class="checked">
+            <td class="tex-c break-all padd0">{{item.sn}}</td>
+            <td class="tex-c break-all padd0">{{item.skuCode}}</td>
+            <td class="tex-l padd0">{{item.productName}}</td>
+    </tr>
+    {{#}}}
+    {{#  }); }}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+    var form = layui.form()
+            , layer = layui.layer
+            , $ = layui.jquery
+            , myAjax = layui.myAjax;
+    var varId = params.get('checkNo');
+    var status = params.get('status');
+    var varType = params.get('type');
+    var snValue;
+    var skuValue;
+    var detailId;
+    var srcInvNum;
+    var uploadFlag;
+    function pageOrder(data) {
+        myAjax.ajaxPage('/inventoryCheck/findDetails.json?checkNo=' + varId, 'pageNum', 'pageContent', 'pageTpl', data,'get',function(){
+            if($(".uncheck").length==0){
+                $("#submit").attr('type','buttom');
+                $("#save").attr('type','hidden');
+                $("#replay").attr('type','hidden');
+                $("#submit").focus();
+            }else if(status==10){
+                $("#save").attr('type','hidden');  
+                $("#replay").attr('type','buttom');
+                $("#submit").attr('type','hidden');
+            }
+        });
+    }
+    
+    pageOrder();
+
+    //保存
+    form.on('submit(save)', function (data) {
+        if (checkSave()&&uploadFlag) {
+            myAjax.ajaxSend('/inventoryCheck/pda/save.json', function () {
+                layer.msg('提交成功');
+                $("#"+detailId).attr("style","background-color:#ebebeb");
+                $("#"+detailId).attr("class","checked");
+                $("#productName").text('');
+                $("#sn").val("");
+                $("#skuCode").val("");
+                $("#invNum").val("");
+                if($(".uncheck").length==0){
+                    $("#submit").attr('type','buttom');
+                    $("#save").attr('type','hidden');
+                }else if(status==10){
+                    $("#save").attr('type','hidden');  
+                    $("#replay").attr('type','buttom');
+                    $("#submit").attr('type','hidden'); 
+            }
+            }, $.extend(data.field,{'parentId':varId}, {'num':$("#invNum").val()-srcInvNum}), 'post');
+        }else{
+            layer.msg('库位或商品条码输入错误');
+        }
+        return false;
+    });
+
+    //保存
+    form.on('submit(replay)', function (data) {
+        if (checkSave()&&uploadFlag) {
+            myAjax.ajaxSend('/inventoryCheck/pda/save.json', function () {
+                layer.msg('提交成功');
+                $("#"+detailId).attr("style","background-color:#ebebeb");
+                $("#"+detailId).attr("class","checked");
+                $("#productName").text('');
+                $("#sn").val("");
+                $("#skuCode").val("");
+                $("#invNum").val("");
+                if($(".uncheck").length==0){
+                    $("#submit").attr('type','buttom');
+                    $("#replay").attr('type','hidden');
+                    $("#save").attr('type','hidden');
+                }else if(status==10){
+                    $("#save").attr('type','hidden');  
+                    $("#replay").attr('type','buttom');
+                    $("#submit").attr('type','hidden');
+            }
+            }, $.extend(data.field,{'parentId':varId}, {'num':$("#invNum").val()-srcInvNum},{'invReplayNum':$("#invNum").val()},{'invNum':null}), 'post');
+        }else{
+            debugger;
+            layer.msg('库位或商品条码输入错误');
+        }
+        return false;
+    });
+
+    //任务提交
+    form.on('submit(submit)', function (data) {
+        if (checkSave()) {
+            if(status==0||status==9){
+                status=10
+            }else if(status==10&&varType!=2){
+                status=1
+            }else if(status==10&&varType==2){
+                status=6
+            }
+            myAjax.ajaxSend('/inventoryCheck/pda/submit.json', function () {
+                layer.msg('提交成功');
+                window.location.href = "inventory_check_list.html";
+            }, $.extend({'checkNo':varId},{'status':status}), 'post');
+        }
+        return false;
+    });
+
+        /*$("#invNum").change(function(){
+            $('#save').focus()
+        });
+        $("#skuCode").change(function(){
+            var skuCode = $("#skuCode").val()
+            snValue=$("#sn").val();
+            myAjax.ajaxSend('/inventoryCheck/pda/find.json', function (dataJson) {
+                $("#productName").text(dataJson.result.productName);
+                srcInvNum = dataJson.result.srcInvNum;
+                skuValue = dataJson.result.skuCode;
+                detailId = dataJson.result.id;
+            }, $.extend({'parentId':varId},{'sn':snValue},{'skuCode':skuCode}), 'post');
+        });*/
+        $('.no1').focus();
+        $('.container-wrap').on('keyup',function (e) {
+            var theEvent=e||window.event;
+            var $target = $(e.target || e.srcElement);
+            var code=theEvent.keyCode ||theEvent.which||theEvent.charCode;
+            if(code===13){
+                if($target.is('#sn')){
+                    $('#skuCode').select();
+                }else if($target.is('#skuCode')){
+                    $('#invNum').select();
+                    skuCodeChange()
+                }else if($target.is('#invNum')){
+                    $('#save').focus()
+                }
+            }
+        });
+        function skuCodeChange(){
+            var skuCode = $("#skuCode").val()
+            snValue=$("#sn").val();
+            myAjax.ajaxSend('/inventoryCheck/pda/find.json', function (dataJson) {
+                if(dataJson.result!=null){
+                    $("#productName").text(dataJson.result.productName);
+                    srcInvNum = dataJson.result.srcInvNum;
+                    skuValue = dataJson.result.skuCode;
+                    detailId = dataJson.result.id;
+                    uploadFlag = true;
+                }else{
+                    uploadFlag = false;
+                    layer.msg('库位或商品条码输入错误');
+                }
+            }, $.extend({'parentId':varId},{'sn':snValue},{'skuCode':skuCode}), 'post');
+        }
+    });    
+
+   /* $(function () {
+        $('.no1').focus();
+        $('.container-wrap').on('keyup',function (e) {
+            var theEvent=e||window.event;
+            var $target = $(e.target || e.srcElement);
+            var code=theEvent.keyCode ||theEvent.which||theEvent.charCode;
+            if(code===13){
+                if($target.is('#sn')){
+                    var $trackingNo= $('#sn')[0]
+                    change1($trackingNo)
+                }else if($target.is('#skuCode')){
+                    var $proSn=$('#skuCode')[0]
+                    change2($proSn)
+                }else if($target.is('#invNum')){
+                    $('#save').focus()
+                }
+            }
+        })
+
+    })
+    function change1() {
+        $('.no2').focus()
+    };
+    function change2() {
+        $('.no3').focus()
+    }*/
+
+</script>
+</body>
+</html>

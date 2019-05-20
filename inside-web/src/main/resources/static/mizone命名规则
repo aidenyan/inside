@@ -1,0 +1,26 @@
+仓库 ：storage
+
+采购 : purchase
+     采购单管理：purchase_list 初审：purchase_first 终审：purchase_end 供应商管理：purchase_supplier 采购指导价：purchase_price 库存预警：purchase_stock
+
+订单 ：order
+     订单列表：order_list   待审核订单：order_pending_audit  波次发货单：order_wave  待发货：order_already
+
+
+商品 ：commodity
+     商品列表 :com_list ;   商品分类：com_class  品牌管理：com_attribute  属性管理：com_brand
+
+
+用户 ：user
+      组织架构管理：user_organizational 经销商管理：user_distributor   门店管理：user_store
+
+系统 ：system
+营销 ：marketing
+统计 ：statistics
+
+
+新增会员等级  （新增弹窗  宽400px  高800px） 标题 fontsize 16px
+
+新增商品
+
+400px 175px

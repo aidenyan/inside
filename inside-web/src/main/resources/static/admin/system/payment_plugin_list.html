@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <style type="text/css">
+        .layui-form-checkbox[lay-skin="primary"] span {
+            padding-right: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <!-- header -->
+    <div class="list">
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="checkTba">
+                <colgroup>
+                    <col width="160">
+                    <col width="160">
+                    <col width="160">
+                    <col width="160">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="tab_sku">名称</th>
+                    <th class="tab_fenlei">版本</th>
+                    <th class="tab_img">作者</th>
+                    <th class="tab_img">状态</th>
+                    <th class="setting">操作</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+
+                </tbody>
+            </table>
+        </div>
+        <!--table 分页-->
+    </div>
+    <script type="text/javascript" src="../admin.js"></script>
+    <script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td>{{:name}}</td>
+    <td>{{:version}}</td>
+    <td>{{:author}}</td>
+    <td>{{if isEnabled}}启用{{else}}禁用{{/if}}</td>
+    <td class="state_uhandle">
+         <div class="">
+             {{if isInstalled}}
+                <a class="  plugin_payment_set set" plugin_url="{{:settingUrl}}"  plugin="{{:id}}" plugin_name="{{:name}}" authority_code="plugin_payment_set" title="设置">
+                     <i class="icon-shezhi1"></i>
+                </a>
+                 <a class="  plugin_payment_set down"   plugin="{{:id}}" authority_code="plugin_payment_set"  title="卸载">
+                  <i class="icon-xiezai"></i>
+                </a>
+                  <a class="  plugin_payment_info info"   plugin_url="{{:settingUrl}}"   plugin="{{:id}}" plugin_name="{{:name}}"  authority_code="plugin_payment_info" n_authority_code="plugin_payment_set"  title="查看">
+                   <i class="icon-search"></i>
+                </a>
+              {{else}}
+               <a  plugin="{{:id}}" class="  plugin_payment_set up"  authority_code="plugin_payment_set" title="安装">
+                   <i class="icon-anzhuang"></i>
+                </a>
+                {{/if}}
+            </div>
+    </td>
+</tr>
+{{/for}}
+
+
+
+
+    </script>
+    <script type="text/javascript">
+        layui.use(['form', 'laypage', 'layedit', 'laydate', 'laytpl'], function () {
+            var form = layui.form();
+            var laytpl = layui.laytpl;
+            var layer = layui.layer,
+                    laypage = layui.laypage;
+
+            function loadPlugin() {
+                ajaxsend("", "/admin/payment/plugin/list.json", function (dataJson) {
+                    var data = dataJson;
+                    createTableData(data);
+                    checkLocalAuthority(data);
+                    form.render(); //
+                });
+            }
+
+            function createTableData(data) {
+                /*获取模板*/
+                var jsRenderTpl = $.templates('#j-con-list'),
+                /*绑定数据*/
+                        finalTpl = jsRenderTpl(data);
+                $('#page_tbody').html(finalTpl)
+                $("#checkTba").tableCheck('success');
+                form.render('checkbox'); //
+                checkLocalAuthority(data)
+                bind();
+            }
+
+
+            function bind() {
+                $("#page_tbody .state_uhandle a").click(function () {
+                    var url = "";
+                    var data = {}
+                    if ($(this).hasClass("up")) {
+                        url = "/admin/payment/plugin/install.json";
+                        data.pluginId = $(this).attr("plugin");
+                        ajaxsend(data, url, function () {
+                            layer.alert("操作成功", {}, function (index) {
+                                layer.close(index);
+                                loadPlugin()
+                            })
+
+                        })
+                    } else if ($(this).hasClass("down")) {
+                        url = "/admin/payment/plugin/uninstall.json";
+                        data.pluginId = $(this).attr("plugin");
+                        ajaxsend(data, url, function () {
+                            layer.alert("操作成功", {}, function (index) {
+                                layer.close(index);
+                                loadPlugin()
+                            })
+
+                        })
+                    } else if ($(this).hasClass("set")) {
+                        openEditContent($(this).attr("plugin_name"),"admin/system/"+ $(this).attr("plugin_url")+"?pluginId="+$(this).attr("plugin"))
+                    }else if ($(this).hasClass("info")) {
+                        openEditContent($(this).attr("plugin_name"),"admin/system/"+ $(this).attr("plugin_url")+"?pluginId="+$(this).attr("plugin")+"&operation=info")
+                    }
+                })
+            }
+
+            function openEditContent(title, url) {
+                  callParent.openTab("plugin_payment_setting",0,title,url,true)
+            }
+
+
+            function checkLocalAuthority(data) {
+                checkAuthority(data.authorityCodeList, ["plugin_payment_page", "plugin_payment_set","plugin_payment_info"]);
+            }
+
+            loadPlugin();
+            callParent.isLoadEnd("plugin_payment_page");
+            callParent.register(function () {
+                loadPlugin()
+            }, "search");
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>调库</title>
+    <link rel="stylesheet" href="../../pda/css/normalize.css">
+    <link rel="stylesheet" href="../../pda/css/basic.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.js"></script>
+</head>
+<body>
+<div class="container-wrap">
+    <div class="title">
+        <p>调库</p>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">仓库</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8;">
+            <select name="" id="slcWarehouse" class="order-check-select">
+                <option value="">选择仓库</option>
+            </select>
+        </div>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">原库位</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+            <input id="txtSrcLocation" type="text" class="text-in no1">
+        </div>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">SKU</p>
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 8">
+            <input id="txtSku" type="text" class="text-in no1">
+        </div>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="flex: 2">
+            <p class="bold">数量</p>
+        </div>
+        <div class="container-item text-wrap " style="flex: 4">
+            <input id="txtNum" type="text" class="text-in no1">
+        </div>
+        <div class="container-item text-wrap order-check-paddR10" style="flex: 4;padding-left: 0">
+            <select name="" id="slcBatchNo" class="order-check-select">
+                <option value="">选择批次</option>
+            </select>
+        </div>
+    </div>
+    <div class="container-list ">
+        <div class="container-item text-wrap" style="text-align: left">
+            <input type="button" id="btnAdd" value="添加" class="btn">
+        </div>
+    </div>
+    <div class="tab-wrap">
+        <table class="ui-table">
+            <thead>
+            <tr class="ui-thead-bg">
+                <td class="wid20 tex-c padd0">原库位</td>
+                <td class="wid25 tex-c padd0">SKU</td>
+                <td class="wid10 tex-c padd0">数量</td>
+                <td class="wid25 tex-c padd0">新库位</td>
+                <td class="wid20 tex-c padd0">操作</td>
+            </tr>
+            </thead>
+            <tbody id="tbContent">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.no1').focus();
+
+        $('#btnAdd').click(function () {
+            var vWid = $("#slcWarehouse").val();
+            if(vWid == ''){
+                alert('请选择仓库');
+                return;
+            }
+            var vLSn = $('#txtSrcLocation').val();
+            if(vLSn == ''){
+                alert('请选择库位');
+                return;
+            }
+            var vSku = $('#txtSku').val();
+            if(vSku == ''){
+                alert('请选择商品');
+                return;
+            }
+            var vNum = $('#txtNum').val();
+            if(vNum == ''){
+                alert('请输入数量');
+                return;
+            }
+            var vBNo = $('#slcBatchNo').val();
+            if(vBNo == ''){
+                alert('请选择批次');
+                return;
+            }
+            var vHtml = '<tr>'
+                    + '<td class="tex-c break-all padd0">' + vLSn + '</td>'
+                    + '<td class="tex-c break-all padd0">' + vSku + '</td>'
+                    + '<td class="tex-c padd0">' + vNum + '</td>'
+                    + '<td class="tex-c break-all padd0"><input type="text" class="text-in no1"></td>'
+                    + '<td class="tex-c break-all padd0">'
+                    + '<input type="button" value="确认" class="btn sureIn" lsn="' + vLSn + '" sku="' + vSku + '" num="' + vNum + '" wid="' + vWid + '" bNo="' + vBNo + '">'
+                    + '<input type="button" value="删除" class="btn delete">'
+                    + '</td>'
+                    + '</tr>';
+            $('#tbContent').append(vHtml);
+        });
+
+        $('#tbContent').on('click', '.sureIn', function () {
+            var vLSn = $(this).attr('lsn');
+            var vSku = $(this).attr('sku');
+            var vNum = $(this).attr('num');
+            var vBNo = $(this).attr('bNo');
+            var vWid = $(this).attr('wid');
+            var vTSn = $(this).parent().prev().children().eq(0).val();
+            if(vTSn == ''){
+                alert('请选择库位');
+                return;
+            }
+            var vTr = $(this).closest('tr');
+            $.ajax({
+                url: '/inventory/moveLocationPDA.json',
+                type: 'post',
+                data: {
+                    'comOrgId': vWid,
+                    'srcLocationSn': vLSn,
+                    'tarLocationSn': vTSn,
+                    'proSn': vSku,
+                    'batchNo': vBNo,
+                    'num': vNum
+                },
+                success: function (data) {
+                    if(data.code == 0) {
+                        vTr.remove();
+                    }
+                    alert(data.message);
+                }
+            });
+        });
+
+        $('#tbContent').on('click', '.delete', function () {
+            $(this).closest('tr').remove();
+        });
+
+        $('#txtSku').blur(function () {
+            var vWid = $("#slcWarehouse").val();
+            var vLSn = $('#txtSrcLocation').val();
+            var vSku = $('#txtSku').val();
+            $.ajax({
+                url: '/inventory/productBatchNo.json',
+                type: 'post',
+                data: {'comOrgId': vWid, 'locationSn': vLSn, 'proSn': vSku},
+                dataType: 'json',
+                success: function (data) {
+                    var vOptions = '<option value="">选择批次</option>';
+                    for (var i = 0; i < data.result.length; i++) {
+                        vOptions += '<option value="' + data.result[i].batchNo + '">' + data.result[i].batchNo + '</option>';
+                    }
+                    $("#slcBatchNo").html(vOptions);
+                }
+            });
+        });
+
+        $.ajax({
+            url: '/admin/common/warehouse/list.json',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                var vOptions = '';
+                for (var i = 0; i < data.result.length; i++) {
+                    vOptions += '<option value="' + data.result[i].id + '">' + data.result[i].companyShortName + '</option>';
+                }
+                $("#slcWarehouse").html(vOptions);
+            }
+        });
+    });
+    function change1() {
+        $('.no2').focus()
+    }
+    ;
+    function change2() {
+        $('.no3').focus()
+    }
+</script>
+</body>
+</html>

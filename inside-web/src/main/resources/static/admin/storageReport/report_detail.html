@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>明细统计</title>
+    <link rel="stylesheet" href="../../common/css/amazeui.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmStorageInfo">
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <input type="button" id="btnExport" class="layui-btn layui-btn-small" value="导出">
+                    </div>
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="SKU/商品名称/出入库单号/关联单号"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcOperType" lay-verify="required" lay-filter="operType" name="type">
+                                <option value="0">入库</option>
+                                <option value="1">出库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <div class="am-selected am-dropdown  am-active" id="am-selected-category_id" style="width: 135px">
+                                <input id="txtOperStatus" type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                                       placeholder="请选择类型">
+                                <i class="edge"></i>
+                                <div class="am-selected-content am-dropdown-content"
+                                     style="min-width: 135px;display: none">
+                                    <div class="am-selected-search">
+                                        <input autocomplete="off" class="am-form-field am-input-sm">
+                                    </div>
+                                    <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto" id="oper_status">
+                                    </ul>
+                                    <div class="am-selected-hint"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" lay-verify="required" name="warehouseId">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-verify="required"
+                                        lay-search>
+                                    <option value="-1">选择供应商</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" lay-verify="required" placeholder="开始日"
+                                   id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" lay-verify="required" placeholder="截止日"
+                                   id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="pageContent" class="layui-form">
+
+        </div>
+    </div>
+</div>
+<script type="text/html" id="j-select-li">
+    {{#  layui.each(d, function(index, item){ }}
+    <li class="" val="{{item.code}}"><span class="am-selected-text">{{item.desc}}</span> <i class="am-check icon-duigou"></i></li>
+    {{#  }); }}
+</script>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+
+<script id="pageTpl" type="text/html">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            {{# if(d.searchMap.type == 0){ }}
+            <th class="sort" name="s.storage_out_in_no" style="width: 140px;">入库单号</th>
+            <th class="sort" name="s.supplier_name">供应商</th>
+            <th class="sort" name="s.oper_type">入库类型</th>
+            {{# }else{ }}
+            <th class="sort" name="s.storage_out_in_no">出库单号</th>
+            <th class="sort" name="s.oper_type">出库类型</th>
+            {{# } }}
+            <th class="sort" name="s.relation_no" style="width: 140px;">关联单号</th>
+            <th class="sort" name="item.sku_code" style="width: 80px;">SKU编码</th>
+            <th class="sort" name="brand.name" style="width: 70px;">品牌</th>
+            <th class="sort" name="product.name">商品名称</th>
+            <th style="width: 80px;">数量</th>
+            {{# if(d.searchMap.type == 0){ }}
+            <th class="sort" name="item.price" style="width: 80px;">采购单价</th>
+            {{# } }}
+            <th style="width: 40px;">单位</th>
+            <th style="width: 50px;">创建人</th>
+            <th style="width: 50px;">操作人</th>
+            <th style="width: 130px;">操作时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.result, function(index, item){ }}
+        <tr>
+            {{# if(d.searchMap.type == 0){ }}
+            <td>{{item.storageOutInNo}}</td>
+            <td>{{item.supplierName || ''}}</td>
+            {{# }else{ }}
+            <td>{{item.storageOutInNo}}</td>
+            {{# } }}
+            <td>{{item.operTypeStr || ''}}</td>
+            <td>{{item.relationNo || ''}}</td>
+            <td>{{item.skuCode}}</td>
+            <td>{{item.brandName}}</td>
+            <td>{{item.name}}</td>
+            <td class="number">{{item.num}}</td>
+            {{# if(d.searchMap.type == 0){ }}
+            <td class="amount">{{item.price || ''}}</td>
+            {{# } }}
+            <td>{{item.unit}}</td>
+            <td>{{item.createName || ''}}</td>
+            <td>{{item.confirmedName || ''}}</td>
+            <td>{{laydate.now(item.createTime, 'YYYY-MM-DD hh:mm:ss')}}</td>
+        </tr>
+        {{# }); }}
+        <tr>
+            <td>合计总数</td>
+            {{# if(d.searchMap.type == 0){ }}
+            <td colspan="6"></td>
+            {{# }else{ }}
+            <td colspan="5"></td>
+            {{# } }}
+            <td class="number">{{d.searchMap.totalNum}}</td>
+            <td colspan="5"></td>
+        </tr>
+        {{# if(d.result.length === 0){ }}
+        <tr>
+            <td colspan="12" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+                <div class="null-show"></div>
+            </td>
+        </tr>
+        {{# } }}
+        </tbody>
+    </table>
+</script>
+<script id="tplSupplier" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        function loadDate(){
+            var date=new Date();
+            var month=(date.getMonth()+1);
+            if(month<10){
+                month="0"+month;
+            }
+            var formatDate=date.getFullYear()+"-"+month+"-01";
+            $('#startDate').val(formatDate);
+            $('#endDate').val(laydate.now());
+        }
+        loadDate();
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        $('#am-selected-category_id').selectMy({nextFunction:function(){
+
+        }});
+
+        function pageOrder(data) {
+            myAjax.ajaxSend('/storageReport/detail.json', function (dataJson) {
+                var getTpl = $("#pageTpl").html();
+                laytpl(getTpl).render(dataJson, function (html) {
+                    $("#pageContent").html(html);
+                    form.render();
+                    $("#pageContent .amount").each(function () {
+                        $(this).html(Utils.formatPrice($(this).html()));
+                    });
+                });
+            }, data);
+        }
+
+        form.on('submit(search)', function (data) {
+            var startDate = $.trim($("#startDate").val());
+            var endDate = $.trim($("#endDate").val());
+            if ((new Date(endDate) - new Date(startDate)) > (365 * 24 * 60 * 60 * 1000)) {
+                layer.alert("结束时间与开始时间不能相差大于一年！");
+                return false;
+            }
+            vSeaData = data.field;
+            $.extend(vSeaData, {'operStatus':getSelectLiId('oper_status')});
+            pageOrder(vSeaData);
+            return false;
+        });
+
+        function getSelectLiId(id){
+            var idList=[];
+            $("#"+id).find("li").each(function(){
+                if( $(this).hasClass("am-checked")){
+                    idList.push($(this).attr("val"))
+                }
+            });
+            return idList;
+        }
+
+        $("#btnExport").click(function () {
+            var startDate = $.trim($("#startDate").val());
+            var endDate = $.trim($("#endDate").val());
+            if ((new Date(endDate) - new Date(startDate)) > (365 * 24 * 60 * 60 * 1000)) {
+                layer.alert("结束时间与开始时间不能相差大于一年！");
+                return false;
+            }else {
+                window.open("/storageReport/exportDetail.json?operStatus=" + getSelectLiId('oper_status').toString() + "&" + $("#frmStorageInfo").serialize(), "_blank");
+            }
+            return false;
+        });
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg');
+
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier', true);
+
+        form.on('select(operType)', function (data) {
+            $('#txtOperStatus').val('');
+            if(data.value == 0){
+                //获取入库类型
+                myAjax.ajaxTpl("/storage/operTypeIn.json", 'oper_status', 'j-select-li');
+            }else{
+                //获取出库类型
+                myAjax.ajaxTpl("/storage/operTypeOut.json", 'oper_status', 'j-select-li');
+            }
+        });
+        //获取入库类型
+        myAjax.ajaxTpl("/storage/operTypeIn.json", 'oper_status', 'j-select-li');
+
+        callParent.isLoadEnd("report_detail");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+</body>
+</html>

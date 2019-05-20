@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加品牌</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <div class="layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="javascript:;" class="layui-btn layui-btn-small" id="add_comBrand"> <i class="layui-icon"style="vertical-align: middle">&#xe61f;</i>添加品牌</a>
+                    <button class="layui-btn layui-btn-small">删除</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form">
+            <table class="layui-table" id="">
+                <colgroup>
+                    <col width="30">
+                    <col width="300">
+                    <col width="160">
+                    <col width="160">
+                    <col width="100">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                    <th class="">品牌</th>
+                    <th class="">图片</th>
+                    <th class="">描述</th>
+                    <th class="">排序</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pager">
+                <!--<tr>-->
+                    <!--<td><input name="" lay-skin="primary" type="checkbox"></i></td>-->
+                    <!--<td>294814321441</td>-->
+                    <!--<td class="">-->
+                        <!--<img src="../common/image/wKgeS1ib-UOALKcqAAAJhQ-7X_E814.png.jpg" alt="" class="tab-img">-->
+                    <!--</td>-->
+                    <!--<td>描述</td>-->
+                    <!--<td>排序</td>-->
+                    <!--<td>-->
+                        <!--<div class="layui-btn-group">-->
+                            <!--<button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">-->
+                                <!--<i class="layui-icon">&#xe642;</i>-->
+                            <!--</button>-->
+                            <!--<button class="layui-btn layui-btn-small delete" value="{{item.id}}">-->
+                                <!--<i class="layui-icon">&#xe640;</i>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div class="layui-form dialog" id="form_addBrand" style="display: none">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">*品牌名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label padd_top">品牌图片</label>
+            <div class="layui-input-inline detailedAddress">
+                <!--<input type="file" name="file" class="layui-upload-file">-->
+                <a href="javascript:;" class="file">
+                    选择上传文件
+                    <input type="file" name="" id="file">
+                    <span class="showFileName"></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">描述</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea placeholder="请输入商品描述信息" class="layui-textarea"> </textarea>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="list" type="text/html">
+    {{#  layui.each(d.list, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></td>
+        <td>{{item.name}}</td>
+        <td>
+            <div class="listImgShow">
+                <img src="{{item.src}}" alt="" >
+            </div>
+        </td>
+        <td>{{item.confirmedTime}}</td>
+        <td>
+            {{# if (item.status) { }}
+            <i class="icon-zhengque" style="color: #3d9e92"></i>
+            {{# } else { }}
+            <i class="icon-cuo"style="color: #f36d00"></i>
+            {{# } }}
+        </td>
+        <td>
+            <div class="listOperationGroup">
+                {{# if (item.status) { }}
+                <a href="javascript:;">下架</a>
+                {{# } else { }}
+                <a href="javascript:;">上架</a>
+                {{# } }}
+                <a href="javascript:;">禁用</a>
+                <a href="javascript:;">编辑</a>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.list.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script src="../layui/layui.js"></script>
+<script>
+    layui.use(['form', 'layer','laytpl','element','upload'], function () {
+        var form = layui.form(),element = layui.element(),layer=layui.layer,laytpl = layui.laytpl,$=layui.jquery;
+
+        $(".file").on("change","input[type='file']",function(){
+            var filePath=$(this).val();
+
+            if(filePath.indexOf("jpg")!=-1 || filePath.indexOf("png")!=-1){
+
+                var arr=filePath.split('\\');
+                var fileName=arr[arr.length-1];
+
+                $(".showFileName").html("已选择文件"+fileName);
+
+            }else{
+
+            }
+        })
+
+        $("#add_comBrand").click(function () {
+            layer.open({
+                title: "新增/编辑品牌"
+                , type: 1
+                , content: $("#form_addBrand")            //弹窗内容
+                , area: ["600px", "400px"]         //设置窗体高度 和宽度
+                , btn: ["确定", "取消"]
+                , closeBtn: 0                      //取消右上角关闭按钮
+                , btnAlign: 'c'
+
+                , success:function (layero, index) {
+                    layero.addClass('layui-form');
+                    layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                    form.render();
+                }
+                , yes: function (index, item) {
+
+                }
+                , btn: ["确定", "取消"]
+            })
+        });
+
+        var data = {"code": 1, "list": [{"status": 0,"src":"../common/image/login-bg-1.jpg","name":"东风嘉实多"}, {"status": 1,"name":"汽机油"}, {"status": 0,"name":"汽机油"}, {"status": 1,"name":"汽机油"}, {"status": 0,"name":"汽机油"}]};
+
+        var getTpl = $("#list").html();
+
+        laytpl(getTpl).render(data, function (html) {
+            $("#pager").html(html)
+            form.render('checkbox');
+        });
+    })
+</script>
+</body>
+</html>

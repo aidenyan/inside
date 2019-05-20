@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="../common/css/sccl.css">
+
+    <style>
+        .content_wrapper {
+            padding-top: 20px;
+            width: 1350px;
+
+            border: 1px solid #eea236;
+        }
+
+        .content_search ul li {
+            float: left;
+            margin-right: 10px;
+            background-color: lightskyblue;
+        }
+
+        .content_search ul.fr li {
+            background-color: #fff;
+        }
+
+        ul.fr li input {
+            border: 0;
+        }
+
+        .content_search ul li a.btn_search {
+            background-color: #7FC764;
+            padding: 7px 10px;
+        }
+.content_table{
+    padding: 0 20px;
+}
+        .content_search {
+            padding: 20px;
+            line-height: 30px;
+        }
+
+        .content_search ul li a {
+            line-height: 30px;
+            padding: 0 10px 0 10px;
+            color: #fff;
+        }
+
+        .search_width {
+            width: 500px;
+        }
+
+        .search_width .border {
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+
+        .border input {
+            width: 300px;
+            border: 0;
+        }
+
+        .border a {
+            display: block;
+            width: 100px;
+            background-color: lightskyblue;
+            color: #fff;
+            text-align: center;
+        }
+
+        .content_search ul li.select_float, .content_search ul li.search_time, .content_search ul li.search_operation {
+            background-color: #fff;
+        }
+
+        .select_float > div {
+            display: inline-block;
+        }
+
+        .select_float > div > select {
+            height: 30px;
+        }
+
+        .search_time > div {
+            display: inline-block;
+            border: 1px solid #d3d3d3;
+            height: 28px;
+        }
+
+        .search_time > div > input {
+            border: 0;
+        }
+
+        .search_operation lable {
+            font-size: 14px;
+            padding-right: 30px;
+            height: 30px;
+        }
+
+        .search_operation lable input {
+            vertical-align: middle;
+        }
+
+        .ui_htable {
+            table-layout: fixed;
+            font: 12px/1.5 arial, 宋体;
+            width: 100%;
+        }
+
+        .ui_htable th, .ui_htable td {
+            border: 1px solid #e2e2e2;
+            text-align: center;
+        }
+        input{
+            vertical-align: middle;
+        }
+        th.checked{
+            width: 25px;
+            padding: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="content_wrapper">
+    <!-- header -->
+    <div class="content_search cf">
+        <ul class="cf fl">
+            <li class="active"><a href="add_com.html">添加商品</a></li>
+            <li><a href="javascript:;">删除</a></li>
+            <li><a href="javascript:;">导入</a></li>
+            <li><a href="javascript:;">导出</a></li>
+        </ul>
+        <div class="fr search_width">
+            <div class="border"><input type="text" placeholder="商品名称/SKU编码" aria-valuemax="2"></div>
+            <div class="border"><a href="javascript:;" class="btn_search">搜索</a></div>
+        </div>
+    </div>
+    <div class="content_search">
+        <ul class="cf">
+            <li><a href="##">清空条件</a></li>
+            <li class="select_float">
+                <div>
+
+                    <select name="" id="1">
+                        <option value="">所有</option>
+                        <option value="">小车</option>
+                        <option value="">大车</option>
+                        <option value="">小车经销商ddddddddddddf</option>
+                    </select>
+                </div>
+                <div>
+                    <select name="" id="2">
+                        <option value="">所有</option>
+                        <option value="">小车</option>
+                        <option value="">大车</option>
+                        <option value="">小车经销商</option>
+                    </select>
+                </div>
+                <div>
+                    <select name="" id="3">
+                        <option value="">所有</option>
+                        <option value="">小车</option>
+                        <option value="">大车</option>
+                        <option value="">小车经销商</option>
+                    </select>
+                </div>
+            </li>
+            <li class="search_time">
+                <div>
+                    <input type="text" placeholder="开始时间">
+                </div>
+                <div>
+                    <input type="text" placeholder="结束时间">
+                </div>
+            </li>
+
+            <li class="search_operation">
+                <lable><input type="checkbox">上架</lable>
+                <lable><input type="checkbox">赠品</lable>
+                <lable><input type="checkbox">套装</lable>
+            </li>
+        </ul>
+    </div>
+
+    <!--table 数据-->
+    <div class="content_table">
+        <table class="ui_htable">
+            <thead>
+            <tr>
+                <th class="checked"><input type="checkbox"></th>
+                <th>SKU编码</th>
+                <th><a href="">商品分类</a></th>
+                <th style="width: 60px">商品图片</th>
+                <th><a href="">品牌</a></th>
+                <th style="width: 340px"><a href="">商品名称</a></th>
+                <th style="width: 50px">单位</th>
+                <th>销售单价</th>
+                <th>创建时间</th>
+                <th>是否上架</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>201702512345678123</td>
+                <td>养护类</td>
+                <td class="content_icon text-center">
+                    <img src="../common/image/wKgeS1ib-UOALKcqAAAJhQ-7X_E814_80x80.png" alt="">
+                   <!-- <div class="icon_hide">
+                        <img src="../common/image/wKgeS1ib-UOALKcqAAAJhQ-7X_E814.png.jpg" alt="">
+                    </div>-->
+                </td>
+                <td>嘉实多</td>
+                <td>嘉实多机油ow-40</td>
+                <td>瓶</td>
+                <td><span>￥:</span>299.00</td>
+                <td>2017-01-16</td>
+                <td><span class="istop_icon"></span></td>
+                <td class="state_uhandle">
+                    <a href="##">下架</a>
+                    <a href="##">编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+<script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+
+<script type="text/javascript">
+    $().ready(function () {
+        $('.tiaozhuan').on('click', function () {
+            console.log($(this).parent('iframe').length)
+
+            console.log()
+        })
+    })
+</script>
+</body>
+</html>

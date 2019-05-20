@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>会员等级列表</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline po-r">
+                        <div class="layui-input-inline">
+                        <select id="searchItem">
+                            <option value="name">名称</option>
+                        </select>
+                        </div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">名称</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">优惠比例</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">消费金额</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70">是否默认</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70"  style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id=page_tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.name}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.discountRatio}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.consumeAmount==null?'-':item.consumeAmount}}</div></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w70">{{item.defaulted==null?'否':item.defaulted==true?'是':'否'}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+                <button class=" view" value="{{item.id}}" title="编辑"><i class="icon-uniE602"></i></button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr aglin='center'>
+        <td colspan="5" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax,laytpl = layui.laytpl;
+        
+        
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxPage('/admin/rankLevel/page.json', 'pageNum', 'page_tbody', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function () {
+            var searchItem=$("#searchItem").val();
+            var searchParam=$("#searchParam").val();
+            var map=new Map();
+            if(searchItem && searchParam){
+                map.push(searchItem, searchParam);;
+            }
+            pageOrder(orderObj.setOption(map.mapObj))
+            return false;
+        });
+        pageOrder();
+
+        $("#page_tbody").on("click",".view", function() {
+            callParent.openTab("rank_level_view", 0, "查看会员等级", "admin/userCenter/rank_level_view.html?id="+$(this).val(), true);
+        })
+
+        callParent.isLoadEnd("rank_level_page");
+        callParent.register(function () {
+        	refresh();
+        }, "refresh");
+
+    });
+</script>
+</body>
+</html>

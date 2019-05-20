@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织岗位管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list ">
+        <div class="userCenter_left">
+            <div class="userCenter_name">
+                <p>组织架构</p>
+            </div>
+            <div class="">
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="输入组织名称进行搜索"
+                           autocomplete="off" class="layui-input small mizo-srarch-input" style="width: 250px">
+                </div>
+                <ul id="treeDemo" class="ztree">
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="userCenter_right">
+            <!--条件搜索部分-->
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_station"> <i class="layui-icon"style="vertical-align: middle">&#xe61f;</i>新增岗位</a>
+                <button class="layui-btn layui-btn-small" id="remove_station">删除</button>
+            </div>
+            <div class="layui-inline ">
+                <input type="text" name="title" required lay-verify="required" placeholder="商品编码/SKU编码"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small">搜索</button>
+            </div>
+
+            <!--表格数据填充部分-->
+            <div class="">
+                <table class="layui-table" id="">
+                    <colgroup>
+                        <col width="30">
+                        <col width="30">
+                        <col width="100">
+                        <col width="80">
+                        <col width="300">
+                        <col width="100">
+                        <col width="250">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                        <th class="">序号</th>
+                        <th class="">岗位名称</th>
+                        <th class="">岗位描述</th>
+                        <th class="">所属组织</th>
+                        <th class="">创建时间</th>
+                        <th class="">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="page_tbody">
+                    <tr>
+                        <td><input name="" lay-skin="primary" type="checkbox"></td>
+                        <td>1</td>
+                        <td>开发工程师</td>
+                        <td>负责XXXXX</td>
+                        <td>循环科技有限公司</td>
+                        <td>2017-03-04 12：00</td>
+                        <td>
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                    <i class="layui-icon">&#xe642;</i>
+                                </button>
+                                <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                    <i class="layui-icon">&#xe640;</i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="form_addStation" style="display: none" class="layui-form dialog">
+    <!--岗位名称-->
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">岗位名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--岗位描述-->
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">岗位描述</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../common/lib/jquery-1.9.0.min.js"></script>
+
+<script src="../layui/layui.js"></script>
+<script type="text/javascript">
+    $().ready(function () {
+        layui.use(['form', 'layer','laytpl','element'], function () {
+            var form = layui.form(),element = layui.element(),layer=layui.layer,laytpl = layui.laytpl;
+            $("#add_station").click(function () {
+                layer.open({
+                    title: "新增/编辑组织机构"
+                    , type: 1
+                    , content: $("#form_addStation")            //弹窗内容
+                    , area: ["671px", "300px"]         //设置窗体高度 和宽度
+                    , btn: ["确定", "取消"]
+                    , closeBtn: 0                    //取消右上角关闭按钮
+                    , btnAlign: 'c'
+                    , yes: function (index, item) {
+                        layer.close(index)
+                        console.log(item)
+                    }
+                    , btn: ["确定", "取消"]
+                })
+
+            });
+
+            $("#remove_station").click(function () {
+                layer.confirm("",{closeBtn: 0},function () {
+
+                })
+            })
+        })
+    })
+</script>
+</body>
+
+</html>

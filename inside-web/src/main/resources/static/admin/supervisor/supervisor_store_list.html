@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>督导门店管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item ">
+                    <div class="layui-inline po-r">
+
+                       <div class="layui-input-inline">
+                        <select id="storeTypeList">
+                            <option value="-1">门店类型</option>
+                        </select>
+                        </div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input" placeholder="门店名称/会员账号/会员手机/督导名称">
+                        <button id="btnSearch" class="layui-btn layui-btn-small">搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td rowspan="1" colspan="1" field="name2">
+                                <div class="datagrid-cell datagrid-cell-c1-number" style="">序号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num"  style="">门店编号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num"  style="">车空间加盟编号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">门店名称</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">姓名</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w80" style="">账号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name12">
+                                <div class="datagrid-cell datagrid-cell-c1-w80" style="">联系手机</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name14" >
+                                <div class="datagrid-cell datagrid-cell-c1-address" style="">详细地址</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name15" >
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">门店来源</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name15" >
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">门店类型</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name15" >
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">督导信息</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" class="text-r"></div>
+    </div>
+</div>
+<div id="supervisorListHtml" style="display: none">
+    <div class="layui-form choiceLogistics">
+        <div class="layui-input-inline">
+            <select id="supervisorListSelect">
+                <option value="-1">选择督导</option>
+            </select>
+        </div>
+    	</div>
+</div>
+
+<div id="addStoreCodeHtml" style="display: none">
+    <div class="layui-form choiceLogistics">
+        <div class="layui-input-inline">
+         <input type="text" id="add_store_code_id"  class="layui-input small mizo-srarch-input" placeholder="请填写车空间加盟编号" maxlength="20"/>
+        </div>
+    </div>
+</div>
+<div id="coupon_list" style="display: none">
+
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/supervisor/supervisor_store.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/lib/jsrender.js"></script>
+<script type="text/javascript" src="../../common/js/common/authority.js"></script>
+<script type="x-jsrender" id="j-coupon-list-tr">
+ <div class="layui-form">
+  <table class="layui-table" style="high" >
+                <colgroup>
+                    <col width="160">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="tab_sku " >优惠名称</th>
+                      <th class="tab_sku " >优惠金额</th>
+                      <th class="tab_sku " >是否使用</th>
+                    <th class="tab_sku " >分配时间</th>
+                     <th class="tab_sku " >有效时间</th>
+                </tr>
+                </thead>
+                <tbody id="page_tbody">
+                {{for result}}
+      <tr>
+     <td>{{:couponName}}</td>
+     <td>{{:couponAmount}}</td>
+      <td>{{if isUsed!=null && isUsed}}是{{else}}否{{/if}}</td>
+      <td>{{:grantDateFormat}}</td>
+   <td>{{:effectiveEndDateFormat}}</td>
+    </tr>
+    {{/for}}
+   </tbody>
+  </table>
+        </div>
+   <div class="cf">
+            <div id="coupon_page" style="text-align:right"></div>
+        </div>
+</script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-number">{{(index+1)+(d.pageSize*(d.pageNo-1))}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num break_all">{{item.storeNo||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num break_all">{{item.storeCode||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.storeName||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">{{item.storeUserName||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80 break_all">{{item.memberAccount || '-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w80 break_all">{{item.memberMobile || '-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-address">{{item.fullAddress||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">
+		{{#  if(item.channelType!=null&&item.channelType == 1){ }}小车平台{{#  } }}
+		{{#  if(item.channelType!=null&&item.channelType == 2){ }}大车平台{{#  } }}
+		{{#  if(item.channelType!=null&&item.channelType == 3){ }}大小车共用{{#  } }}
+		</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">{{changeStoreType(item.storeType)}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">{{item.supervisorName||'-'}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">
+                <button class="sureIn" val="{{item.id}}" onclick="selectSupervisor({{item.storeId}},{{item.channelType}},{{item.memberId}})" title="选择督导">
+                    <i class="icon-uniE602"></i>
+                </button>
+                <button class="sureIn" val="{{item.id}}" onclick="searchCoupon({{item.memberId}})" title="优惠券信息">
+                    <i class="icon-quan"></i>
+                </button>
+                <button class="sureIn supervisor_store_remove_info" val="{{item.id}}" authority_code="supervisor_store_remove_info" onclick="removeSupervisor({{item.storeId}})" title="解除绑定">
+                    <i class="icon-jiebang"></i>
+                </button>
+                <button class="sureIn " val="{{item.id}}"  onclick="addStoreCode({{item.storeId}},'{{item.storeCode}}')" title="添加车空间加盟编号">
+                    <i class="icon-uniE602"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr aglin='center'>
+       <td colspan="11">
+           <div class="null-show"></div>
+       </td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="storeTypeTpl" type="text/html">
+    <option value="-1">门店类型</option>
+    {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script id="supervisorListTpl" type="text/html">
+    <option value="-1">选择督导</option>
+    {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supervisorName}}</option>
+    {{#  }); }}
+</script>
+<script id="warehouseListTpl" type="text/html">
+    <option value="-1">选择仓库</option>
+    {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+
+</body>
+</html>

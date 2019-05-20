@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商品关联供应商</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-inline">
+                    <a href="javascript:;" id="purchaseAdd" class="layui-btn layui-btn-small"> <i
+                            class="layui-icon"
+                            style="vertical-align: middle">
+                        &#xe61f;</i>批量关联</a>
+                    <button class="layui-btn layui-btn-small">导出</button>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="SKU编码/商品名称"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcProductType" name="typeId">
+                                <option value="">选择分类</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcBrand" name="brandId">
+                                <option value="">选择品牌</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="layui-form">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>SKU编码</th>
+                    <th>品牌</th>
+                    <th>商品名称</th>
+                    <th>单位</th>
+                    <th>商品分类</th>
+                    <th>销售单价</th>
+                    <th>采购指导价</th>
+                    <th>供应商</th>
+                </tr>
+                </thead>
+                <tbody id="pageContent">
+
+                </tbody>
+            </table>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.cost}}</td>
+        <td>{{item.statusStr}}</td>
+        <td>
+            {{#  if(item.status == 1){ }}
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-small pass" val="{{item.id}}" title="初审通过">
+                    <i class="layui-icon">&#x1005;</i>
+                </button>
+                <button class="layui-btn layui-btn-small reject" val="{{item.id}}" title="初审拒绝">
+                    <i class="layui-icon">&#x1006;</i>
+                </button>
+            </div>
+            {{#  } }}
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr>
+        <td colspan="9" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        //监听提交
+        form.on('submit(search)', function (data) {
+            myAjax.ajaxPage('/purchase/purchasePrice.json', 'pageNum', 'pageContent', 'pageTpl', data.field);
+            return false;
+        });
+
+        myAjax.ajaxPage('/purchase/purchasePrice.json', 'pageNum', 'pageContent', 'pageTpl');
+
+        //获取分类
+        myAjax.ajaxTpl("/admin/common/category/list.json", 'slcProductType', 'tplOption', true);
+        //获取品牌
+        myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'tplOption', true);
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplOption', true);
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增盘点</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-input-inline">
+                        <select id="slcCheckType" name="checkType" lay-filter="checkType" lay-verify="required">
+                            <option value>选择盘点类型</option>
+                            <option value="1">全盘</option>
+                            <option value="2">动盘</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select id="slcWarehouse" name="warehouseId" lay-verify="required">
+                            <option value>选择仓库</option>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">新增
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <select id="slcBrand" name="brandName">
+                            <option value="">选择盘点品牌</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select id="slcCategory" name="productCategory">
+                            <option value="">选择类别</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="startSn" placeholder="起始库位编码"
+                               autocomplete="off" class="layui-input small ">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="endSn" placeholder="结束库位编码"
+                               autocomplete="off" class="layui-input small ">
+                    </div>
+                    <div class="layui-inline" id="time">
+                        <div class="layui-input-inline">
+                            <input id="startDate" name="start" class="layui-input" type="datetime" placeholder="开始日">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input id="endDate" name="end" class="layui-input" type="datetime" placeholder="截止日">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>    
+        <form>
+        <div class="layui-form">        
+        <div class="panel">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr class="datagrid-header-row">
+                                <td><div class="datagrid-cell datagrid-cell-c1-number text-c">序号</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-w100" name="warehouse_name">所在仓库</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-order_num" name="ilp.sku_code">SKU编码</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-order_num" >商品条码</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w100" name="pb.name">品牌</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w200 " name="product_name">商品名称</div></td>
+                                <td><div class="datagrid-cell datagrid-cell-c1-number text-c" name="product_unit">单位</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w60" name="product_category">商品类别</div></td>
+                                <td><div class="sort datagrid-cell datagrid-cell-c1-w80" name="ilp.location_sn">库位编码</div></td>
+                                <!--<td><div class="sort datagrid-cell datagrid-cell-c1-w100" name="batch_no">入库批次</div></td>-->
+                                <!--<td><div class="datagrid-cell datagrid-cell-c1-w60" name="sale_num">销售库存</div></td>-->
+                                <td><div class="datagrid-cell datagrid-cell-c1-w60" name="src_inv_num">实际库存</div></td>
+                                <td><div class=" datagrid-cell datagrid-cell-c1-w80" >盘点实际库存</div></td>
+                                <td><div class=" datagrid-cell datagrid-cell-c1-w60" >盘亏盘盈</div></td>
+                                <td><div class=" datagrid-cell datagrid-cell-c1-w60" >入库数量</div></td>
+                                <td><div class=" datagrid-cell datagrid-cell-c1-w60" >出库数量</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                    <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody id="pageContent">
+                        <tr>
+                            <td style="text-align: center;height: 400px;border-bottom: 0;border-right: 0"><img src="../../common/image/pandianliucheng.png" alt=""  style=""></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+        <div class="footer-wrapper cf" id="btn" hidden>
+            <div class="btn-group fl" id="btnContent">
+                <input id="replay" type="button" class="layui-btn layui-btn-small" value="提交复盘" lay-submit=""
+                    lay-filter="replay"/> 
+                <input id="save" type="button" class="layui-btn layui-btn-small" value="保&nbsp;&nbsp;存" lay-submit=""
+                    lay-filter="save"/>
+                <!--                            
+                <input id="submit" type="button" class="layui-btn layui-btn-small" value="提&nbsp;&nbsp;交" lay-submit=""
+                    lay-filter="submit"/>
+                -->    
+                <input id="cancel" type="button" class="layui-btn layui-btn-small" value="取&nbsp;&nbsp;消" lay-submit=""
+                    lay-filter="cancel"/>
+   
+            </div>
+        </div>
+        </div>
+        </form>  
+    </div>
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/lib/jsrender.js"></script>
+<script id="pageTpl" type="text/html">
+    <form>
+    <input id="type" type="hidden" name="type" class="layui-input">
+    <input id="warehouseId" type="hidden" name="warehouseId" class="layui-input">
+    <input id="warehouseName" type="hidden" name="warehouseName" class="layui-input">  
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td><div class="datagrid-cell datagrid-cell-c1-number text-c">{{(index+1)}}</div><input type="hidden" name="detailList[{{index}}].inventoryId" value="{{(index+1)}}" class="layui-input"></td>
+        <td>
+            <input type="hidden" name="detailList[{{index}}].warehouseName" value="{{item.warehouseName}}" class="layui-input">
+            <div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName}}</div>
+        </td>
+        <td><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.skuCode}}</div><input type="hidden" name="detailList[{{index}}].skuCode" value="{{item.skuCode}}" class="layui-input"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.proSn}}</div><input type="hidden" name="detailList[{{index}}].proSn" value="{{item.proSn}}" class="layui-input"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.brandName}}</div><input type="hidden" name="detailList[{{index}}].brandName" value="{{item.brandName}}" class="layui-input"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w200 over_hid" title="{{item.productName}}">{{item.productName}}</div><input type="hidden" name="detailList[{{index}}].productName" value="{{item.productName}}" class="layui-input"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-number text-c">{{item.productUnit}}</div><input type="hidden" name="detailList[{{index}}].productUnit" value="{{item.productUnit}}" class="layui-input"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.productCategory}}</div><input type="hidden" name="detailList[{{index}}].productCategory" value="{{item.productCategory}}" class="layui-input"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w80">{{item.sn}}</div><input type="hidden" name="detailList[{{index}}].sn" value="{{item.sn}}" class="layui-input"></td>
+        <!--<td><div class="datagrid-cell datagrid-cell-c1-w100">{{item.batchNo || 0}}</div><input type="hidden" class="layui-input" name="detailList[{{index}}].batchNo" value="{{item.batchNo}}"></td>-->
+        {{# if(item.num != 0 && item.num!=null){}}
+        <!--<td><div class="datagrid-cell datagrid-cell-c1-w60" style="color:red;">{{item.saleNum || 0}}</div><input type="hidden" class="saleNum" name="detailList[{{index}}].saleNum" value="{{item.saleNum || 0}}" class="layui-input"></td>-->
+        <td><div class="datagrid-cell datagrid-cell-c1-w60" style="color:red;">{{item.srcInvNum}}</div><input type="hidden" class="srcInvNum" name="detailList[{{index}}].srcInvNum" value="{{item.srcInvNum || 0}}" class="layui-input"></td>
+        {{# }else{}}
+        <!--<td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.saleNum || 0}}</div><input type="hidden" class="saleNum" name="detailList[{{index}}].saleNum" value="{{item.saleNum || 0}}" class="layui-input"></td>-->
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.srcInvNum}}</div><input type="hidden" class="srcInvNum" name="detailList[{{index}}].srcInvNum" value="{{item.srcInvNum || 0}}" class="layui-input"></td>
+        {{#}}}
+        <td>
+            <div class="datagrid-cell datagrid-cell-c1-w80">
+                <input class="layui-input small invNum" type="text" name="detailList[{{index}}].invNum" value="{{item.invNum || ''}}">
+            </div>
+        </td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60 numVal">{{item.num || 0}}</div><input type="hidden" class="layui-input num" name="detailList[{{index}}].num" value="{{item.num || 0}}"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.inNum || 0}}</div><input type="hidden" class="layui-input" name="detailList[{{index}}].inNum" value="{{item.inNum || 0}}"></td>
+        <td><div class="datagrid-cell datagrid-cell-c1-w60">{{item.outNum || 0}}</div><input type="hidden" class="layui-input" name="detailList[{{index}}].outNum" value="{{item.outNum || 0}}"></td>
+        <input type="hidden" class="layui-input" name="detailList[{{index}}].parentId" value="{{item.parentId || ''}}">  
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.length == 0){ }}
+    <tr>
+        <td colspan="10" style="text-align: center;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+{{#  layui.each(d, function(index, item){ }}
+<option value="{{item.id}}">{{item.companyShortName}}</option>
+{{#  }); }}
+</script>
+<script type="text/html" id="slcBrandName">
+    <option value>全部</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.name}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcProductCategory">
+    <option value>全部</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.name}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        //var replayTag = true;
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , date = layui.date;
+        var sortTag = false;
+        var start = {}, end = {}
+        $('#startDate').click(function () {
+            start.elem = this;
+            start.format = 'YYYY-MM-DD';
+            start.min = undefined;
+            if (!Utils.isNotBlack($("#endDate").val())) {
+                start.max = undefined;
+            } else if (!Utils.isNotNull(start.max)) {
+                start.max = laydate.now();
+            }
+            start.choose = function (datas) {
+                end.min = datas; //结束日选好后，重置开始日的最大日期
+            }
+            start.start = "";
+            start.istoday = false
+            laydate(start);
+        })
+        $('#endDate').click(function () {
+            end.elem = this;
+            end.format = 'YYYY-MM-DD';
+            end.max = undefined;
+            if (!Utils.isNotBlack($("#startDate").val())) {
+                end.min = undefined;
+            } else if (!Utils.isNotNull(end.min)) {
+                end.min = laydate.now();
+            }
+            end.choose = function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+            laydate(end);
+        })     
+
+        // if(replayTag){
+        //     $("#submit").hide();
+        // }else{
+        //     $("#submit").show();
+        //     $("#repaly").hiden();
+        // }
+
+        //盘点
+        form.on('submit(replay)', function (data) {
+            //replayTag = false;
+            if (checkSave()) {
+                myAjax.ajaxSend('/inventoryCheck/replay.json', function () {
+                callParent.parentUse("inventory_check_manage", "refresh");
+                callParent.openTab("inventory_check_manage");
+                callParent.closeTab('inventory_check_add');
+                }, $.extend(data.field, {type:$("#slcCheckType").val()}, {warehouseId:$("#slcWarehouse").val()}, {warehouseName:$("#slcWarehouse").find("option:selected").text()}), 'post');
+            }
+        });
+
+        //保存
+        form.on('submit(save)', function (data) {
+            layer.confirm('确认保存吗?', {icon: 3, title: '提示'}, function (index) {
+                if (checkSave()) {
+                    myAjax.ajaxSend('/inventoryCheck/save.json', function () {
+                        layer.msg('保存成功');
+                        callParent.parentUse("inventory_check_manage", "refresh");
+                        callParent.openTab("inventory_check_manage");
+                        callParent.closeTab('inventory_check_add');
+                    }, data.field, 'post');
+                }
+                layer.close(index);
+            });
+            return false;
+        });
+
+        //提交审核
+        form.on('submit(submit)', function (data) {
+            layer.confirm('确认提交吗?', {icon: 3, title: '提示'}, function (index) {
+                if (checkSave()) {
+                    myAjax.ajaxSend('/inventoryCheck/toApproval.json', function () {
+                        layer.msg('提交成功');
+                        callParent.parentUse("inventory_check_manage", "refresh");
+                        callParent.openTab("inventory_check_manage");
+                        callParent.closeTab('inventory_check_add');
+                    }, $.extend(data.field, {'id': varId}), 'post');
+                }
+                layer.close(index);
+            });
+            return false;
+        });
+
+        form.on('select(checkType)',function(data){
+            if($("#slcCheckType").val()==1){
+                $("#time").hide();
+            }else{
+                $("#time").show();
+            }
+        });
+
+        $("#cancel").click(function () {
+            callParent.openTab("inventory_check_manage");
+            callParent.parentUse("inventory_check_manage", "refresh");
+            callParent.closeTab('inventory_check_add');
+        });
+
+        // $("#pageContent").on('keyup', '.invNum', function () {
+        //     var vThis = $(this);
+        //     var vParent = vThis.parent();
+        //     var vValue = vThis.val();
+        //     var sValue = vParent.children('.srcInvNum').val();
+        //     var temp = vValue - sValue;
+        //     if (temp == 0) {
+        //         vParent.children('.type').val(0);
+        //     } else if (temp > 0) {//盘盈
+        //         vParent.children('.type').val(1);
+        //     } else {//盘亏
+        //         vParent.children('.type').val(2);
+        //     }
+        //     vParent.children('.checkNum').val(temp);
+        //     vParent.next().text(temp);
+        // });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        }, "ilp.location_sn",'asc');
+
+        function pageOrder(data) {
+            if(sortTag){
+                myAjax.ajaxTpl('/inventoryCheck/addCheck.json', 'pageContent', 'pageTpl', false, function (dataJson) {
+                    if(dataJson.length>0){
+                        $("#btn").show();
+                    }else{
+                        $("#btn").hide();
+                    }
+                    $("#type").val($("#slcCheckType").val());
+                    $("#warehouseId").val($("#slcWarehouse").val());
+                    $("#warehouseName").val($("#slcWarehouse").find("option:selected").text());
+                }, data);
+            }
+        }
+
+        $("#pageContent").on('blur', '.invNum', function () {
+            var vThis = $(this);
+            var vParent = vThis.parent().parent().parent();
+            var vValue = vThis.val();
+            var sValue = vParent.find('.srcInvNum').val();
+            var temp = vValue - sValue;
+            if (temp == 0) {
+                vParent.children('.type').val(0);
+            } else if (temp > 0) {//盘盈
+                vParent.children('.type').val(1);
+            } else {//盘亏
+                vParent.children('.type').val(2);
+            }
+            if(temp!=0){
+                vParent.find('.numVal').css("color","red")
+            }
+            vParent.find('.num').val(temp);
+            vParent.find('.numVal').text(temp);
+        });
+
+        form.on('submit(search)', function (data) {
+            if($("input[name='startSn']").val().split('-').length!=$("input[name='endSn']").val().split('-').length){
+                layer.alert('起始库位编码和结束库位编码不一致');
+                return false;
+            }
+            sortTag = true;
+            vSeaData = data.field;
+            if(data.field.checkType==1){
+                pageOrder(orderObj.setOption(vSeaData));
+            }else{
+                //pageOrder(vSeaData);
+                pageOrder(orderObj.setOption(vSeaData));
+            }
+           // pageOrder(vSeaData);
+            $("#type").val($("#slcCheckType").value);
+            return false;
+        });
+
+        var varId = params.get('checkId');
+        if (varId != null) {
+            myAjax.ajaxTpl('/inventoryCheck/updateCheck.json?', 'pageContent', 'pageTpl', false, function () {
+            }, data);
+        }
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg',true);
+
+        //获取品牌
+        myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'slcBrandName', true);
+
+        //获取分类
+        myAjax.ajaxTpl("/admin/common/category/list.json", 'slcCategory', 'slcProductCategory', true);
+
+        callParent.isLoadEnd("inventory_check_add");
+        callParent.register(function () {
+           $(".invNum").val('');
+        }, "refresh");
+    });
+</script>
+</body>
+</html>

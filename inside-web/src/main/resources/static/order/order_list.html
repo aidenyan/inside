@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单列表</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <style>
+        body {
+            font-family: verdana, "Microsoft YaHei", sans-serif;
+        }
+
+        .select-float select {
+            height: 28px;
+            width: 98px;
+            color: #717680;
+        }
+
+        .content-wrpper {
+            min-width: 1072px;
+        }
+
+        .onCliclk {
+            cursor: pointer;
+        }
+
+        .layui-table {
+            margin: 0;
+        }
+
+        .detailed-title {
+            height: 35px;
+            line-height: 35px;
+            /*background-color: #009cff;*/
+            background-color: #e0e0e0;
+            color: #fff;
+        }
+
+        #view > td {
+            border: 0;
+        }
+        .order-list-detailed table tr{
+            background-color: #ebebeb;
+        }
+        .activeTr{
+            background-color: #eb7350;
+        }
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header -->
+        <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="../order/add_order.html" class="layui-btn layui-btn-small"> <i class="layui-icon"
+                                                                                            style="vertical-align: middle">
+                        &#xe61f;</i>创建订单</a>
+                    <button class="layui-btn layui-btn-small">合并订单</button>
+                    <button class="layui-btn layui-btn-small layui-btn-disabled">删除</button>
+                    <button class="layui-btn layui-btn-small">导出</button>
+                </div>
+
+                <div class="layui-inline ">
+                    <div class="layui-input-inline">
+                        <select name="">
+                            <option value="">请选择问题</option>
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                            <option value="你的工号">你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </select>
+                    </div>
+                    <input type="text" name="title" required lay-verify="required" placeholder="商品编码/SKU编码"
+                           autocomplete="off" class="layui-input small mizo-srarch-input">
+                    <button class="layui-btn layui-btn-small">搜索</button>
+                </div>
+            </div>
+            <div class="layui-form-item ">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <select name="">
+                            <option value="">请选择问题</option>
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                            <option value="你的工号">你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="">
+                            <option value="">请选择问题</option>
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                            <option value="你的工号">你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="">
+                            <option value="">请选择问题</option>
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                            <option value="你的工号">你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="">
+                            <option value="">请选择问题</option>
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                            <option value="你的工号">你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="">
+                            <option value="">请选择问题</option>
+                            <option value="你工作的第一个城市">你工作的第一个城市</option>
+                            <option value="你的工号">你的工号</option>
+                            <option value="你最喜欢的老师">你最喜欢的老师</option>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <input class="layui-input" placeholder="开始日" id="LAY_demorange_s">
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <input class="layui-input" placeholder="截止日" id="LAY_demorange_e">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--table 数据-->
+        <div class="layui-form">
+            <table class="layui-table" id="">
+                <colgroup>
+                    <col width="30">
+                    <col width="160">
+                    <col width="40">
+                    <col width="80">
+                    <col width="60">
+                    <col width="60">
+                    <col width="100">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="90">
+                    <col width="90">
+                    <col width="90">
+                    <col width="120">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                    <th class="">订单编号</th>
+                    <th class="">收货人</th>
+                    <th class="">订单金额</th>
+                    <th class="">应收金额</th>
+                    <th class="">优惠金额</th>
+                    <th class="">小车经销商积分</th>
+                    <th class="">会员帐号</th>
+                    <th class="">配送方式</th>
+                    <th class="">状态</th>
+                    <th class="">平台</th>
+                    <th class="">发货仓库</th>
+                    <th class="">创建日期</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pager">
+                <!--<tr>
+                    <td><input name="" lay-skin="primary" lay-filter="" type="checkbox"></td>
+                    <td class="onCliclk">M12345678998745</td>
+                    <td>刘德华</td>
+                    <td>￥300:00</td>
+                    <td>￥300:00</td>
+                    <td>￥300:00</td>
+                    <td></td>
+                    <td>18518598524</td>
+                    <td>包邮</td>
+                    <td>部分支付</td>
+                    <td>小车经销商</td>
+                    <td>杭州仓库</td>
+                    <td>2018-02-03</td>
+                    <td>
+                        <a href="javascript:;">查看</a>
+                        <a href="javascript:;">编辑</a>
+                        <a href="javascript:;">拆单</a>
+                        <a href="javascript:;">子单</a>
+                    </td>
+                </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script id="listPage" type="text/html">
+    {{#  layui.each(d.list, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></td>
+        <td class="onCliclk">{{'sku'+(index+1)+item.sku}}</td>
+        <td>{{item.receivingName}}</td>
+        <td>{{"￥:"+item.orderAmount}}</td>
+        <td>
+            <span>
+                ￥：
+                <em>{{item.actualAmount}}</em>
+            </span>
+        </td>
+        <td>{{"￥:"+item.discountAmount}}</td>
+        <td>{{item.useName}}</td>
+        <td>{{item.integral}}</td>
+        <td>{{item.operType}}</td>
+        <td>{{item.supplierName}}</td>
+        <td>{{item.ordersource}}</td>
+        <td>{{item.formWarehouse
+            }}</td>
+        <td>{{item.createTime}}</td>
+
+        <td class="state_uhandle">
+            <div class="">
+                {{# if (item.status) { }}
+                <button class="" title="父单"><i class="icon-iconfontwodehaoyou"></i></button>
+                {{# } else { }}
+                <button class="" title="子单"><i class="icon-haoyouqingqiu"></i></button>
+                {{# } }}
+                <button class="" title="详情"><i class="icon-uniE602"></i></button>
+                <button class="" title="拆单"><i class="icon-biaodan"></i></button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.list.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script id="list" type="text/html">
+    <td colspan="14">
+        <div class="layui-form">
+            <p class="detailed-title">{{d.title}} {{d.id}}</p>
+        </div>
+        <div style="" class="order-list-detailed">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <td width="5%">序号序号序号序号序号序号序号序号</td>
+                    <td width="15%">SKU编码</td>
+                    <td width="15%">品牌</td>
+                    <td width="15%">商品名称</td>
+                    <td width="5%">单位</td>
+                    <td width="9%">销售单价</td>
+                    <td width="9%">下单数量</td>
+                    <td width="9%">小计</td>
+                    <td width="9%">销售库存</td>
+                    <td width="9%">实际库存</td>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d.list, function(index, item){ }}
+                <tr>
+                    <td>{{index++}}</td>
+                    <td>{{item.sku}}</td>
+                    <td>{{item.pin}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.dan}}</td>
+                    <td>{{item.num}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <td>合计：</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+<script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+
+<script type="text/javascript">
+    $().ready(function () {
+        layui.use(['form', 'laydate', 'laytpl'], function () {
+            var form = layui.form(), laydate = layui.laydate, laytpl = layui.laytpl;
+
+            var start = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+            var end = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+            var data = {
+                "code": 1,
+                "list": [
+                    {
+                        "status": 0,
+                        "src": "../common/image/login-bg-1.jpg",
+                        "sku": "328749234243244",
+                        "receivingName": "张一山",
+                        "receivingAddress": "",
+                        "useName": "18518598524",
+                        "orderAmount": "30000.00",
+                        "actualAmount": "900.00",
+                        "discountAmount": "29100.00",
+                        "integral": "3124.00",
+                        "operType": "快递",
+                        "supplierName":"部分支付",
+                        "ordersource":"小车",
+                        "formWarehouse":"杭州总仓"
+                    },
+                    {"status": 1}, {"status": 0}, {"status": 1}, {"status": 0}]
+            };
+            var getTpl = $("#listPage").html();
+            laytpl(getTpl).render(data, function (html) {
+                $("#pager").html(html)
+                form.render('checkbox');
+            });
+            $('#LAY_demorange_s').click(function () {
+                start.elem = this;
+                laydate(start);
+            })
+
+            $('#LAY_demorange_e').click(function () {
+                end.elem = this;
+                laydate(end)
+            })
+
+
+            $('.onCliclk').on('click', function () {
+                if (!$(this).hasClass('open')) {
+                    $(this).addClass('open')
+                   /* $(this).parent('tr').addClass('activeTr')*/
+                    $('#view').remove()
+                    $(this).parent('tr').after('<tr id="view"></tr>')
+                    var data = {
+                        "id": "201610271517541992",
+                        "title": "订单商品详情"
+                        ,
+                        "list": [{
+                            "name": "壳牌蓝多多混合型OW-40",
+                            "sku": "328749234243244",
+                            "pin": "嘉实多",
+                            "dan": "瓶",
+                            "num": "8"
+                        }, {}]
+                    }
+                    var getTpl = $('#list').html();
+                    laytpl(getTpl).render(data, function (html) {
+                        $('#view').html(html)
+                    });
+
+                } else {
+                    $(this).removeClass('open')
+                    $(this).parent().removeClass('activeTr')
+                    $(this).parent().next('#view').remove();
+                }
+            })
+
+        })
+    })
+</script>
+</body>
+</html>

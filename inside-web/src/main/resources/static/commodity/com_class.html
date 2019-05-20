@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加分类</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <style></style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!--操作按钮-->
+        <div class="layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+                    <a href="javascript:;" class="layui-btn layui-btn-small" id="add_conClas"> <i class="layui-icon"
+                                                                                                  style="vertical-align: middle">
+                        &#xe61f;</i>添加分类</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-small" id="exportIn"> <i class="layui-icon"
+                                                                                                      style="vertical-align: middle">
+                            &#xe61f;</i>导入</a>
+                    <button class="layui-btn layui-btn-small" id="remove_conClass">删除</button>
+                </div>
+            </div>
+        </div>
+        <!--内容表格-->
+        <div class="layui-form">
+            <div class="layui-form">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="30">
+                        <col width="300">
+                        <col width="160">
+                        <col width="100">
+                        <col width="180">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                        <th class="">分类名称</th>
+                        <th class="">分类图片</th>
+                        <th class="">排序</th>
+                        <th class="">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pager">
+                    <tr>
+                        <td><input name="" lay-skin="primary" type="checkbox"></i></td>
+                        <td>294814321441</td>
+                        <td class="">
+                            <img src="../common/image/wKgeS1ib-UOALKcqAAAJhQ-7X_E814.png.jpg" alt="" class="tab-img">
+                        </td>
+                        <td class=""></td>
+                        <td>
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn-small update" value="{{item.id}}" onclick="">
+                                    <i class="layui-icon">&#xe642;</i>
+                                </button>
+                                <button class="layui-btn layui-btn-small delete" value="{{item.id}}">
+                                    <i class="layui-icon">&#xe640;</i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-form dialog" id="form_addClass" style="display: none">
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">上级分类</label>
+            <div class="layui-input-inline mizo-selectW">
+                <select>
+                    <option value="">请选择问题</option>
+                    <option value="你工作的第一个城市">你工作的第一个城市</option>
+                    <option value="你的工号">你的工号</option>
+                    <option value="你最喜欢的老师">你最喜欢的老师</option>
+                    <optgroup label="你的工号">
+                        <option value="你工作的第一22ds2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22sd2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22d2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22ds2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22sd2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22d2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22ds2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22sd2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22d2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22ds2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22sd2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22d2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22ds2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22sd2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22d2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22ds2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22sd2个城市">你工作的第一个城市</option>
+                        <option value="你工作的第一22d2个城市">你工作的第一个城市</option>
+
+
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">分类名称</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">分类图片</label>
+            <div class="layui-input-inline detailedAddress">
+                <!--<input type="file" name="file" class="layui-upload-file">-->
+                <a href="javascript:;" class="file">
+                    选择上传文件
+                    <input type="file" name="" id="file">
+                    <span class="showFileName"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline detailedAddress">
+                <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">单行输入框</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 导入的CSS文件 -->
+<style>
+    .update_content_wrapper{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding:30px 50px 30px 50px;
+    }
+    .down_model a{
+        display: inline-block;
+        width: 60px;
+        z-index: 999;
+        font-size: 14px;
+        line-height: 28px;
+        height: 28px;
+        background: #31be3b;
+        color: #fff;
+        text-align: center;
+        border: 1px solid #00ab0c;
+        border-radius: 2px;
+        margin: 0 20px 0px 15px;
+        cursor: pointer;
+    }
+    .update_list a {
+        display: inline-block;
+        width: 93px;
+        z-index: 999;
+        font-size: 14px;
+        line-height: 28px;
+        height: 28px;
+        background: #31be3b;
+        color: #fff;
+        text-align: center;
+        border: 1px solid #00ab0c;
+        border-radius: 2px;
+        margin: 0 20px 0px 15px;
+    }
+    .update_list input {
+        cursor: pointer;
+        direction: ltr;
+        font-size: 0;
+        margin: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        position: absolute;
+        left: 90px;
+        top: 0;
+        height: 30px;
+        line-height: 30px;
+        width: 93px;
+        vertical-align: middle;
+        z-index: 1000;
+    }
+    .file-import-ctn{
+        margin-right: 10px;
+        padding-left: 50px;
+    }
+    .file-import-ctn li {
+        padding-top: 10px;
+    }
+    .importDetail {
+        border: #EEEEEE 3px solid;
+        border-radius: 10px;
+        position: relative;
+        margin: 40px 50px 15px 50px;
+        padding: 28px;
+    }
+    .importDatail span{
+        display: inline-block;
+        margin-left: 15px;
+    }
+    .mid-wrap-tit{
+        position: absolute;
+        background: #ffffff;
+        padding: 3px 6px;
+        left: 10px;
+        top: -16px;
+    }
+    .hidden{
+        display: none
+    }
+</style>
+<!-- 导入的模板文件 -->
+<div class="hidden" id="form_import">
+    <div class="update_content_wrapper">
+        <div class="update_list" style="position: relative">
+            <label>上传文件：</label>
+            <a href="javascript:;" class="update_file">
+                选择文件
+                <input type="file" id="update" multiple="multiple" name="files[]">
+            </a>
+        </div>
+        <div class="down_model">
+            <label>导入模板下载：</label>
+            <!-- <p id="download">下载</p> -->
+            <a href="javascript:;" download>下载</a>
+        </div>
+    </div>
+    <ul class="file-import-ctn">
+        <li>选择的文件列表</li>
+    </ul>
+    <div class="importDetail">
+        <span class="mid-wrap-tit">导入详细</span>
+        <p>
+            新增数据：
+            <span></span>
+        </p>
+        <p>
+            错误数据：
+            <span></span>
+        </p>
+    </div>
+    <form action="url" class="hidden" id="sub"></form>
+</div>
+
+<script id="list" type="text/html">
+    {{#  layui.each(d.list, function(index, item){ }}
+    <tr>
+        <td><input name="" lay-skin="primary" type="checkbox"></td>
+        <td>{{item.name}}</td>
+        <td>
+            <div class="listImgShow">
+                <img src="{{item.src}}" alt="">
+            </div>
+        </td>
+        <td>
+            {{# if (item.status) { }}
+            <i class="layui-icon" style="color: #3d9e92">&#xe616;</i>
+            {{# } else { }}
+            <i class="layui-icon" style="color: #f36d00">&#x1007;</i>
+            {{# } }}
+        </td>
+        <td>
+            <div class="listOperationGroup">
+                {{# if (item.status) { }}
+                <a href="javascript:;">下架</a>
+                {{# } else { }}
+                <a href="javascript:;">上架</a>
+                {{# } }}
+                <a href="javascript:;">禁用</a>
+                <a href="javascript:;">编辑</a>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.list.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script src="../layui/layui.js"></script>
+<script>
+    layui.use(['form', 'layer', 'laytpl', 'element', 'upload'], function () {
+
+        var form = layui.form(), element = layui.element(), layer = layui.layer, laytpl = layui.laytpl, $ = layui.jquery;
+
+        // 导入的JS文件
+        $(".update_file").on("change", "input[type='file']", function () {
+            var list = document.querySelector("#update").files
+            var str = []
+            var formData = new FormData();
+            for(var i=0;i<list.length;i++) {
+                var file = list[i]
+                formData.append(file.name, file);
+                str += '<li>'+file.name+'</li>'
+            }
+            $('.file-import-ctn').html(str)
+            str = []
+            $.ajax({
+                url: '/admin/order/import.json',
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response)
+                }
+            })
+        });
+
+        var data = {"code": 1,
+            "list": [{"status": 0, "src": "../common/image/login-bg-1.jpg", "name": "汽机油"}, {
+                "status": 1,
+                "name": "汽机油"
+            }, {"status": 0, "name": "汽机油"}, {"status": 1, "name": "汽机油"}, {"status": 0, "name": "汽机油"}]
+        };
+
+        var getTpl = $("#list").html();
+
+        laytpl(getTpl).render(data, function (html) {
+            $("#pager").html(html)
+            form.render('checkbox');
+        });
+
+        $("#add_conClas").click(function () {
+            layer.open({
+                title: "新增/编辑分类"
+                , type: 1
+                , content: $("#form_addClass")            //弹窗内容
+                , area: ["600px", "300px"]         //设置窗体高度 和宽度
+                , btn: ["确定", "取消"]
+                , closeBtn: 0                      //取消右上角关闭按钮
+                , btnAlign: 'c'
+
+                , success: function (layero, index) {
+                    layero.addClass('layui-form');
+                    layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                    form.render();
+                }
+                , yes: function (index, item) {
+
+                }
+
+            })
+
+        });
+        $('#exportIn').click(function() {
+            layer.open({
+                title: '订单导入',
+                type: 1, area: ["650px", "430px"] ,  
+                btn: ["完成", "关闭"], 
+                content: $("#form_import"),
+                closeBtn: 0,
+                btnAlign: 'c'
+            })
+        })
+
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+        });
+
+        form.on('submit(demo1)', function(data){
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+    })
+</script>
+</body>
+</html>

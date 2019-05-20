@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document2017/5/24 0024</title>
+    <link rel="stylesheet" href="../mizone-static/layui/css/layui.css">
+    <link rel="stylesheet" href="../mizone-static/common/css/font-style.css">
+    <style>
+        .box {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+            background-color: #000;
+            filter: alpha(opacity=60); /*IE*/
+            -moz-opacity: 0.6; /*old Mozilla*/
+            -khtml-opacity: 0.6; /*old Safari*/
+            opacity: 0.6; /*Chrome, Opera, Safari*/
+            z-index: 100;
+        }
+
+        @-webkit-keyframes layui-rotate {
+
+        from {
+            -webkit-transform: rotate(0)
+        }
+
+        to {
+            -webkit-transform: rotate(360deg)
+        }
+
+        }
+        @keyframes layui-rotate {
+            from {
+                transform: rotate(0)
+            }
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .layui-anim-rotate {
+            animation-name: layui-rotate;
+            animation-duration: 1s;
+            animation-timing-function:linear;
+            animation-iteration-count:infinite;
+           /* animation-iteration-count:
+            animation-duration: .3s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;*/
+        }
+        .dd{
+            width: 100px;
+            height: 50px;
+            border: 1px solid #333;
+        }
+        aa{
+            display: inline-block;
+        }
+        .icon-loading1{
+            display: inline-block;
+            font-size: 30px;
+            color: #009cff;
+        }
+    </style>
+</head>
+<body>
+<div class="">
+
+
+    <div class="dd layui-anim-rotate"></div>
+
+    <i class="icon-loading1 layui-anim-rotate"></i>
+
+
+    <div class="icon-loading1 layui-anim-rotate"></div>
+
+</div>
+</body>
+</html>

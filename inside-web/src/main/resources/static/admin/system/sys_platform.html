@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>平台管理</title>
+   <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list">
+    <div class="content-search layui-form">
+            <div class=" layui-form-item">
+                <div class="layui-inline">
+
+                    <a href="javascript:void(-1);" id="add" class="layui-btn layui-btn-small role_save"
+                       authority_code="role_save"> <i class="layui-icon" style="vertical-align: middle">&#xe61f;</i>添加平台</a>
+                    <button class="layui-btn layui-btn-small role_deleted" id="batchForbid">禁用</button>
+                    <button class="layui-btn layui-btn-small role_deleted" id="batchUse">启用</button>
+                </div>
+            </div>
+        </div>
+
+    <!--table 数据-->
+    <div class="layui-form">
+        <table class="layui-table">
+       			<colgroup>
+                    <col width="30">
+                    <col width="160">
+                    <col width="100">
+                    <col width="100">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                    <col width="180">
+                </colgroup>
+            <thead>
+            <tr>
+                <th class="checked"><input type="checkbox" id="selectAllCheckBox" lay-filter="selectAllCheckBox" lay-skin="primary"></th>
+                <th>序号</th>
+                <th class="sort" name="code">平台编码</th>
+                <th>平台名称</th>
+                <th class="sort" name="type">类型</th>
+                <th class="sort" name="effective">状态</th>
+                <th class="sort" name="create_time">创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="page_tbody">
+            </tbody>
+        </table>
+        </div>
+
+    <!--分页条-->
+    <div class="cf">
+        <div id="pageNum" class="text-r"></div>
+    </div>
+
+    </div>
+</div>
+
+
+<form id="platForm" action="" style="display: none">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>平台编号</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入平台编号" class="layui-input" id="platformCode" name="platformCode" lay-verify="platformCode">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>平台名称</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="text" placeholder="请输入平台名称" class="layui-input" id="platformName" name="platformName" lay-verify="platformName">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top"><span style="color:red">*</span>平台类型</label>
+        <div class="layui-input-inline detailedAddress">
+           <input type="radio" class="input-Ml" name="platformType" value="0" title="内部平台" lay-skin="primary" checked="">
+            <input type="radio" class="input-Ml"  name="platformType" value="1" title="第三方平台" lay-skin="primary">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">平台描述</label>
+        <div class="layui-input-inline detailedAddress">
+            <textarea  placeholder="请输入描述信息" class="layui-textarea" id="platformDesc" name="platformDesc"> </textarea>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label padd_top">是否启用</label>
+        <div class="layui-input-inline detailedAddress">
+            <input type="checkbox" name="effective" checked="checked" value="1" lay-skin="primary">
+        </div>
+    </div>
+
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script src="../../common/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/js/child.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/list.js"></script>
+<script type="text/javascript" src="../../common/js/system/platform.js"></script>
+<script type="text/javascript" src="../../common/js/common/ajaxsend.js"></script>
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="platformCheckbox" lay-skin="primary" type="checkbox" value="{{item.id}}"></i></td>
+        <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
+        <td>{{item.code==null?'':item.code}}</td>
+        <td>{{item.name==null?'':item.name}}</td>
+        <td>{{item.type==0?'内部平台':'第三方平台'}}</td>
+        <td>{{item.effective==true?'已启用':'已禁用'}}</td>
+        <td>{{item.createTime==null?'':laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+        <td class="state_uhandle">
+           <div class="">
+                <button class=" update" value="{{item.id}}" onclick="forbidById({{item.id}},{{item.effective}})">
+                    {{item.effective==true?'<i class="icon-uniE617"></i>':'<i class="icon-zhengque"></i>'}}
+                </button>
+                <button class=" delete" value="{{item.id}}" onclick="updateInfo({{item.id}})">
+                    <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+    	<tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+</body>
+</html>

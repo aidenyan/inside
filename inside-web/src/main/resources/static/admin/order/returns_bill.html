@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>退款订单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline po-r">
+                       <div class="layui-input-inline">
+                        <select id="searchItem">
+                            <option value="orderSn">订单号</option>
+                            <option value="no">退货单号</option>
+                            <option value="shipper">退货人</option>
+                            <option value="phone">退货人电话</option>
+                        </select>
+                        </div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="refundStatus">
+                                <option value="">选择状态</option>
+                                <option value="1">待退款</option>
+                                <option value="2">退款中</option>
+                                <option value="3">已退款</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">创建日期</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num">退货单号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-order_num">订单编号</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w200">第三方支付流水号</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50">退货人</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100">电话</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w50">退货原因</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50">参考退款</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50">参考积分</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50">实际退款</div>
+                            </td>
+                            <td>
+                                <div class="datagrid-cell datagrid-cell-c1-w50">实际积分</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-time">退款时间</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w100 "  style="">状态</div>
+                            </td>
+                            <td >
+                                <div class="datagrid-cell datagrid-cell-c1-w70"  style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr {{#if (item.delivered) { }}id="{{item.id}}"{{# } }}>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.createTime)}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.no}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.orderSn}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w200">{{item.payOutSn||""}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.shipper}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.phone}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.reason}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.amount}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.point||"0"}}</div></td>
+        {{#if (item.refundStatus != 3) { }}
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50"><input type="text" name="amount" class="layui-input amount" value="{{item.realAmount||""}}"></div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50"><input {{#if (item.delivered) { }}type="text"{{# } }} {{#if (!item.delivered) { }}type="hidden"{{# } }} name="point" class="layui-input point" value="{{item.realPoint||"0"}}"></div></td>
+        {{# } }}
+        {{#if (item.refundStatus == 3) { }}
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.realAmount||'0'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.delivered?item.realPoint:'-'}}</div></td>
+        {{# } }}
+        
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{#if (item.refundTime) { }}{{laydate.now(item.refundTime,'YYYY-MM-DD hh:mm:ss')}}{{# } }}</div></td>
+        <td class="trDetail text-c"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.refundStatusStr}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+                <button class="orderDetail" val="{{item.orderId}}" max="{{item.amount}}" title="订单明细">
+                    <i class="icon-uniE602"></i>
+                </button>
+            {{#if (item.refundStatus !=3) { }}
+                {{#if (!item.payPluginId || !item.payOutSn) { }}
+                <button class="convert" val="{{item.id}}" max="{{item.amount}}" title="确认退款">
+                    <i class="icon-zhenque"></i>
+                </button>
+                {{# } }}
+                {{#if (item.payPluginId && item.payOutSn) { }}
+                <button class="pluginConvert" val="{{item.id}}" max="{{item.amount}}" title="确认退款">
+                    <i class="icon-zhenque"></i>
+                </button>
+                {{# } }}
+            {{# } }}
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr aglin='center'>
+        <td colspan="12" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+<script id="tplItem" type="text/html">
+    <td colspan="14" class="itemContent purchaseItemContent ">
+        <div>
+            <p class="trDetail-title">退货明细</p>
+        </div>
+        <div style="">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商品sku</th>
+                    <th>商品名称</th>
+                    <th>数量</th>
+                    <th>参考退款</th>
+                    <th>返还积分</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d, function(index, item){ }}
+                <tr>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.amount}}</td>
+                    <td>{{item.point||"0"}}</td>
+                </tr>
+                {{# }); }}
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax;
+        
+        $(document).on("click", ".convert", function () {
+            var id = $(this).attr('val');
+            var max = Number($(this).attr('max'));
+            var amount=Number($(this).parents("tr").find(".amount").val());
+            var point=Number($(this).parents("tr").find(".point").val());
+            if(amount >= 0 && point >= 0){
+            	console.log("amount:"+amount+" point:"+point);
+            	var msg=amount > max?"退款大于参考金额,":"";
+            	layer.confirm(msg+"确定退款?", {icon: 3, title: '提示'}, function (index) {
+                    myAjax.ajaxSend("/admin/returns/updateBill.json?id=" + id+"&amount="+amount+"&point="+point, function (dataJson) {
+                    	refresh();
+                        layer.msg('成功');
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        $(document).on("click", ".orderDetail", function () {
+            var id = $(this).attr('val');
+            if(id){
+            	callParent.openTab("order_detail", 0, "订单详情", "admin/order/order_details.html?id="+id+"&msgToclose=order_toBeCheck_list", true);
+            }
+            return false;
+        });
+        function open_link(url){
+        	 var el = document.createElement("a");
+        	 document.body.appendChild(el);
+        	 el.href = url;
+        	 el.target = "_blank";
+        	 el.click();
+        	 document.body.removeChild(el);
+        }
+        $(document).on("click", ".pluginConvert", function () {
+            var id = $(this).attr('val');
+            var max = Number($(this).attr('max'));
+            var amount=Number($(this).parents("tr").find(".amount").val());
+            var point=Number($(this).parents("tr").find(".point").val());
+            if(amount >= 0 && point >= 0){
+                var msg=amount > max?"退款大于参考金额,":"";
+                layer.confirm(msg+"确定通过第三方支付退款?", {icon: 3, title: '提示'}, function (index) {
+                    myAjax.ajaxSend("/admin/payment/refund.json?id=" + id+"&amount="+amount+"&point="+point, function (dataJson) {
+                    	if(dataJson.code==0){
+                    		if(dataJson.result.success){
+                    			if(dataJson.result.url){
+                    				open_link(dataJson.result.url);
+                    			}
+                    			refresh();
+                    		}else{
+                    			layer.msg(dataJson.result.msg+"");
+                    		}
+                    	}
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxPage('/admin/returns/bill.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function () {
+            var searchItem=$("#searchItem").val();
+            var searchParam=$("#searchParam").val();
+            var refundStatus=$("#refundStatus").val();
+            var map=new Map();
+            if(searchItem && searchParam){
+                map.push(searchItem, searchParam);;
+            }
+            if(refundStatus){
+                map.push("refundStatus",refundStatus)
+            }
+            pageOrder(orderObj.setOption(map.mapObj))
+            return false;
+        });
+        pageOrder();
+
+        //明细
+        $(document).on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            if(varId){
+            	var varCon = $("#itemContent");
+                if (varCon.length == 0) {
+                    varThis.parent('tr').after('<tr id="itemContent" val="' + varId + '"></tr>');
+                    varThis.parent().addClass('bg');
+                    myAjax.ajaxTpl("/admin/returns/findItems.json?id=" + varId, 'itemContent', 'tplItem');
+                } else {
+                    varCon.remove();
+                    varThis.parent().removeClass('bg')
+                    if (varCon.attr('val') != varId) {
+                        varThis.parent().siblings('tr.bg').removeClass('bg')
+                        varThis.parent().addClass('bg');
+                        varThis.parent('tr').after('<tr id="itemContent" val="' + varId + '"></tr>');
+                        myAjax.ajaxTpl("/admin/returns/findItems.json?id=" + varId, 'itemContent', 'tplItem');
+                    }
+                }
+            }
+            return false;
+        });
+
+        callParent.isLoadEnd("returns_bill");
+        callParent.register(function () {
+        	refresh();
+        }, "refresh");
+
+    });
+</script>
+<!--<script type="text/javascript">
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

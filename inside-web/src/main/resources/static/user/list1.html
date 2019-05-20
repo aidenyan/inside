@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织成员管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <link rel="stylesheet" href="../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style>
+
+        .mizon-checkbox span.checkedBg {
+            background-color: #3c763d;
+        }
+        .togetherList .listBody div{
+            font-size: 12px;
+            font-family: "Microsoft Yahei", "微软雅黑";
+
+        }
+        .togetherList .listBody div i{
+           /* color: #009cff;*/
+            color: #fff;
+            background-color: #009cff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list ">
+        <div class="userCenter_left">
+            <div class="userCenter_name">
+                <p>组织架构</p>
+            </div>
+            <div class="">
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="输入组织名称进行搜索" autocomplete="off" class="layui-input small mizo-srarch-input" style="width: 250px">
+
+                    <dl class="mizone-input-up">
+                        <dd>sssss</dd>
+                        <dd>sssss</dd>
+                        <dd>sssss</dd>
+                    </dl>
+                </div>
+                <ul id="treeDemo" class="ztree">
+                    <li>dddddd</li>
+                    <li>dddddd</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="userCenter_right">
+            <!--条件搜索部分-->
+            <div class="layui-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-small" id="add_use"> <i class="layui-icon"
+                                                                                          style="vertical-align: middle">
+                    &#xe61f;</i>新增成员</a>
+                <div class="layui-inline ">
+                    <input type="text" name="title" required lay-verify="required" placeholder="商品编码/SKU编码"
+                           autocomplete="off" class="layui-input small mizo-srarch-input">
+                    <button class="layui-btn layui-btn-small">
+                        <i class="icon-">&#xe61c;</i>
+                    </button>
+                </div>
+            </div>
+
+            <!--表格数据填充部分-->
+            <div class="table_over">
+                <table class="layui-table" id="">
+                    <colgroup>
+                        <col width="30">
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="250">
+                        <col width="150">
+                        <col width="80">
+                        <col width="270">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th class="">姓名</th>
+                        <th class="">员工编号</th>
+                        <th class="">工作岗位</th>
+                        <th class="">联系邮箱</th>
+                        <th class="">联系电话</th>
+                        <th class="">帐号</th>
+                        <th class="">联系地址</th>
+                        <th class="">所属组织</th>
+                        <th class="">移动</th>
+                        <th class="">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="page_tbody">
+                    <tr>
+                        <td>1</td>
+                        <td>李三</td>
+                        <td>0001</td>
+                        <td>总经理</td>
+                        <td>123@123.com</td>
+                        <td>13103923432</td>
+                        <td></td>
+                        <td>湖北省武汉市夏江区小风路2号</td>
+                        <td>循环科技有限公司</td>
+                        <td class="move">
+                            <div style="height:26px">
+                                <span class="icon-C3"></span>
+                                <span class="icon-C4"></span>
+                            </div>
+                        </td>
+                        <td class="">
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn-small" title="账户管理"><i class="icon-zhangHao"></i></button>
+                                <button class="layui-btn layui-btn-small" title="编辑用户"> <i class="icon-bianji"></i></button>
+                                <button class="layui-btn layui-btn-small" title="权限设置"> <i class="icon-shezhi1" ></i></button>
+                                <button class="layui-btn layui-btn-small" title="删除"> <i class="icon-delete" ></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>李三</td>
+                        <td>0001</td>
+                        <td>总经理</td>
+                        <td>123@123.com</td>
+                        <td><div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-small" title="添加"><i class="icon-plus"></i></button>
+                            <button class="layui-btn layui-btn-small" title="删除"> <i class="icon-minus"></i></button>
+                            <button class="layui-btn layui-btn-small" title="上架"> <i class="icon-upload" ></i></button>
+                            <button class="layui-btn layui-btn-small" title="下架"> <i class="icon-download" ></i></button>
+                        </div></td>
+                        <td></td>
+                        <td><div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-small" title="禁用"><i class="icon-uniE617"></i></button>
+                            <button class="layui-btn layui-btn-small" title="打印"> <i class="icon-x2"></i></button>
+                            <button class="layui-btn layui-btn-small" title="启用"> <i class="icon-zhengque"></i></button>
+                            <button class="layui-btn layui-btn-small" title="搜索"> <i class="icon-search" ></i></button>
+                            <button class="layui-btn layui-btn-small" title="添加"> <i class="icon-tianjia" ></i></button>
+                        </div></td>
+                        <td><div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-small" title="正确"><i class="icon-checkmark3"></i></button>
+                            <button class="layui-btn layui-btn-small" title="编辑用户"> <i class="icon-bianji"></i></button>
+                            <button class="layui-btn layui-btn-small" title="权限设置"> <i class="icon-shezhi1" ></i></button>
+                            <button class="layui-btn layui-btn-small" title="错误"> <i class="icon-cancel3" ></i></button>
+                        </div></td>
+                        <td class="move">
+                            <div style="height:26px">
+                                <span class="icon-C3"></span>
+                                <span class="icon-C4"></span>
+                            </div>
+                        </td>
+                        <td class="">
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn-small" title="账户管理"><i class="icon-zhangHao"></i></button>
+                                <button class="layui-btn layui-btn-small" title="编辑用户"> <i class="icon-bianji"></i></button>
+                                <button class="layui-btn layui-btn-small" title="权限设置"> <i class="icon-shezhi1" ></i></button>
+                                <button class="layui-btn layui-btn-small" title="删除"> <i class="icon-delete" ></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="form_addUse" style="display: none">
+        <div class="layui-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">成员信息</li>
+                <li>账户管理</li>
+                <li>权限设置</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">*成员编号</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="" lay-verify="required" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">组织姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">*工作岗位</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">联系邮箱</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">*联系电话</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">入职时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">所在地区</label>
+                            <div class="layui-input-inline">
+                                <select name="">
+                                    <option value="">请选择省</option>
+                                    <option value="浙江" selected="">浙江省</option>
+                                    <option value="你的工号">江西省</option>
+                                    <option value="你最喜欢的老师">福建省</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="">
+                                    <option value="">请选择市</option>
+                                    <option value="杭州">杭州</option>
+                                    <option value="宁波" disabled="">宁波</option>
+                                    <option value="温州">温州</option>
+                                    <option value="温州">台州</option>
+                                    <option value="温州">绍兴</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="">
+                                    <option value="">请选择县/区</option>
+                                    <option value="西湖区">西湖区</option>
+                                    <option value="余杭区">余杭区</option>
+                                    <option value="拱墅区">临安市</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">*详细地址</label>
+                                <div class="layui-input-inline detailedAddress">
+                                    <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">账号</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">登录密码</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">重复密码</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="" lay-verify="" autocomplete="off" class="layui-input">
+                                </div>
+                                <div style="display: inline-block;height: 30px;line-height: 30px" id="clickA">
+                                    <i class="layui-icon" style="vertical-align: middle;color: #60be3e;cursor: pointer" >&#xe60b;</i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否启用</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="like1[write]" lay-skin="primary" title="启用" checked="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">超级管理员</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="like1[write]" lay-skin="primary" title="启用" checked="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">其选择平台</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车品台" checked="">
+                                <input type="checkbox" name="like1[write]" lay-skin="primary" title="大车品台" checked="">
+                                <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车品台" checked="">
+                                <input type="checkbox" name="like1[write]" lay-skin="primary" title="小车经销商" checked="">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <table class="layui-table" style="width: 600px; ">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="400">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>选择仓库</th>
+                                    <th>选择角色</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="layui-form">
+                                    <td>
+                                        <div class="mizo-width">
+                                            <div class="layui-input-inline mizo-width-left">
+                                                <div class="mizon-checkbox">
+                                                    <input type="checkbox" name="like1[write]" lay-skin="primary"
+                                                           title="" checked="">
+                                                    <span>杭州总仓</span>
+                                                </div>
+                                                <div class="mizon-checkbox">
+                                                    <input type="checkbox" name="like1[write]" lay-skin="primary"
+                                                           title="" checked="">
+                                                    <span>富阳分仓</span>
+                                                </div>
+                                                <div class="mizon-checkbox">
+                                                    <input type="checkbox" name="like1[write]" lay-skin="primary"
+                                                           title="" checked="">
+                                                    <span>福州分仓</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="mizo-width">
+                                            <div class="layui-input-inline mizo-width-right">
+                                                <div class="mizon-dialog-add_use-chooseRol"> <input type="checkbox"name="like1[write]"lay-skin="primary" title="订单管理角色"> </div>
+                                                <div class="mizon-dialog-add_use-chooseRol"><input type="checkbox"name="like1[write]" lay-skin="primary"title="订单管理角色" ></div>
+                                                <div class="mizon-dialog-add_use-chooseRol"><input type="checkbox"name="like1[write]" lay-skin="primary"title="订单管理角色" ></div>
+                                                <div class="mizon-dialog-add_use-chooseRol"><input type="checkbox"name="like1[write]" lay-skin="primary"title="订单管理角色" ></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="togetherList">
+            <!--<div class="listHeader">
+                <div class="wp15">SKU编码</div>
+                <div class="wp24">商品名称</div>
+                <div class="wp15">品牌</div>
+                <div class="wp5">单位</div>
+                <div class="wp15">商品分类</div>
+                <div class="wp8">销售单价</div>
+                <div class="wp8">下单数量</div>
+                <div class="wp10">小计</div>
+            </div>-->
+            <ul class="listBody">
+                <li>
+                    <div class="wp10">账户管理 <button class="layui-btn layui-btn-small"><i class="icon-zhangHao"></i></button></div>
+                    <div class="wp10" title="">编辑用户 <i class="icon-bianji"></i></div>
+                    <div class="wp10">权限设置 <i class="icon-shezhi1" ></i></div>
+                    <div class="wp10">删除 <i class="icon-delete" ></i></div>
+                    <div class="wp10">上架 <i class="icon-upload"></i></div>
+                    <div class="wp10">下架 <i class="icon-download"></i></div>
+                    <div class="wp10">禁用 <i class="icon-uniE617"></i></div>
+                    <div class="wp10 break_all">打印 <i class="icon-x2"></i></div>
+                </li>
+                <li>
+                    <div class="wp10">搜索 <i class="icon-search"></i></div>
+                    <div class="wp10" title="">添加 <i class="icon-tianjia"></i></div>
+                    <div class="wp10">正确 <i class="icon-checkmark3" ></i></div>
+                    <div class="wp10">错误 <i class="icon-cancel3" ></i></div>
+                    <div class="wp10">采购 <i class="icon-">&#xe901;</i> <i class="icon-caiGou"></i></div>
+                    <div class="wp10">仓库 <i class="icon-">&#xe902;</i> <i class="icon-cangKu"></i></div>
+                    <div class="wp10">订单 <i class="icon-">&#xe903;</i> <i class="icon-dingDan"></i></div>
+                    <div class="wp10 break_all">配送 <i class="icon-">&#xe904;</i> <i class="icon-peiSong"></i></div>
+                </li>
+                <li>
+                    <div class="wp10">商品 <i class="icon-">&#xe905;</i> <i class="icon-shangPing"></i></div>
+                    <div class="wp10">统计 <i class="icon-">&#xe906;</i> <i class="icon-tongJi"></i></div>
+                    <div class="wp10">系统 <i class="icon-">&#xe907;</i> <i class="icon-xiTong"></i></div>
+                    <div class="wp10 break_all">营销 <i class="icon-">&#xe908;</i> <i class="icon-yingXiao"></i></div>
+                    <div class="wp10">用户中心 <i class="icon-">&#xe909;</i> <i class="icon-useCenter"></i></div>
+                    <div class="wp10">账号 <i class="icon-">&#xe90a;</i> <i class="icon-zhangHao"></i></div>
+                    <div class="wp10">详细 <i class="icon-"></i> <i class="icon-biaodan"></i></div>
+                    <div class="wp10 break_all"> 父单<i class="icon-"></i> <i class="icon-iconfontwodehaoyou"></i></div>
+                </li>
+                <li>
+                    <div class="wp10">子单 <i class="icon-"></i> <i class="icon-haoyouqingqiu"></i></div>
+                    <div class="wp10">拆单 <i class="icon-"></i> <i class="icon-uniE606"></i></div>
+                    <div class="wp10">启用 <i class="icon-"></i> <i class="icon-checkmark2"></i></div>
+                    <div class="wp10 break_all">卸载 <i class="icon-xiezai"></i> <i class=""></i></div>
+                    <div class="wp10">安装 <i class="icon-anzhuang"></i> <i class=""></i></div>
+                    <div class="wp10">账号 <i class="icon-"></i> <i class=""></i></div>
+                    <div class="wp10">详细 <i class="icon-"></i> <i class=""></i></div>
+                    <div class="wp10 break_all"> 父单<i class="icon-"></i> <i class=""></i></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<script src="../common/lib/jquery-1.9.0.min.js"></script>
+
+<!--<script type="text/javascript" src="../common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="../common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="../common/ztree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../common/ztree/js/jquery.ztree.exedit.js"></script>
+&lt;!&ndash;<script type="text/javascript" src="../common/js/system/companyOrg.js"></script>&ndash;&gt;
+<script type="text/javascript" src="../common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="../common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="../common/lib/jsrender.js"></script>
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><input type="checkbox" id="{{:id}}"></td>
+    <td onclick=fn()>{{:companyName}}</td>
+    <td>{{:companyShortName}}</td>
+    <td>{{:agentCode}}</td>
+    <td>{{:agentType}}</td>
+    <td>{{:parentShortName}}</td>
+    <td>{{:level}}级</td>
+    <td>{{format:createTime}}</td>
+    <td class="">
+        <a href="javascript:void(0);">删除</a>
+        <a href="javascript:void(0);">编辑</a>
+    </td>
+</tr>
+{{/for}}
+
+
+
+</script>-->
+
+<script src="../layui/layui.js"></script>
+<script type="text/javascript">
+    $().ready(function () {
+        layui.use(['form', 'layer', 'laytpl', 'element'], function () {
+            var form = layui.form(), element = layui.element(), layer = layui.layer, laytpl = layui.laytpl;
+            $("#add_use").click(function () {
+                layer.open({
+                      title: "新增平台"
+                    , type: 1
+                    , content: $("#form_addUse")            //弹窗内容
+                    , area: ["671px", "500px"]         //设置窗体高度 和宽度
+                    , btn: ["确定", "取消"]
+                    , closeBtn: 0                    //取消右上角关闭按钮
+                    , btnAlign: 'c'
+                    , yes: function (index, item) {
+                        layer.close(index)
+                        console.log(item)
+                    }
+                    , btn: ["确定", "取消"]
+
+                })
+
+            });
+
+            $('#clickA').on('click','i',function () {
+                var $this=$(this)
+                console.log($this)
+
+                layer.tips('提示', $this);
+            })
+
+            form.verify({
+                username: function (value) {
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '用户名不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '用户名首尾不能出现下划线\'_\'';
+                    }
+                    if (/^\d+\d+\d$/.test(value)) {
+                        return '用户名不能全为数字';
+                    }
+                }
+
+                //我们既支持上述函数式的方式，也支持下述数组的形式
+                //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+                , pass: [
+                    /^[\S]{6,12}$/
+                    , '密码必须6到12位，且不能出现空格'
+                ]
+            });
+
+
+            $(".mizo-width-left").on('click', 'span', function () {
+
+                if ($(this).parent('div').hasClass("layui-form-checked")) {
+
+                    $(this).addClass('checkedBg');
+                    $(this).parent('div').siblings().find('span').removeClass('checkedBg')
+                }
+            });
+        });
+    })
+</script>
+</body>
+
+</html>

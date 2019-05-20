@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/inside-common/common.iml" filepath="$PROJECT_DIR$/inside-common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inside.iml" filepath="$PROJECT_DIR$/inside.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inside-core/inside-core.iml" filepath="$PROJECT_DIR$/inside-core/inside-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inside-dao/inside-dao.iml" filepath="$PROJECT_DIR$/inside-dao/inside-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inside-service/inside-service.iml" filepath="$PROJECT_DIR$/inside-service/inside-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inside-sys/inside-sys-dao.iml" filepath="$PROJECT_DIR$/inside-sys/inside-sys-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inside-web/inside-web.iml" filepath="$PROJECT_DIR$/inside-web/inside-web.iml" />
+    </modules>
+  </component>
+</project>

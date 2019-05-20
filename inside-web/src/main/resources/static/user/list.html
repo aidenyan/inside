@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../common/ztree/css/demo.css" type="text/css">
+    <link rel="stylesheet" href="../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="../common/css/sccl.css">
+
+    <!--<link rel="stylesheet" href="../common/css/layui.css">-->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/sccl.css">
+    <style>
+
+        .content_table {
+            padding-left: 250px;
+            min-width: 980px;
+        }
+
+        #form1 {
+            padding: 20px;
+        }
+
+        .content-search ul li a{
+            background-color: #60be3e;
+        }
+        .layui-layer-title{
+        background-color: #00aadc;
+        }
+
+        .zTree-header-name{
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #60be3e;
+        }
+        .zTree-header-name > p{
+            color: #fff;
+            font-size: 14px;
+        }
+        .zTree-search-w{
+            width: 232px;
+
+        }
+        .zTree-search-w .layui-input{
+            height: 30px;
+            line-height: 30px;
+            border: 0;
+        }
+        .content-wrpper{
+            min-width: 1112px;
+            padding: 0;
+        }
+
+        /*tab 表格的公共样式*/
+
+        a{
+            display: inline-block;
+            text-decoration: none;
+            color: #333;
+        }
+        .zTree-header-search input{
+            display: block;
+            height: 30px;
+            width: 100%;
+            border: 0;
+            border-bottom: 1px solid;
+        }
+        .zTree-header-search ul{
+            display: none;
+            margin-top: -1px;
+            border: 1px solid #f2f2f2;
+        }
+        .zTree-header-search ul li{
+            height: 35px;
+            line-height: 35px;
+        }
+        .zTree-header-search ul li a{
+            height: 40px;
+            line-height: 40px;
+            padding-left: 10px;
+        }
+        .zTree-header-search ul li a:hover{
+            background: #ccc;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="content-wrpper">
+    <div class="list cf">
+        <div class="zTreeDemoBackground fl">
+            <div class="zTree-header">
+                <div class="zTree-header-name">
+                    <p>组织架构</p>
+                </div>
+                <div class="zTree-header-search">
+                    <input type="text" id="search">
+                    <ul id="list">
+                        <li><a href="javascript:;">ddd</a></li>
+                        <li><a href="javascript:;">ssss</a></li>
+                        <li><a href="javascript:;">fffffff</a></li>
+                        <li><a href="javascript:;">gggggggg</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <ul id="treeDemo" class="ztree">
+                <li>dddddd</li>
+                <li>dddddd</li>
+            </ul>
+        </div>
+
+        <div class="content_table">
+            <div class="content-search cf fr">
+                <ul class="cf fl">
+                    <li class="active"><a href="javascript:;" id="add"> <i class="icon-font"
+                                                                           style="vertical-align: middle;padding-right: 6px">
+                        &#xe8fa;</i>添加</a>
+                    </li>
+                </ul>
+                <div class="fr search-box">
+                    <div class="border"><input type="text" placeholder="商品名称/SKU编码" aria-valuemax="2"></div>
+                    <div class="btn-search"><a href="javascript:;">搜索</a></div>
+                </div>
+            </div>
+            <table class="layui-table " id="checkTba">
+                <colgroup>
+                    <col width="30">
+                    <col width="80">
+                    <col width="100">
+                    <col width="80">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="250">
+                    <col width="150">
+                    <col width="80">
+                    <col width="280">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th class="">姓名</th>
+                    <th class="">员工编号</th>
+                    <th class="">工作岗位</th>
+                    <th class="">联系邮箱</th>
+                    <th class="">联系电话</th>
+                    <th class="">帐号</th>
+                    <th class="">联系地址</th>
+                    <th class="">所属组织</th>
+                    <th class="">移动</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pagetbody">
+                <tr>
+                    <td>1</td>
+                    <td>李三</td>
+                    <td>0001</td>
+                    <td>总经理</td>
+                    <td>123@123.com</td>
+                    <td>13103923432</td>
+                    <td></td>
+                    <td>湖北省武汉市夏江区小风路2号</td>
+                    <td>循环科技有限公司</td>
+                    <td class="move">
+                        <div style="height:26px">
+                            <span class="icon-C3"></span>
+                            <span class="icon-C4"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-small">账户管理</button>
+                            <button class="layui-btn layui-btn-small">编辑用户</button>
+                            <button class="layui-btn layui-btn-small">权限设置</button>
+                            <button class="layui-btn layui-btn-small">删除</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--page 分页-->
+        <div id="pager"></div>
+    </div>
+
+</div>
+
+<form id="form1" action="" class="layui-form layui-form-pane">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品属性</label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入商品属性" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品描述</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入商品描述信息" class="layui-textarea"> </textarea>
+        </div>
+    </div>
+
+</form>
+
+<!--<div id="menuTree" class="menuTree"></div>-->
+</body>
+
+<script src="../common/lib/jquery-1.9.0.min.js"></script>
+
+<script type="text/javascript" src="../common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="../common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="../common/ztree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../common/ztree/js/jquery.ztree.exedit.js"></script>
+<!--<script type="text/javascript" src="../common/js/system/companyOrg.js"></script>-->
+<script type="text/javascript" src="../common/js/page/js-extend.js"></script>
+<script type="text/javascript" src="../common/js/page/jquery-ajax-pager.js"></script>
+<script type="text/javascript" src="../common/lib/jsrender.js"></script>
+<script src="../layui/lay/dest/layui.all.js"></script>
+
+<script type="x-jsrender" id="j-con-list">
+{{for result}}
+<tr>
+    <td><input type="checkbox" id="{{:id}}"></td>
+    <td onclick=fn()>{{:companyName}}</td>
+    <td>{{:companyShortName}}</td>
+    <td>{{:agentCode}}</td>
+    <td>{{:agentType}}</td>
+    <td>{{:parentShortName}}</td>
+    <td>{{:level}}级</td>
+    <td>{{format:createTime}}</td>
+    <td class="">
+        <a href="javascript:void(0);">删除</a>
+        <a href="javascript:void(0);">编辑</a>
+    </td>
+</tr>
+{{/for}}
+
+</script>
+<script type="text/javascript">
+    $().ready(function () {
+        $(function () {
+            $('#pager').sjAjaxPager({
+                type: "GET",
+                url: "../json/data.json",
+                pageSize: 1,
+                searchParam: {
+                    //自行添加
+                },
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    createTableData(data.result)
+                },
+                complete: function () {
+                }
+            });
+        })
+        $("#add").click(function () {
+            var layer = layui.layer, form = layui.form();
+            layer.open({
+                title: "新增平台"
+                , type: 1
+                , content: $("#form1")
+                , area: ["438px", "286px"]
+                , btn: ["确定", "取消"]
+                , closeBtn: 0
+                , btnAlign: 'c'
+                , yes: function (index, item) {
+                    layer.close(index)
+                    console.log(item)
+                }
+            })
+        })
+        getSearch()
+    })
+    function fn() {
+    console.log('aa')
+}
+    function getSearch() {
+        var oInp=document.getElementById('search');
+        var oUl=document.getElementById('list');
+
+        oInp.onkeyup=oInp.onfocus=function(){
+            //把input中开头和结尾的空格去掉；
+            var val=this.value.replace(/(^ +)|( +$)/g,'');
+            oUl.style.display=val.length>0?'block':'none';
+        };
+        document.body.onclick=function(e){
+            e=e||window.event;
+            var tar= e.target|| e.srcElement;
+
+            if(tar.tagName.toLowerCase()==='a' && tar.parentNode.parentNode.id==='list'){
+                oInp.value=tar.innerHTML;
+            }
+            oUl.style.display='none';
+        };
+        //input处理2：取消冒泡
+        oInp.onclick=function(e){
+            e=e||window.event;
+            e.stopPropagation? e.stopPropagation(): e.cancelBubble=true;
+        }
+    }
+    function createTableData(data) {
+        $.views.converters({
+            format:function (vaule) {
+                return new Date(vaule).format("yyyy-MM-dd hh:mm:ss")
+            }
+        })
+        /*获取模板*/
+        var jsRenderTpl = $.templates('#j-con-list'),
+                /*绑定数据*/
+            finalTpl = jsRenderTpl(data);
+
+        $('#page_tbody').html(finalTpl)
+    }
+    Date.prototype.format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1,                 //月份
+            "d+": this.getDate(),                    //日
+            "h+": this.getHours(),                   //小时
+            "m+": this.getMinutes(),                 //分
+            "s+": this.getSeconds(),                 //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds()             //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    }
+</script>
+</html>

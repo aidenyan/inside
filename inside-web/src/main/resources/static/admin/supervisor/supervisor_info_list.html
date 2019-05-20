@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查看督导</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+	<link rel="stylesheet" href="../../common/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <div id="frmStorageIn">
+            <div class="content-search layui-form">
+                <div class="layui-form-item ">
+                    <div class="layui-inline po-r">
+
+                       <div class="layui-input-inline">
+                        </div>
+                        <input type="text" name="inputStr" id="searchParam" autocomplete="off" class="layui-input small mizo-srarch-input" placeholder="登录账号/督导手机/督导名称">
+                        <button id="btnSearch" class="layui-btn layui-btn-small">搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td rowspan="1" colspan="1" field="name2">
+                                <div class="datagrid-cell datagrid-cell-c1-number" style="">序号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num"  style="">联系电话</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num"  style="">督导名称</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">登录账号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 168px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="page_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" class="text-r"></div>
+    </div>
+
+<div id="form_bindStoreEdit" style="display: none">
+	 <div class="layui-tab-content">
+	  <div class="layui-tab-item layui-show" id="form_bindStoreEditHtml" name="authorityStyle">
+		  <div class="layui-form">
+			<div class="layui-form-item">
+				<div class="layui-form-item form-item-margButtom5" lay-verify="sysarea">
+					<label class="layui-form-label"><span style="color:red">*</span>所在地区</label>
+					<div style="width: 349px;float: left">
+						<div class="layui-input-inline linkageSelection" id="proviceList">
+							<select id="province" lay-filter="provinceFilter">
+								<option value="">请选择省</option>
+							</select>
+						</div>
+						<div class="layui-input-inline linkageSelection" style="display: none" id="cityList">
+							<select id="city" lay-filter="cityFilter">
+								<option value="">请选择市</option>
+							</select>
+						</div>
+						<div class="layui-input-inline linkageSelection" style="display: none" id="areaList">
+							<select id="sysarea" lay-filter="areaFilter">
+								<option value="">请选择县/区</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span style="color:red">*</span>选择平台</label>
+				<div class="layui-input-block" id="platformList" lay-verify="platformList">
+					<input type="radio" value="1" name="channelType" lay-skin="primary" title="小车" lay-filter="channelFilter">
+					<input type="radio" value="2" name="channelType" lay-skin="primary" title="大车" lay-filter="channelFilter">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<table class="layui-table" style="table-layout: fixed">
+					<thead>
+						<tr>
+							<th class="wp60"><input type='checkbox' alt="全选" lay-filter='selectAllStoreFilter' name='selectAllStore' lay-skin='primary' >选择门店</th>
+							<th class="wp60">已选门店</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="layui-form">
+							<td>
+								<div class="mizo-width">
+									<div class="layui-input-inline mizo-width-left" id="storeList" style="width:auto">
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="mizon-dialog-add_use-chooseRol"> 
+									<div class="mizo-width">
+										<div class="layui-input-inline mizo-width-right" id="alStoreList">
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	  </div>
+	 </div>
+</div>
+
+<div id="form_alreadyBindStoreEdit" style="display: none">
+	 <div class="layui-tab-content">
+	  <div class="layui-tab-item layui-show" id="form_alreadyBindStoreEditHtml" name="authorityStyle">
+		  <div class="layui-form">
+			<div class="layui-form-item">
+				<div style="height: 450px; overflow: auto;">
+					<ul id="talreadyBindStoreList" style="overflow: hidden;"></ul>
+				</div>
+			</div>
+		</div>
+	  </div>
+	 </div>
+</div>
+	
+</div>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../common/js/common/order.js"></script>
+<script type="text/javascript" src="../../common/js/common/map.js"></script>
+<script type="text/javascript" src="../../common/lib/jsrender.js"></script>
+<script type="text/javascript" src="../../common/js/common/authority.js"></script>
+<script type="text/javascript" src="../../common/js/area.js?v=3"></script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-number">{{(index+1)+(d.pageSize*(d.pageNo-1))}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num break_all">{{item.contactPhone||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num break_all">{{item.supervisorName||'-'}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num">{{item.username||'-'}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">
+                <button class="sureIn" val="{{item.id}}" onclick="selectStore({{item.id}},{{item.personId}})" title="绑定门店">
+                    <i class="icon-uniE602"></i>
+                </button>
+                <button class="sureIn unbind_supervisor_store" accountId="{{item.id}}" personId="{{item.personId}}" authority_code="unbind_supervisor_store" onclick="unbindSuperisorStoreOrg({{item.id}},{{item.personId}})" title="解除绑定">
+                    <i class="icon-jiebang"></i>
+                </button>
+				<button class="sureIn bind_supervisor_store_detail" accountId="{{item.id}}" personId="{{item.personId}}" authority_code="bind_supervisor_store_detail" onclick="supervisorBindStreDetail({{item.id}},{{item.personId}})" title="已绑定关系">
+                    <i class="icon-uniE606"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr aglin='center'>
+       <td colspan="11">
+           <div class="null-show"></div>
+       </td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/javascript">
+	var form;
+    layui.use(['form', 'laypage','laytpl', 'layedit','myAjax','element', 'laydate'], function () {
+        form = layui.form();
+        var layer = layui.layer;
+		var laypage = layui.laypage;
+		var laytpl = layui.laytpl;
+		var element = layui.element();
+		var myAjax = layui.myAjax;
+		var concatAreaIds;
+		var platformid;
+		var storeListMap;
+		var alreadyChosenStoreList = new Array();
+		var accountId ;
+		var personId;
+		form.on('radio(channelFilter)', function(data){
+			platformid=data.value;
+			if(null != concatAreaIds){
+				selectStoreListFun(concatAreaIds,platformid);
+			}
+		}); 
+		form.on('select(provinceFilter)', function(data){
+			var provinceId = data.value;
+			changeProvince(provinceId);
+			selectConcatAreaIds(provinceId);
+			if(null != platformid){
+				selectStoreListFun(concatAreaIds,platformid);
+			}
+		}); 
+		form.on('select(cityFilter)', function(data){
+			var cityId = data.value;
+			changeCity(cityId);
+			selectConcatAreaIds(cityId);
+			if(null != platformid){
+				selectStoreListFun(concatAreaIds,platformid);
+			}
+		}); 
+		form.on('select(areaFilter)', function(data){
+			var areaId = data.value;
+			concatAreaIds = areaId;
+			if(null != platformid){
+				selectStoreListFun(concatAreaIds,platformid);
+			}
+		});
+		form.on('checkbox(selectAllStoreFilter)', function(data){
+			var obj = $("input[name=selectAllStore]");
+			$("input[type=checkbox]").each(function(){
+				$(this).prop("checked",obj.prop("checked"));
+				checkStoreFun($(this).val());
+			});
+			form.render("checkbox");
+		});
+		checkStoreFun = function(id){
+			var obj = $("input[value="+id+"]");
+			var isCheck = obj.prop("checked");
+			//var storeId = obj.attr("storeId");
+			var storeId = id;
+			var memberId = obj.attr("memberId");
+			var s_m_id = storeId+","+memberId;
+			if(isCheck){
+				if(alreadyChosenStoreList.indexOf(s_m_id)<0){
+					setStoreListFun(id);
+					alreadyChosenStoreList.push(s_m_id);
+				}
+			}else{
+				$("#alreadyStore_"+id).remove();
+				var index = alreadyChosenStoreList.indexOf(s_m_id);
+				alreadyChosenStoreList.splice(index, 1);
+			}
+		};
+		form.on('checkbox(storeFilter)', function(data){
+			var id = data.value;
+			checkStoreFun(id);
+		});
+		setStoreListFun = function(id){
+			var name = storeListMap.get(id);
+			var html = "<div class='mizon-dialog-add_use-chooseRol' id='alreadyStore_"+id+"'>"+name+"</div>";
+			$("#alStoreList").append(html);
+		};
+		unbindSuperisorStoreOrg = function(aId,pId){
+			layer.confirm('确认解除门店绑定关系吗?', {icon: 3, title: '提示','closeBtn':0,area: ['200px', '200px']}, function (index) {
+                myAjax.ajaxSend("/admin/supervisor/unbindSupervisorStore.json?supervisorId=" + aId, function (dataJson) {
+                    layer.msg('解除绑定关系成功');
+                });
+                layer.close(index);
+            });
+		};
+		var searchParam;
+	    searchSupervisors=function(){
+			var searchInput=$("#searchParam").val();
+	    	searchParam={
+	    		"supervisorName":searchInput
+	    	}
+	    	myAjax.ajaxPage('/admin/supervisor/pageSupervisorInfo.json','pageNum','page_tbody','pageTpl',orderObj.setOption(searchParam),'post',undefined,function(data){
+				checkAuthority(data.authorityCodeList, ["supervisor_store_remove_info"]);
+			});
+	    };
+		var orderObj = new Order(function (obj) {
+    		myAjax.ajaxPage('/admin/supervisor/pageSupervisorInfo.json','pageNum','page_tbody','pageTpl',orderObj.setOption(searchParam),'post',undefined,function(data){
+				checkAuthority(data.authorityCodeList, ["supervisor_store_remove_info"]);
+			});
+    	},"account.id");
+	    searchSupervisors();
+	    
+	    $("#btnSearch").click(function(){
+			searchSupervisors();
+		});
+		selectStoreListFun = function(aredIds,platformId){
+			$.ajax({
+				url : "/admin/companyOrg/listCompanyOrgByAreaAndChannel.json",
+				type : "get",
+				data:{"aredIds":aredIds,"channelType":platformId},
+				traditional : true,
+				async : false,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					var options="";
+					if(data.result!=null){
+						var map=new Map();
+						var stores = data.result;
+						$.each(stores,function(k,p){
+							if(p!=null&&p.id!=null&&p.id!=""){
+								var tmid = p.memberId;
+								var tsid = p.storeId;
+								if(null == tmid){
+									return true; 
+								}
+								var tid = p.id;
+								var s_m_id = tid+","+tmid;
+								var checkboxHtml = "";
+								if(alreadyChosenStoreList.length>0){
+									var index = alreadyChosenStoreList.indexOf(s_m_id);
+									if(index>-1){
+										checkboxHtml = "checked='checked'";
+									}
+								}
+								options+="<div class='mizon-checkbox'>";
+								options+="<input type='checkbox' "+checkboxHtml+" lay-filter='storeFilter'  name='store' lay-skin='primary' value='"+p.id+"' storeId='"+tsid+"' memberId='"+tmid+"'>";
+								options+="<span name='"+p.id+"'>"+p.companyShortName+"</span>";
+								map.push(p.id,p.companyShortName);
+							}
+						});
+						storeListMap = map;
+						$("#storeList").html(options);
+						form.render("checkbox");
+					}
+				}
+			});
+		};
+		
+		selectConcatAreaIds = function(parentId){
+			$.ajax({
+				url : "/admin/area/selectConcatAreaIds.json",
+				type : "get",
+				data:{"parentId":parentId},
+				traditional : true,
+				async : false,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					if(data.result!=null){
+						concatAreaIds = "";
+						concatAreaIds = data.result;
+					}
+				}
+			});
+		};
+		supervisorBindStreDetail = function(aId,pId){
+			if(null == aId || null == pId){
+	    		return layer.msg("信息错误");
+	    	}
+			$.ajax({
+				url : "/admin/supervisor/supervisorBindStoreList.json",
+				type : "get",
+				data:{"supervisorId":aId},
+				traditional : true,
+				async : false,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					var storeResultList = data.result;
+					if(storeResultList!=null){
+						layer.open({
+							type: 1,
+							title: "已绑定门店",
+							btn: ['确定'],
+							closeBtn: 0,
+							btnAlign: 'r',
+							area:['900px', '600px'],
+							shadeClose: true,
+							success:function (layero, index) {
+								var options ='';
+								$.each(storeResultList,function(k,p){
+									options+="<li alt='地址:"+p.fullAddress+"' title='地址:"+p.fullAddress+"' style='padding: 10px 0; width: 50%; float: left;word-break: keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"+p.storeName+"</li>";
+								});
+								$("#talreadyBindStoreList").html(options);
+							},
+							content: $('#form_alreadyBindStoreEdit'),
+							yes: function(index){
+								layer.close(index);
+							}
+						});
+					}else{
+						$("#talreadyBindStoreList").html('<li class="null-show"></li>');
+					}
+				}
+			});
+		};
+		selectStore=function(aId,pId){
+	    	if(null == aId || null == pId){
+	    		return layer.msg("信息错误");
+	    	}
+			accountId = aId;
+			personId = pId;
+			getProvinceList();
+			layer.open({
+				type: 1,
+				title: "绑定门店",
+				btn: ['确定', '取消'],
+				closeBtn: 0,
+				btnAlign: 'r',
+				area:['900px', '600px'],
+				shadeClose: true,
+				success:function (layero, index) {
+					layero.addClass('layui-form');
+					layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '');
+					form.render();
+					$("#storeList").html('');
+					$("#alStoreList").html('');
+				},
+				content: $('#form_bindStoreEdit'),
+				yes: function(index){
+					form.on('submit(fromContent)',function(){
+						saveSupervisorStoreBindOrgFun(index);
+					})
+				}
+			});
+	    };
+		saveSupervisorStoreBindOrgFun = function(idx){
+			if(alreadyChosenStoreList.length==0){
+				return layer.alert("您还未选择需要绑定的门店",{icon: 5});
+			}
+			if(null == accountId || null==personId){
+				return layer.alert("当前账号错误",{icon: 5});
+			}
+			$.ajax({
+				url : "/admin/supervisor/bindSupervisorStoreOrg.json",
+				type : "post",
+				data:{"channelType":platformid,"supervisorId":accountId,"acs":alreadyChosenStoreList},
+				traditional : true,
+				async : false,
+				dataType : "json",
+				//contentType : "application/json; charset=utf-8",
+				contentType : "application/x-www-form-urlencoded; charset=utf-8",
+				success : function(data) {
+					if(data.result!=null&&data.result){
+						layer.msg('绑定关系成功');
+						layer.close(idx);
+						window.location.reload();
+					}else{
+						layer.alert("操作失败",{icon: 5});
+					}
+				}
+			});
+			
+		};
+    });
+</script>
+</body>
+</html>

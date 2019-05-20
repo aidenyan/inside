@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>退货</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+	<div class="content-wrpper">
+		<div class="list">
+			<form class="layui-form" action="">
+			<input type="hidden" id="orderId" name="orderId">
+			<div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>物流信息</span>
+            </div>
+            <div class="layui-form">
+                <div class="layui-form-item mizone-form-item-t">
+                    <div class="layui-inline mizone-inline-t">
+                        <label class="layui-form-label padd_top" >物流公司</label>
+                        <div class="layui-input-inline inline-width338">
+                            <select id="expressOperation" name="trackingName">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline mizone-inline-t">
+                        <label class="layui-form-label padd_top">运单号</label>
+                        <div class="layui-input-inline inline-width338" >
+                            <input name="trackingNo" type="text" lay-skin="primary" class="layui-input" value="">
+                        </div>
+                    </div>
+                </div>
+<!--                 <div class="layui-form-item"> -->
+<!--                     <div class="layui-inline"> -->
+<!--                         <label class="layui-form-label padd_top" >发货人</label> -->
+<!--                         <div class="layui-input-inline"> -->
+<!--                             <input  type="text" name="shipper" class="layui-input" > -->
+<!--                         </div> -->
+<!--                     </div> -->
+<!--                     <div class="layui-inline"> -->
+<!--                         <label class="layui-form-label padd_top">联系电话</label> -->
+<!--                         <div class="layui-input-inline"> -->
+<!--                             <input id="txtPhone" type="text" name="phone" class="layui-input"> -->
+<!--                         </div> -->
+<!--                     </div> -->
+<!--                 </div> -->
+                <div class="layui-form-item mizone-form-item-t">
+<!--                     <label class="layui-form-label padd_top" >发货地址</label> -->
+<!--                     <div class="layui-input-inline" style="width:338px;"> -->
+<!--                         <input id="txtAddress" type="text" name="address" class="layui-input"> -->
+<!--                     </div> -->
+                    <div class="layui-inline mizone-inline-t">
+                        <label class="layui-form-label padd_top" >退换货原因:</label>
+                        <div class="layui-input-inline" style="width: 164px">
+                            <select id="defaultReason">
+                                <option value="协商退货">协商退货</option>
+                                <option value="七天无理由退货">七天无理由退货</option>
+                                <option value="产品破损">产品破损</option>
+                                <option value="质量原因">质量原因</option>
+                                <option value="未按约定时间发货">未按约定时间发货</option>
+                                <option value="客户未签收破损">客户未签收破损</option>
+                                <option value="客户未签收丢失">客户未签收丢失</option>
+                                <option value="地址信息不详">地址信息不详</option>
+                                <option value="客户拒收">客户拒收</option>
+                                <option value="超区退回">超区退回</option>
+                                <option value="订单取消客服召回">订单取消客服召回</option>
+                                <option value="多次配送无人接收">多次配送无人接收</option>
+                                <option value="错漏发产品"> 错漏发产品</option>
+                                <option value="其他原因">其他原因</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width: 164px">
+                            <input type="text" id="reason" name="reason" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline mizone-inline-t">
+                        <label class="layui-form-label padd_top" >备注</label>
+                        <div class="layui-input-inline inline-width338">
+                            <input id="txtAddress" type="text" name="memo" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="exchange" id="isExchange" title="换货"> 
+<!--                 <div class="layui-form-item"> -->
+<!--                     <label class="layui-form-label padd_top" ></label> -->
+<!--                     <div class="layui-input-inline"> -->
+<!--                         <input type="checkbox" name="exchange" id="isExchange" title="换货">  -->
+<!--                     </div> -->
+<!--                 </div> -->
+            </div>
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>退货项</span>
+            </div>
+			<div class="layui-form">
+					<table class="layui-table" style="table-layout: fixed">
+						<thead>
+							<tr>
+								<th class="width15">sku编码</th>
+								<th class="width25">商品名称</th>
+								<th class="width10">单价</th>
+								<th class="width10">已发货数量</th>
+								<th class="width10">已退货数量</th>
+								<th class="width10">退货数量</th>
+								<th class="width10">退款金额</th>
+								<th class="width10">返还积分</th>
+								<th class="width10">小计</th>
+							</tr>
+						</thead>
+						<tbody id="page_tbody">
+						</tbody>
+					</table>
+			</div>
+			<div class="layui-inline">
+				<button class="layui-btn layui-btn-small" lay-submit=""
+					lay-filter="save">确定</button>
+				<button id="cancel" class="layui-btn layui-btn-small">取消</button>
+			</div>
+			</form>
+		</div>
+	</div>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <input name="ids" type="hidden" value="{{item.id}}">
+        <td>{{item.skuCode}}</td>
+        <td>{{item.name==null?'':item.name}}</td>
+        <td class="price">{{item.price==null?'':item.price}}</td>
+        <td>{{item.quantity==null?'':item.quantity}}</td>
+        <td>{{item.rejectedNum==null?'0':item.rejectedNum}}</td>
+        <td><input type="number" name="quantity" lay-verify="quantity" class="layui-input  quantity" min="0" max="{{item.quantity-item.rejectedNum}}" value="{{item.quantity-item.rejectedNum}}"></td>
+        <td><input type="number" name="amount" lay-verify="amount" class="layui-input  amount" min="0" max="{{(item.quantity-item.rejectedNum)*item.price}}" value="{{(item.quantity-item.rejectedNum)*item.price}}"></td>
+        <td><input type="number" name="point"  class="layui-input" min="0" value="0"></td>
+        <td class=" ">{{item.price*item.quantity}}</td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result==null||d.result.length === 0){ }}
+        <tr aglin='center'><td colspan="9"><div class="null-show"></div></td></tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.name}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script>
+var form;
+   $(function () {
+	   var element,layer,laytpl,myAjax,laydate;
+	   layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], function () {
+		   form = layui.form();element = layui.element();layer=layui.layer;laytpl = layui.laytpl;myAjax = layui.myAjax;laydate = layui.laydate;
+		   var id=params.get("id");
+		   var isExchange=params.get("isExchange");
+	        var parentId="";
+	        var msgToclose=params.get("msgToclose");
+	        var orderDetailInfo;
+	        if(id!=null){
+	        	$("#orderId").val(id);
+	            myAjax.ajaxSend("/admin/order/orderItemList.json",function(data){
+	            	laytpl($("#pageTpl").html()).render(data, function (html) {
+                        $("#page_tbody").html(html);
+                        form.render();
+                    });
+	            },{'orderId':id});
+	        }
+	        if(isExchange!=null && isExchange==='true'){
+	        	$("#isExchange").val(1);
+	        }else{
+	        	$("#isExchange").val(0);
+	        }
+	        
+	        myAjax.ajaxSend("/express/listExpressInfo.json",function(data){
+	        	if(data.code=="0"){
+	                laytpl($("#slcOption").html()).render(data.result, function (html) {
+	                    $("#expressOperation").append(html);
+	                    form.render()
+	                });
+	             }
+            });
+	        
+	        form.verify({
+	        	  amount: function(value, item){ //value：表单的值、item：表单的DOM对象
+	        		  var max=Number($(item).attr("max"));
+	        		  var min=Number($(item).attr("min"));
+	        		  if(value < min || value > max){
+	        			  return "金额大小介于 "+min+" 到 "+max+"之间";
+	        		  }
+	        	  },
+	        	  quantity: function(value, item){ //value：表单的值、item：表单的DOM对象
+                      var max=Number($(item).attr("max"));
+                      var min=Number($(item).attr("min"));
+                      if(value < min || value > max){
+                    	  return "数量大小介于 "+min+" 到 "+max+"之间";
+                      }
+                  }
+	        });
+	        form.on('submit(save)', function (data) {
+	            if (checkSave()) {
+	            	if(!$("#reason").val()){
+	            		$("#reason").val($("#defaultReason").val())
+	            	}
+	                myAjax.ajaxSend('/admin/returns/save.json', function (data) {
+	                	if(data.result){
+	                		callParent.parentUse("order_deliverd_list", "search");
+	                		$("#cancel").click();
+	                	}else{
+	                		layer.msg(data.message);
+	                	}
+	                }, $("form").serialize(), 'post');
+	            }
+	            return false;
+	        });
+	   })
+	   $("#page_tbody").on("change", ".quantity", function () {
+		   var price=Number($(this).parents("tr").find(".price").text()).toFixed(2);
+		   var quantity=$(this).val();
+		   $(this).parents("tr").find(".amount").val(price*quantity);
+        });
+	   $("#cancel").click(function () {
+           callParent.openTab('order_deliverd_list');
+           callParent.closeTab('returns');
+       });
+   });
+</script>
+</body>
+</html>

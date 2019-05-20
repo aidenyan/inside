@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拆单</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../common/css/common.css">
+    <link rel="stylesheet" href="../common/css/font-style.css">
+    <script type="text/javascript" src="../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../layui/layui.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list">
+    <div class="order_num">
+        <span class="icon-minus2 minus"></span>
+        <span class="num">2</span>
+        <span class="icon-plus2 plus"></span>
+    </div>
+
+    <!--原单数据-->
+    <div class="table_box">
+        <table class="layui-table text_left">
+            <thead>
+            <tr>
+                <td width="3%">序号</td>
+                <td width="9%">SKU编码</td>
+                <td width="9%">品牌</td>
+                <td width="9%">商品名称</td>
+                <td width="5%">单位</td>
+                <td width="5%">商品分类</td>
+                <td width="5%">销售单价</td>
+                <td width="5%">下单数量</td>
+                <td width="5%">未拆单数量</td>
+                <td width="5%">小计</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>51343353</td>
+                <td>嘉实多</td>
+                <td>嘉实多机油ow-40</td>
+                <td>瓶</td>
+                <td>汽机油</td>
+                <td>￥500.00</td>
+                <td>5</td>
+                <td>2</td>
+                <td>￥2500.00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="order_list">
+
+    </div>
+
+
+    <div class="mizone-bottom-btn botton_paddT">
+        <button class="layui-btn">确定</button>
+        <button class="layui-btn">取消</button>
+    </div>
+</div>
+
+
+<script type="text/html" id="addOrder">
+   <div>
+       <!--分割线-->
+       <h2 class="title2">
+           <span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>
+           订单拆分
+       </h2>
+       <!--拆分订单一-->
+
+       <div class="table_box">
+           <table class="layui-table text_left">
+               <thead>
+               <tr>
+                   <td width="3%">序号</td>
+                   <td width="9%">SKU编码</td>
+                   <td width="9%">品牌</td>
+                   <td width="9%">商品名称</td>
+                   <td width="5%">单位</td>
+                   <td width="5%">商品分类</td>
+                   <td width="5%">销售单价</td>
+                   <td width="5%">数量</td>
+                   <td width="5%">小计</td>
+                   <td width="5%">操作</td>
+               </tr>
+               </thead>
+               <tbody>
+
+               {{# layui.each(d.list, function(index, item){ }}
+               <tr data-id="{{item.advertiseGroup}}">
+                   <td>{{index+1}}</td>
+                   <td>{{item.advertiseGroup}}</td>
+                   <td>{{item.advertiseStart}}</td>
+                   <td>{{item.advertiseGroup*item.advertiseStart}}</td>
+                   <td>瓶</td>
+                   <td>汽机油</td>
+                   <td class="advertisePrice">{{item.advertisePrice}}</td>
+                   <td onclick="Public.editNum(this)" class="advertiseNum">
+                       {{item.advertiseNum}}
+                   </td>
+                   <!--<span class="editNum" onclick="Public.editNum(this)">5</span>-->
+                   <td class="heji">{{(item.advertiseNum)*(item.advertisePrice)}}</td>
+                   <td>
+                       <div class="layui-btn-group">
+                           <button class="layui-btn layui-btn-small" title="添加" onclick=""><i
+                                   class="icon-plus"></i>
+                           </button>
+                           <button class="layui-btn layui-btn-small" title="删除" onclick=""><i
+                                   class="icon-minus"></i></button>
+                       </div>
+                   </td>
+               </tr>
+
+               {{# }); }}
+
+               {{# if(d.list.length === 0){ }}
+               无数据
+               {{# } }}
+               </tbody>
+           </table>
+       </div>
+       <div>
+           <h2 class="title2">
+               <span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>
+               编辑收货地址
+               <span class="icon- sign" onclick="Public.editAddress(this)">&#xE611</span>
+           </h2>
+
+           <div class="address" style="width: 100%;display: none">
+               <div class="layui-form poR">
+                   <div class="layui-form-item mizone-order-item">
+                       <div class="layui-inline">
+                           <label class="layui-form-label mizone-order-label">收货人</label>
+                           <div class="layui-input-inline inputW338">
+                               <input type="text" class="layui-input" value="付国辉">
+                           </div>
+                       </div>
+                       <div class="layui-inline">
+                           <label class="layui-form-label mizone-order-label">收件电话</label>
+                           <div class="layui-input-inline inputW338">
+                               <input type="text" class="layui-input" value="123456789113">
+                           </div>
+                       </div>
+                   </div>
+                   <div class="layui-form-item mizone-order-item">
+                       <div class="layui-inline">
+                           <label class="layui-form-label mizone-order-label">地址</label>
+                           <div class="inputW338 layui-inline">
+                               <div class="layui-input-inline inputW238">
+                                   <select name="quiz1">
+                                       <option value="">请选择省</option>
+                                       <option value="浙江" selected="">浙江省</option>
+                                       <option value="你的工号">江西省</option>
+                                       <option value="你最喜欢的老师">福建省</option>
+                                   </select>
+                               </div>
+                               <div class="layui-input-inline inputW238">
+                                   <select name="quiz1">
+                                       <option value="">请选择省</option>
+                                       <option value="浙江" selected="">浙江省</option>
+                                       <option value="你的工号">江西省</option>
+                                       <option value="你最喜欢的老师">福建省</option>
+                                   </select>
+                               </div>
+                               <div class="layui-input-inline inputW238 layui-inline-last">
+                                   <select name="quiz1">
+                                       <option value="">请选择省</option>
+                                       <option value="浙江" selected="">浙江省</option>
+                                       <option value="你的工号">江西省</option>
+                                       <option value="你最喜欢的老师">福建省</option>
+                                   </select>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="layui-inline">
+                           <label class="layui-form-label mizone-order-label">业务员</label>
+                           <div class="layui-input-inline inputW338">
+                               <input type="text" class="layui-input" value="付国辉">
+                           </div>
+                       </div>
+                   </div>
+
+                   <div class="layui-form-item mizone-order-item">
+                       <div class="layui-inline ">
+                           <label class="layui-form-label mizone-order-label">详细地址</label>
+                           <div class="layui-input-inline inputW438">
+                               <input type="text" class="layui-input" value="付国辉">
+                           </div>
+                       </div>
+                   </div>
+
+                   <div class="layui-form-item mizone-order-item">
+                       <div class="layui-inline ">
+                           <label class="layui-form-label mizone-order-label">订单备注</label>
+                           <div class="layui-input-inline inputW438">
+                               <input type="text" class="layui-input" value="付国辉">
+                           </div>
+                       </div>
+                   </div>
+                   <!--<div class="button-change">编辑</div>-->
+               </div>
+           </div>
+       </div>
+   </div>
+</script>
+<script>
+    (function ($, window) {
+        var Public = {
+            editAddress: function (parent) {
+                var $this = $(parent), $address = $this.parent().siblings('.address');
+                if (this.isOpen) {
+                    $this.removeClass('open')
+                    $address.slideUp('fast');
+                    this.isOpen = false
+                    $this.html('&#xE611')
+                } else {
+                    $address.slideDown('fast');
+                    this.isOpen = true
+                    $this.html('&#xE614')
+                    $this.addClass('open')
+                }
+            },
+            editNum:function (parent) {
+                var $this=$(parent);
+                var cunt=0;
+                if(!$this.is('.input')){
+                    $this.addClass('input').html('<input type="text" value="'+ $(this).text() +'" />').find('input').focus().blur(function(){
+                        if($(this).val()>5){
+                            layer.tips('最大数值为5',$(this))
+                            $(this).parent().removeClass('input').html(5);
+                            $(this).val(5)
+                        }
+                        else {
+                            $(this).parent().removeClass('input').html($(this).val() || 0);
+                        }
+                        var price= $this.parent().find('.advertisePrice').html();
+                        $this.parent().find('.heji').html(price*$(this).val())
+                        console.log($this.parent().find('.advertisePrice').html())
+                    });
+                }
+            }
+        }
+        window.Public = Public
+    })(jQuery, window)
+</script>
+
+
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+
+            var data = {
+                "code": 0,
+                "list": [{
+                    "advertiseTitle": "小车门店APP车空间商城首页",
+                    "advertiseGroup": "100",
+                    "advertiseStart": "20",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00",
+                    "advertisePrice":"500",
+                    "advertiseNum":"5"
+                }, {
+                    "advertiseTitle": "首页滚动广告",
+                    "advertiseGroup": "商品标签",
+                    "advertiseStart": "",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00",
+                    "advertisePrice":"500",
+                    "advertiseNum":"5"
+                }, {
+                    "advertiseTitle": "小车门店APP车空间商城首页",
+                    "advertiseGroup": "会员创建订单",
+                    "advertiseStart": "2017-03-23 12：00",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00",
+                    "advertisePrice":"500",
+                    "advertiseNum":"5"
+                }, {
+                    "advertiseTitle": "小车门店APP车空间商城首页",
+                    "advertiseGroup": "会员创建订单",
+                    "advertiseStart": "2017-03-23 12：00",
+                    "advertiseEnd": "1320392332",
+                    "advertiseCreatTime": "2017-03-23 12：00",
+                    "advertisePrice":"500",
+                    "advertiseNum":"5"
+                }]
+            };
+            var data1 = {
+                "code": 0,
+                "list": [{
+                    "advertiseName": "小车门店APP车空间商城首页",
+                    "advertiseWidth": "500",
+                    "advertiseHeight": "600",
+                    "advertiDescribed": "结束日选好后，重置开始日的最大日期",
+                },]
+            };
+
+            var $num = $('.num'), num = 2;
+            var getTpl=$('#addOrder').html();
+            /*laytpl(getTpl).render(data, function (html) {
+                $('#order_list').append(html);
+                form.render()
+                $('.sign').get(0).onselectstart = function () {
+                    return false
+                }
+            });*/
+
+            var  result=laytpl(getTpl).render(data);
+            $('#order_list').append(result)
+            //    阻止连续点击选中文本
+            $('.order_num').get(0).onselectstart = function () {
+                return false
+            }
+            $('.order_num').on('click', function (e) {
+                e = e || window.event
+                var $target = $(e.target || e.srcElement);
+                if ($target.is('.minus')) {
+                    if (num <= 2) {
+                        return
+                    }
+                    num--
+                    $num.text(num)
+                    $("#order_list>div").last().remove();
+                } else if ($target.is('.plus')) {
+                    num++;
+                    $num.text(num);
+                    $('#order_list').append(result);
+
+                   /* laytpl(getTpl).render(data, function (html) {
+                        $('#order_list').append(html);
+                        form.render()
+                        $('.sign').get(0).onselectstart = function () {
+                            return false
+                        }
+                    });*/
+                }
+            })
+
+        })
+    })
+</script>
+
+</body>
+</html>

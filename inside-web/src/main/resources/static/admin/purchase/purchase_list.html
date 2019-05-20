@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>采购管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form>
+            <div class="content-search layui-form">
+                <div class="layui-form-item hasNext">
+                    <div class="layui-inline">
+                        <a href="javascript:;" id="purchaseAdd" class="layui-btn layui-btn-small"> <i
+                                class="layui-icon"
+                                style="vertical-align: middle">
+                            &#xe61f;</i>新增采购单</a>
+                        <!--<button class="layui-btn layui-btn-small">删除</button>-->
+                    </div>
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="采购单号/操作人"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="slcWarehouse" name="warehouseId">
+                                <option value="">选择仓库</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcStatus" name="status">
+                                <option value="">选择状态</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="startDate" class="layui-input" placeholder="开始日" id="startDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input name="endDate" class="layui-input" placeholder="截止日" id="endDate">
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="slcSupplier" name="supplierId" lay-filter="supplier" lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!--<div class="layui-form">
+            <table class="layui-table" style="font-size: 10px" id="table2">
+                <thead>
+                <tr>
+                    <th class="sort width120" name="purchase_no">采购单号</th>
+                    <th class="sort width165" name="supplier_name" style="min-width: 100px;">供应商</th>
+                    <th class="sort width100" name="up_time">采购日期</th>
+                    <th class="sort amount width100" name="total_amount" data-type="number">总金额</th>
+                    <th class="sort width100" name="warehouse_name">采购仓库</th>
+                    <th class="width70">采购人</th>
+                    <th class="width70">初审人</th>
+                    <th class="width100">初审时间</th>
+                    <th class="width70">终审人</th>
+                    <th class="width100">终审时间</th>
+                    <th class="width70">是否邮件</th>
+                    <th class="width40">状态</th>
+                    <th style="min-width: 150px;width: 150px;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pageContent">
+
+                </tbody>
+            </table>
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num sort" name="purchase_no" style="">采购单号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-w300 sort" name="supplier_name" style="">供应商名称</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-time sort" name="up_time" style="">采购日期</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 sort" name="total_amount" data-type="number" style="">总金额</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-w100" name="warehouse_name" style="">采购仓库</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name9">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">采购人</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">初审人</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name11">
+                                <div class="datagrid-cell datagrid-cell-c1-time" style="">初审时间</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-w70" style="">终审人</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name11">
+                                <div class="datagrid-cell datagrid-cell-c1-time" style="">终审时间</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name9">
+                                <div class="datagrid-cell datagrid-cell-c1-w50" style="">是否邮件</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name16">
+                                <div class="datagrid-cell datagrid-cell-c1-w50" style="">审核状态</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num" style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cf">
+            <span class="layui-laypage-limits"><select class="page_size_value"  lay-ignore=""><option value="20" selected="">20 条/页</option><option value="100">100 条/页</option><option value="300">300 条/页</option><option value="500">500 条/页</option></select></span>
+            <div id="pageNum" class="text-r"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <!--<td><input name="" lay-skin="primary" type="checkbox"></td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num break_all">{{item.purchaseNo}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w300 over_hid" title="{{item.supplierName}}">{{item.supplierName}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.upTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail "><div class="datagrid-cell datagrid-cell-c1-w70 amount break_all">{{item.totalAmount}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.warehouseName}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70 break_all">{{item.purchaseName}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70 break_all">{{item.firstName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.firstTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">{{item.secondName || ''}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time">{{laydate.now(item.secondTime, 'YYYY-MM-DD hh:mm:ss')}}</div></td>
+        <td class="trDetail text-c"><div class="datagrid-cell datagrid-cell-c1-w50">{{# if(item.sended){ }}是{{# }else{ }}否{{# } }}</div></td>
+        <td class="trDetail text-c"><div class="datagrid-cell datagrid-cell-c1-w50">{{item.statusStr}}</div></td>
+        <td class="text-c state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-order_num">
+                <button class="{{# if(item.status != 0 && item.status != 3 && item.status != 5 && item.status != 7){ }}layui-btn-disabled{{# }else{ }} update{{# } }}"
+                        {{# if(item.status !=0 && item.status !=3 && item.status !=5 && item.status !=7){ }}disabled{{# }else{ }} val="{{item.id}}"
+                        {{# } }}
+                        title="编辑">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class="{{# if(item.status != 1){ }}layui-btn-disabled{{# }else{ }} cancel{{# } }}"
+                        {{# if(item.status !=1){ }}disabled{{# }else{ }}
+                        val="{{item.id}}"{{# } }} title="撤回">
+                    <i class="icon-yaoyaozhibofanye"></i>
+                </button>
+                <button class="{{# if(item.status != 4){ }}layui-btn-disabled{{# }else{ }} close{{# } }}"
+                        {{# if(item.status !=4){ }}disabled{{# }else{ }}
+                        val="{{item.id}}"{{# } }} title="关闭">
+                    <i class="icon-uniE617"></i>
+                </button>
+                <button class="{{# if(item.status == 4 || item.status == 6 || item.status == 8){ }}layui-btn-disabled{{# }else{ }} delete{{# } }}"
+                        {{# if(item.status== 4 || item.status== 6 || item.status== 8){ }}disabled{{# }else{ }}
+                        val="{{item.id}}"{{# } }} title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr>
+        <td colspan="13" style="text-align: center;border-bottom: none;
+    border-right: 0;"><div class="null-show"></div></td>
+    </tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="slcOption">
+    <option value="-1">选择状态</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.code}}">{{item.desc}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="slcOptionOrg">
+    <option value="-1">选择仓库</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplSupplier" type="text/html">
+    <option value="-1">请选择供应商</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supplierName}}</option>
+    {{#  }); }}
+</script>
+<script id="tplPurchaseItem" type="text/html">
+    <td colspan="13" class="purchaseItemContent">
+        <div>
+            <p class="trDetail-title">采购明细</p>
+        </div>
+        <div style="">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <!--<th style="width: 50px;">序号</th>-->
+                    <th style="width: 175px;">商品编码</th>
+                    <th style="width: 120px;">品牌</th>
+                    <th style="min-width: 200px;">商品名称</th>
+                    <th style="width: 50px;">单位</th>
+                    <th class="amount" class="width100">采购指导价</th>
+                    <th class="amount">采购单价</th>
+                    <th class="number">采购数量</th>
+                    <th class="amount">小计金额</th>
+                    <th class="number">实际库存</th>
+                    <th class="number">已入库数量</th>
+                    <th class="number">上月销量</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d.purchaseItemDTOList, function(index, item){ }}
+                <tr>
+                    <!--<td>{{++index}}</td>-->
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.brandName}}</td>
+                    <td>{{item.productName}}</td>
+                    <td>{{item.productUnit}}</td>
+                    <td class="amount">{{item.cost || 0}}</td>
+                    <td class="amount">{{item.purchasePrice}}</td>
+                    <td class="number">{{item.purchaseNum}}</td>
+                    <td class="amount">{{item.purchaseNum * item.purchasePrice}}</td>
+                    <td class="number">{{item.stock || 0}}</td>
+                    <td class="number">{{item.inNum || ''}}</td>
+                    <td class="number">{{item.saleCount || ''}}</td>
+                </tr>
+                {{# }); }}
+                <tr>
+                    <td>合计：</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="amount">{{d.totalAmount}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>备注：</td>
+                    <td colspan="11">{{d.remark || ''}}</td>
+                </tr>
+                {{# if(d.firstRemark != null && d.firstRemark != ''){ }}
+                <tr>
+                    <td>初审拒绝原因：</td>
+                    <td colspan="11">{{d.firstRemark || ''}}</td>
+                </tr>
+                {{# } }}
+                {{# if(d.secondRemark != null && d.secondRemark != ''){ }}
+                <tr>
+                    <td>终审拒绝原因：</td>
+                    <td colspan="11">{{d.secondRemark || ''}}</td>
+                </tr>
+                {{# } }}
+                </tbody>
+            </table>
+        </div>
+    </td>
+</script>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , date = layui.date;
+
+        date.bindDate('startDate', 'endDate');
+
+        //新增
+        $("#purchaseAdd").click(function () {
+            //callParent.openTab("purchase_add", 0, "新增采购单", "admin/purchase/purchase_add.html", true);
+            callParent.openTab("purchase_add", 0, "编辑采购单", "admin/purchase/purchase_add.html", true);
+        });
+
+        //撤回
+        $("#pageContent").on("click", ".cancel", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认撤回吗?', {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function (index) {
+                myAjax.ajaxSend("/purchase/cancel.json?id=" + varId, function (dataJson) {
+                    refresh();
+                    layer.msg('撤回成功');
+                });
+                layer.close(index);
+            });
+        });
+
+        $(".page_size_value").change(function(){
+            $("#btnSearch").click();
+        });
+
+        //编辑
+        $("#pageContent").on("click", ".update", function () {
+            var varId = $(this).attr('val');
+            //callParent.openTab("purchase_update", 0, "编辑采购单", "admin/purchase/purchase_add.html?purchaseId=" + varId, true);
+            callParent.openTab("purchase_add", 0, "编辑采购单", "admin/purchase/purchase_add.html?purchaseId=" + varId, true);
+        });
+
+        //删除
+        $("#pageContent").on("click", ".delete", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认删除吗?', {icon: 3, title: '提示','closeBtn':0,area: ['430px', '240px']}, function (index) {
+                myAjax.ajaxSend("/purchase/delete.json?id=" + varId, function (dataJson) {
+                    var refPage = $("#pageNum").find(".layui-laypage-skip");
+                    if (refPage.length > 0) {
+                        var pNo = refPage.val();
+                        if ($("#pageContent").find("tr").length == 1) {
+                            pNo = pNo - 1;
+                        }
+                        myAjax.ajaxPage('/purchase/list.json', 'pageNum', 'pageContent', 'pageTpl', $.extend($("#frmPurchase").serializeJson(), {'pageNo': pNo}));
+                    } else {
+                        $('#btnSearch').click();
+                    }
+                    layer.msg('删除成功');
+                });
+                layer.close(index);
+            });
+        });
+
+        //关闭
+        $("#pageContent").on("click", ".close", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认关闭吗?', {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function (index) {
+                myAjax.ajaxSend("/purchase/close.json?id=" + varId, function (dataJson) {
+                    refresh();
+                    layer.msg('关闭成功');
+                });
+                layer.close(index);
+            });
+        });
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            if(!Utils.isNotNull(data)){
+                data = {"params_order_name":"up_time","params_order_type":"0"};
+            }
+            myAjax.ajaxPage('/purchase/list.json', 'pageNum', 'pageContent', 'pageTpl', data, '', function(){
+                $("#pageContent .amount").each(function(){
+                    $(this).html(Utils.formatPrice($(this).html()));
+                });
+            });
+        }
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            $.extend(vSeaData,{"params_order_name":"up_time","params_order_type":"0"});
+            pageOrder(vSeaData);
+            return false;
+        });
+        pageOrder();
+
+        //获取仓库
+        myAjax.ajaxTpl("/admin/common/warehouse/list.json", 'slcWarehouse', 'slcOptionOrg');
+
+        //获取状态
+        myAjax.ajaxTpl("/purchase/getStatus.json", 'slcStatus', 'slcOption');
+
+        //获取供应商
+        myAjax.ajaxTpl("/supplier/supplierList.json", 'slcSupplier', 'tplSupplier');
+
+        //明细
+        $("#pageContent").on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            var varCon = $("#purchaseItemContent");
+            if (varCon.length == 0) {
+                varThis.parent('tr').after('<tr id="purchaseItemContent" val="' + varId + '"></tr>');
+                myAjax.ajaxTpl("/purchase/findItems.json?purchaseId=" + varId, 'purchaseItemContent', 'tplPurchaseItem', false, function(){
+                    $("#purchaseItemContent tbody .amount").each(function(){
+                        $(this).html(Utils.formatPrice($(this).html()));
+                    });
+                });
+            } else {
+                varCon.remove();
+                if (varCon.attr('val') != varId) {
+                    varThis.parent('tr').after('<tr id="purchaseItemContent" val="' + varId + '"></tr>');
+                    myAjax.ajaxTpl("/purchase/findItems.json?purchaseId=" + varId, 'purchaseItemContent', 'tplPurchaseItem', false, function(){
+                        $("#purchaseItemContent tbody .amount").each(function(){
+                            $(this).html(Utils.formatPrice($(this).html()));
+                        });
+                    });
+                }
+            }
+        });
+
+        callParent.isLoadEnd("purchase_list");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+
+    });
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

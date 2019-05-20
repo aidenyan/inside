@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>供应商管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <form id="frmSupplier">
+            <div class="content-search layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <a href="javascript:;" id="supplierAdd" class="layui-btn layui-btn-small"> <i
+                                class="layui-icon"
+                                style="vertical-align: middle">
+                            &#xe61f;</i>新增供应商</a>
+                        <!--<button class="layui-btn layui-btn-small">删除</button>-->
+                    </div>
+                    <div class="layui-inline po-r">
+                        <input type="text" name="inputStr" placeholder="供应商名称/联系人"
+                               autocomplete="off" class="layui-input small mizo-srarch-input">
+                        <button id="btnSearch" class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!--<div class="layui-form">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    &lt;!&ndash;<th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>&ndash;&gt;
+                    <th class="sort w-sn" name="sn">供应商编号</th>
+                    <th class="sort w-pro" name="supplier_name">供应商名称</th>
+                    <th class="sort w-date width50" name="name">联系人</th>
+                    <th class="w-date">联系电话</th>
+                    <th class="w-ware">邮箱</th>
+                    <th class="w-pro">供应商地址</th>
+                    <th class="w-pro">供货范围</th>
+                    <th class="w-pro">备注</th>
+                    <th class="w-ware action-items-75">操作</th>
+                </tr>
+                </thead>
+                <tbody id="pageContent">
+
+                </tbody>
+            </table>
+        </div>-->
+        <div class="panel layui-form">
+            <div class="datagrid-header" style="width: 100%; height: 29px;">
+                <div class="datagrid-header-inner" style="display: block;position: absolute;left: 0;">
+                    <table class="datagrid-htable" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr class="datagrid-header-row">
+                            <td rowspan="1" colspan="1" field="name4">
+                                <div class="datagrid-cell datagrid-cell-c1-w300 sort w-pro" name="supplier_name" style="">供应商名称</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name3"  class="">
+                                <div class="datagrid-cell datagrid-cell-c1-w100 sort w-sn" name="sn" style="">供应商编号</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name5">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 sort w-date" name="name" style="">联系人</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name7">
+                                <div class="datagrid-cell datagrid-cell-c1-tel_num w-date">联系电话</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name8">
+                                <div class="datagrid-cell datagrid-cell-c1-order_num w-ware" >邮箱</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name9">
+                                <div class="datagrid-cell datagrid-cell-c1-address w-pro" style="">供应商地址</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name10">
+                                <div class="datagrid-cell datagrid-cell-c1-time w-pro" style="">供货范围</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name11">
+                                <div class="datagrid-cell datagrid-cell-c1-time w-pro" style="">备注</div>
+                            </td>
+                            <td rowspan="1" colspan="1" field="name17">
+                                <div class="datagrid-cell datagrid-cell-c1-w70 w-ware" style="">操作</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datagrid-body" style="width: 100%; margin-top: 0px; height: 500px;">
+                <table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0">
+                    <tbody id="pageContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pageNum" style="text-align:right"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/serializeJson.js"></script>
+
+<script id="pageTpl" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <!--<td><input name="" lay-skin="primary" type="checkbox"></td>-->
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w300 over_hid" title="{{item.supplierName}}">{{item.supplierName}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w100">{{item.sn}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-w70">{{item.name}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-tel_num break_all">{{item.phone}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-order_num break_all">{{item.email}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-address over_hid" title="{{item.fullAddress}}">{{item.fullAddress}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time over_hid">{{item.productType}}</div></td>
+        <td class="trDetail"><div class="datagrid-cell datagrid-cell-c1-time over_hid" title="{{item.remark || ''}}">{{item.remark || ''}}</div></td>
+        <td class="state_uhandle">
+            <div class="datagrid-cell datagrid-cell-c1-w70">
+                <button class=" update" val="{{item.id}}" title="编辑">
+                    <i class="icon-bianji"></i>
+                </button>
+                <button class=" delete" val="{{item.id}}" title="删除">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.result.length == 0){ }}
+    <tr>
+        <td colspan="9" style="text-align: center;border-bottom: none;
+    border-right: 0;">
+            <div class="null-show"></div>
+        </td>
+    </tr>
+    {{#  } }}
+</script>
+
+<script id="tplProductLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li skucode="{{item.skuCode}}">{{item.skuCode}} / {{item.name}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+<script id="tplAddItems" type="text/html">
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input type="text" name="" placeholder="商品名称/SKU编码"
+                       autocomplete="off" class="layui-input small mizo-srarch-input productSearch" style="width: 100%">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="deletePro">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+<script id="tplSupProItem" type="text/html">
+    {{#  layui.each(d.productDTOList, function(index, item){ }}
+    <tr>
+        <td>
+            <div style="position: relative;width: 100%">
+                <input class="proSku" type="hidden" name="skuCodes"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="" placeholder="商品名称/SKU编码" value="{{item.skuCode}} / {{item.name}}"
+                       autocomplete="off" class="layui-input small mizo-srarch-input productSearch" style="width: 100%">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change" value="&#xe615;" style="position: absolute;right: 0;bottom: 1px">
+            </div>
+        </td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class="deletePro">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplProList" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td><input name="skuCodes" lay-skin="primary" type="checkbox" value="{{item.skuCode}}"></td>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+    </tr>
+    {{#  }); }}
+</script>
+<script id="tplOption" type="text/html">
+    <option value="-1">全部</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script id="tplSupPro" type="text/html">
+    <td colspan="10" class="purchaseItemContent">
+        <div>
+            <p class="trDetail-title" style="text-align: left;padding-top: 0;height: 30px">
+                <input id="add_commodity" type="button" class="layui-btn layui-btn-small layui-icon" value="&#xe61f;添加">
+                <input type="button" lay-submit="" lay-filter="save" class="layui-btn layui-btn-small layui-icon"
+                       value="&#xe632;保存">
+            </p>
+        </div>
+        <div>
+        <div style="">
+
+        <form id="frmSupPro">
+            <input type="hidden" name="supplierId" value="{{d}}">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>SKU编码/商品名称</th>
+                    <th class="wp15">品牌</th>
+                    <th class="wp5">单位</th>
+                    <th class="wp15">商品分类</th>
+                    <th class="wp5">操作</th>
+                </tr>
+                </thead>
+                <tbody id="supProItemContent">
+                </tbody>
+            </table>
+        </form>
+        </div>
+            </div>
+    </td>
+</script>
+<div class="layui-form dialog" id="form_addCommodity" style="display: none">
+    <form>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label padd_top" style="width: 30px;">品牌</label>
+                <div class="layui-input-inline">
+                    <select id="slcBrand" name="brandId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <label class="layui-form-label padd_top" style="width: 60px;">商品分类</label>
+                <div class="layui-input-inline">
+                    <select id="slcProductType" name="typeId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline ">
+                <input type="text" name="inputStr" placeholder="商品编码/SKU编码" style="width: 250px;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="proSearch">搜索</button>
+            </div>
+        </div>
+    </form>
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+                <th>SKU编码</th>
+                <th>品牌</th>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>商品分类</th>
+            </tr>
+            </thead>
+            <tbody id="proListContent">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'laypage', 'laydate', 'laytpl', 'myAjax', 'date'], function () {
+        var form = layui.form()
+                , layer = layui.layer
+                , $ = layui.jquery
+                , myAjax = layui.myAjax
+                , laytpl = layui.laytpl
+                , date = layui.date;
+
+        //新增
+        $("#supplierAdd").click(function () {
+            callParent.openTab("supplier_add", 0, "编辑供应商", "admin/supplier/supplier_add.html", true);
+        });
+
+        //编辑
+        $(document).on("click", ".update", function () {
+            var varId = $(this).attr('val');
+            callParent.openTab("supplier_add", 0, "编辑供应商", "admin/supplier/supplier_add.html?supplierId=" + varId, true);
+        });
+
+        //监听提交，保存
+        form.on('submit(save)', function () {
+            myAjax.ajaxSend('/supplier/saveRelPro.json', function () {
+                layer.msg('保存成功');
+            }, $("#frmSupPro").serialize(), 'post');
+            return false;
+        });
+
+        //弹出层，查询商品
+        form.on('submit(proSearch)', function (data) {
+            var varSku = [];
+            $("#supProItemContent").find(".proSku").each(function () {
+                varSku.push($(this).val());
+            });
+            myAjax.ajaxTpl('/storage/listProductNoSupplier.json', 'proListContent', 'tplProList', false, null, $.extend(data.field, {"notInSku": varSku}), 'post');
+            return false;
+        });
+
+        //删除商品
+        $("#pageContent").on('click', '.deletePro', function () {
+            $(this).closest('tr').remove();
+        });
+
+        //打开商品查询弹框
+        var varTr;
+        $("#pageContent").on('click', '.change', function () {
+            varTr = $(this).closest("tr");
+            $("#proListContent").html('');
+            $("#form_addCommodity").find('input[type="checkbox"]').attr('checked', false);
+            layer.open({
+                title: "关联商品"
+                , type: 1
+                , content: $("#form_addCommodity")            //弹窗内容
+                , area: ["800px", "500px"]         //设置窗体高度 和宽度
+                , btn: ["确定", "取消"]
+                , closeBtn: 0                      //取消右上角关闭按钮
+                , btnAlign: 'r'
+
+                , success: function (layero, index) {
+                    //获取分类
+                    myAjax.ajaxTpl("/admin/common/category/list.json", 'slcProductType', 'tplOption');
+                    //获取品牌
+                    myAjax.ajaxTpl("/admin/common/brand/list.json", 'slcBrand', 'tplOption');
+
+                    layero.addClass('layui-form');
+                    layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '');
+                    form.render();
+                }
+                , yes: function (index, item) {
+                    myAjax.ajaxTpl('/supplier/getItemDTOList.json', 'supProItemContent', 'tplSupProItem', true, function () {
+                        layer.close(index);
+                        varTr.remove();
+                    }, $(item.selector + " input[name='skuCodes']:enabled:checked").serialize());
+                }
+            });
+            return false;
+        });
+
+        //输入sku或名称快速查询商品
+        $("#pageContent").on('keyup', '.productSearch', function () {
+            var varThis = $(this);
+            varThis.prev().val('');
+
+            var varSku = [];
+            $("#supProItemContent").find(".proSku").each(function () {
+                varSku.push($(this).val());
+            });
+            myAjax.ajaxSend('/storage/listProductNoSupplier.json', function (dataJson) {
+                var getTpl = $("#tplProductLi").html();
+                laytpl(getTpl).render(dataJson.result, function (html) {
+                    varThis.parent().children('.proSearchDiv').each(function () {
+                        $(this).remove();
+                    });
+                    var varDivPL = '<div class="proSearchDiv" style="height: auto;">' + html + '</div>';
+                    if (dataJson.result != null && dataJson.result != '') {
+                        varThis.next().after(varDivPL);
+                        varTr = varThis.closest("tr");
+                        $(".proSearchDiv").find('li').click(function () {
+                            var vSkuCode = $(this).attr('skucode');
+                            myAjax.ajaxTpl('/supplier/getItemDTOList.json?skuCodes=' + vSkuCode, 'supProItemContent', 'tplSupProItem', true, function () {
+                                varTr.remove();
+                            });
+                            $(this).closest('div').remove();
+                        });
+                    }
+                });
+            }, {"inputStr": varThis.val(), "notInSku": varSku}, 'post');
+
+        });
+
+        $("#pageContent").on('blur', '.productSearch', function () {
+            var varThis = $(this);
+            var hideSku = varThis.prev().val();
+            if (hideSku == '') {
+                varThis.val('');
+            }
+        });
+
+        //明细
+        $("#pageContent").on("click", ".trDetail", function () {
+            var varThis = $(this);
+            var varId = varThis.parent().attr('id');
+            var varCon = $("#supProContent");
+            if (varCon.length == 0) {
+                varThis.parent('tr').after('<tr id="supProContent" val="' + varId + '"></tr>');
+                myAjax.getTpl('supProContent', 'tplSupPro', {'result': varId});
+                myAjax.ajaxSend("/supplier/findItems.json?supplierId=" + varId, function (data) {
+                    //获取关联商品
+                    if (data.result.productDTOList.length != 0) {
+                        myAjax.getTpl('supProItemContent', 'tplSupProItem', data);
+                    }
+                });
+            } else {
+                varCon.remove();
+                if (varCon.attr('val') != varId) {
+                    varThis.parent('tr').after('<tr id="supProContent" val="' + varId + '"></tr>');
+                    myAjax.getTpl('supProContent', 'tplSupPro', {'result': varId});
+                    myAjax.ajaxSend("/supplier/findItems.json?supplierId=" + varId, function (data) {
+                        //获取关联商品
+                        if (data.result.productDTOList.length != 0) {
+                            myAjax.getTpl('supProItemContent', 'tplSupProItem', data);
+                        }
+                    });
+                }
+            }
+        });
+
+        //关联商品，添加一行
+        $("#pageContent").on("click", "#add_commodity", function () {
+            myAjax.getTpl('supProItemContent', 'tplAddItems', {"result": []}, true);
+        });
+
+        //删除
+        $("#pageContent").on("click", ".delete", function () {
+            var varId = $(this).attr('val');
+            layer.confirm('确认删除吗?', {icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function (index) {
+                myAjax.ajaxSend("/supplier/delete.json?supplierId=" + varId, function (dataJson) {
+                    var refPage = $("#pageNum").find(".layui-laypage-skip");
+                    if (refPage.length > 0) {
+                        var pNo = refPage.val();
+                        if ($("#pageContent").find("tr").length == 1) {
+                            pNo = pNo - 1;
+                        }
+                        myAjax.ajaxPage('/supplier/list.json', 'pageNum', 'pageContent', 'pageTpl', $.extend($("#frmSupplier").serializeJson(), {'pageNo': pNo}));
+                    } else {
+                        $('#btnSearch').click();
+                    }
+                    layer.msg('删除成功');
+                });
+            });
+        });
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //查询、排序
+        var vSeaData;
+        var orderObj = new Order(function () {
+            pageOrder(orderObj.setOption(vSeaData));
+        });
+
+        function pageOrder(data) {
+            myAjax.ajaxPage('/supplier/list.json', 'pageNum', 'pageContent', 'pageTpl', data);
+        }
+
+        form.on('submit(search)', function (data) {
+            vSeaData = data.field;
+            pageOrder(vSeaData);
+            return false;
+        });
+        pageOrder();
+
+        callParent.isLoadEnd("supplier_list");
+        callParent.register(function () {
+            refresh();
+        }, "refresh");
+    });
+</script>
+<!--<script>
+    $(function () {
+        resize();
+        $(window).resize(function () {
+            resize();
+        })
+        $('.datagrid-body').scroll(function () {
+            $('.datagrid-header-inner').css('left', -$(this).scrollLeft())
+        })
+    });
+    function resize() {
+        var height = $(document.body).height(), topH = 200, panelH = height - topH, bodyH = panelH - 30;
+        var width=$('.panel').width(),realW=width - 20;$('.datagrid-htable').css('width',realW);$('.datagrid-btable').css('width',realW);
+        console.log(width);
+        $('.panel').css('height', panelH);
+        $('.datagrid-body').css('height', bodyH);
+    }
+</script>-->
+</body>
+</html>

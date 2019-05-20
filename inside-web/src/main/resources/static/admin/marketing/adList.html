@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>广告管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <script type="text/javascript" src="../admin.js"></script>
+    <style>
+        html {
+            color: #646976;
+        }
+    </style>
+</head>
+<body>
+
+<div class="list layui-form">
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title paddR50">
+            <li class="layui-this">广告管理</li>
+            <li>广告位设置</li>
+        </ul>
+        <div class="layui-tab-content paddR0">
+            <div class="layui-tab-item layui-show">
+                <!--按钮组-->
+                <div class="mizone-button-groups button-w70">
+                    <button class="layui-btn layui-btn-primary layui-btn-small active" id="add">新增</button>
+                    <button class="layui-btn layui-btn-primary layui-btn-small active" id="deleteAd">删除</button>
+                </div>
+                <!--table表格-->
+                <div class="table_box">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <td width="5%"><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox">
+                            </td>
+                            <td width="25% ">标题</td>
+                            <td width="10%">类型</td>
+                            <td width="20%">广告位</td>
+                            <td width="10%">起始时间</td>
+                            <td width="10%">结束时间</td>
+                            <td width="15%">创建时间</td>
+                            <td width="5%">操作</td>
+                        </tr>
+                        </thead>
+                        <tbody id="adTbody">
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--table 分页-->
+                <div class="cf">
+                    <div id="pager" style="text-align:right"></div>
+                </div>
+            </div>
+
+           <div class="layui-tab-item">
+               <!--按钮组-->
+               <div class="mizone-button-groups button-w70">
+                   <button class="layui-btn layui-btn-primary layui-btn-small active" id="addPositon">新增</button>
+                   <button class="layui-btn layui-btn-primary layui-btn-small active" id="deletePositon">删除</button>
+               </div>
+               <!--table表格-->
+               <div class="table_box">
+                   <table class="layui-table">
+                       <thead>
+                       <tr>
+                           <td width="5%"><input name="" lay-skin="primary"  type="checkbox" lay-filter="allChoose">
+                           </td>
+                           <td width="30% ">名称</td>
+                           <td width="20%">宽度</td>
+                           <td width="15%">高度</td>
+                           <td width="25%">描述</td>
+                           <td width="5%">操作</td>
+                       </tr>
+                       </thead>
+                       <tbody id="positionTbody">
+
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="adList">
+    {{# layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="checkbox" lay-skin="primary" type="checkbox" value="{{item.id}}"></td>
+        <td class="text_left">{{item.title}}</td>
+        <td class="text_left">{{item.type==0?'文本':'图片'}}</td>
+        <td class="text_left">{{d.positionMap.get(item.adPositionId)}}</td>
+        <td class="text_left">{{laydate.now(item.beginTime,"YYYY-MM-DD")}}</td>
+        <td class="text_left">{{laydate.now(item.endTime,"YYYY-MM-DD")}}</td>
+        <td class="text_left">{{laydate.now(item.createTime,"YYYY-MM-DD hh:mm:ss")}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class=" update" title="编辑" value="{{item.id}}">
+                    <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.result.length === 0){ }}
+    无数据
+    {{# } }}
+</script>
+
+<script type="text/html" id="positionList">
+    {{# layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="checkbox" lay-skin="primary" type="checkbox" value="{{item.id}}"></td>
+        <td class="text_left">{{item.name}}</td>
+        <td class="text_left">{{item.width}}</td>
+        <td class="text_left">{{item.height}}</td>
+        <td class="text_left">{{item.description}}</td>
+        <td class="state_uhandle">
+            <div class="">
+                <button class=" update" title="编辑" value="{{item.id}}">
+                    <i class="icon-bianji"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.result === 0){ }}
+    无数据
+    {{# } }}
+</script>
+
+<script type="text/html" id="addAdTpl">
+<form action=""">
+    <input type="hidden" name="id" value="{{d.id||''}}">
+    <div class="layui-form form-box">
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100"><span style="color:red">*</span>标题：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input"  id="title" name="title" value="{{d.title||''}}" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">广告位：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <select name="adPositionId" >
+                    {{# layui.each(d.positionMap.key(), function(index, item){ }}
+                    <option value="{{item}}" {{#  if(d.adPositionId==item){ }}selected="selected"{{#  } }} >{{d.positionMap.get(item)}}</option>
+                    {{# }); }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">图片：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <a href="javascript:;" class="file" id="select_file_a">选择上传文件
+                    <input type="file" name="file"   id="url_id"><span  class="showFileName" id="select_img"></span>
+                </a>
+                {{#  if(d.path != null && d.path.length>0){ }}
+                   <a href="{{d.path}}" target="_blank" class="file">
+                    <span class="showFileName"  file_url='{{d.path}}'>已上传的图片</span>
+                    </a>
+                 {{#  } }}
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">起始时间：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="开始日" id="LAY_demorange_s" name="beginTime" value="{{laydate.now(d.beginTime,"YYYY-MM-DD")||''}}">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">结束时间：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="结束日" id="LAY_demorange_e" name="endTime" value="{{laydate.now(d.endTime,"YYYY-MM-DD")||''}}">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">链接地址：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="" name="url" value="{{d.url||''}}">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">内容：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <textarea  class="layui-textarea" name="content">{{d.content||''}}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">排序：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input class="layui-input" placeholder="" name="orders" value="{{d.orders||'0'}}" lay-verify="number">
+            </div>
+        </div>
+    </div>
+</form>
+</script>
+
+<script type="text/html" id="addPositonTpl">
+<form action=""">
+    <input type="hidden" name="id" value="{{d.id||''}}">
+    <div class="layui-form form-box">
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100"><span style="color:red">*</span>广告位名称：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input"  name="name" value="{{d.name||''}}" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100"><span style="color:red">*</span>广告位宽度：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input" maxlength="6" name="width" value="{{d.width||''}}" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100"><span style="color:red">*</span>广告位高度：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <input type="text" class="layui-input" maxlength="6" name="height" value="{{d.height||''}}" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <label class="dialog_label dialog_label_w100">广告位描述：</label>
+            <div class="layui-input-inline dialog_input_inline_w300">
+                <textarea  class="layui-textarea" name="description">{{d.description||''}}</textarea>
+            </div>
+        </div>
+    </div>
+</form>
+</script>
+
+
+<script>
+    $(window).ready(function () {
+        layui.use(['layer', 'form', 'element', 'laytpl', 'laydate','laypage'], function () {
+            var layer = layui.layer;
+            var form = layui.form();
+            var element = layui.element;
+            var laytpl = layui.laytpl;
+            var laypage = layui.laypage;
+            var laydate = layui.laydate;
+            var positionMap;
+
+            var start = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+
+            var end = {
+                min: laydate.now()
+                , max: '2099-06-16 23:59:59'
+                , istoday: false
+                , choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            }
+            var getTpl2 = $("#addAd").html();
+            var getTpl3 = $("#addPositons").html();
+            
+            
+            var orderObj = new Order(function (obj) {
+                search();
+            });
+
+            function search(pageNo) {
+                if (!Utils.isNotNull(pageNo)) {
+                    pageNo = 1;
+                }
+                currPageNo = pageNo;
+                var pageSize = 10;
+                var option = {pageNo: pageNo, pageSize: pageSize};
+                option = orderObj.setOption(option);
+                ajaxsend(option, "/admin/ad/list.json", function (dataJson) {
+                	dataJson.result.positionMap=positionMap;
+                    laytpl($("#adList").html()).render(dataJson.result, function (html) {
+                        $("#adTbody").html(html);
+                        form.render()
+                    });
+                    //var data = dataJson;
+                    //checkLocalAuthority(data);
+                    form.render('checkbox'); //
+                    laypage({
+                        cont: "pager",
+                        curr: dataJson.result.pageNo
+                        , pages: dataJson.result.totalPage
+                        , skip: true
+                        , jump: function (jumpObj, first) {
+                            if (!first) {
+                                search(jumpObj.curr);
+                            }
+                        }
+                    })
+                })
+            }
+            
+            function getPosition(){
+            	ajaxsend("","/admin/ad/position/list.json", function (dataJson) {
+                    if(dataJson.code=="0"){
+                    	positionMap=new Map();
+                        for (var i in dataJson.result.result) {
+                            positionMap.push(dataJson.result.result[i].id, dataJson.result.result[i].name);
+                        }
+                        laytpl($("#positionList").html()).render(dataJson.result, function (html) {
+                           $("#positionTbody").html(html);
+                           form.render()
+                           search(); 
+                       });
+                    }
+                })
+            }
+            getPosition();
+            
+            form.on('checkbox(allChoose)', function(data){
+                var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+
+            $("body").on("click","#LAY_demorange_s", function() {
+                start.elem = this;
+                laydate(start);
+            })
+
+            $("body").on("click","#LAY_demorange_e", function() {
+                end.elem = this;
+                laydate(end)
+            })
+            
+            $.fn.serializeObject = function(){
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function() {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+            
+            $("#add").click(function () {
+                var data={};
+                data.positionMap=positionMap;
+                laytpl($("#addAdTpl").html()).render(data, function(html){
+                    layer.open({
+                        type: 1,
+                        title: "新增广告",
+                        btn: ['确定', '取消'],
+                        closeBtn: 0,
+                        btnAlign: 'r',
+                        area: ["800px"],
+                        shadeClose: false,
+                        content: html,
+                        success:function (layero, index) {
+                        	layero.addClass('layui-form');
+                            layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                            form.render();
+                            $("#select_file_a").on("change", "input[type='file']", function () {
+                                var filePath = $(this).val();
+                                if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1) {
+                                    var arr = filePath.split('\\');
+                                    var fileName = arr[arr.length - 1];
+                                    $("#select_img").html("已选择文件" + fileName);
+                                }
+                            })
+                        },
+                        yes: function(index){
+                        	form.on('submit(fromContent)',function(){
+                                uploadFile("/admin/ad/save.json", function (dataJson) {
+                                    if(dataJson.result==true){
+                                        layer.alert("新增成功！", function (alertIndex) {
+                                        	callParent.parentUse("ad_list", "search");
+                                            layer.close(alertIndex);
+                                            layer.close(index);
+                                        })
+                                    }
+                                }, {
+                                    fileId: "url_id",
+                                    data:$("form").serializeObject()
+                                });
+                            })
+                        }
+                      });
+                });
+                
+            });
+            
+            $("#deleteAd").click(function () {
+                var ids = new Array();
+                $("#adTbody input[name='checkbox']:checked").each(function(){
+                    ids.push($(this).val());
+                });
+                if (ids.length > 0) {
+                    layer.confirm("确定要删除？",{icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function (index) {
+                        ajaxsend({"ids": ids}, "/admin/ad/delete.json", function (dataJson) {
+                            if(dataJson.result==true){
+                            	callParent.parentUse("ad_list", "search");
+                            }else{
+                            	layer.alert("删除失败！")
+                            }
+                            layer.close(index);
+                        })
+                    })
+                }
+            });
+            
+            $("#deletePositon").click(function () {
+                var ids = new Array();
+                $("#positionTbody input[name='checkbox']:checked").each(function(){
+                    ids.push($(this).val());
+                });
+                if (ids.length > 0) {
+                    layer.confirm("确定要删除？",{icon: 3, title: '提示','closeBtn':0,area: ['480px', '240px']}, function (index) {
+                        ajaxsend({"ids": ids}, "/admin/ad/position/delete.json", function (dataJson) {
+                            if(dataJson.result==true){
+                            	callParent.parentUse("ad_list", "search");
+                            }else{
+                                layer.alert("删除失败！")
+                            }
+                            layer.close(index);
+                        })
+                    })
+                }
+            });
+            
+            $("#adTbody").on("click",".update", function() {
+                ajaxsend({"id":$(this).val()}, "/admin/ad/get.json", function (dataJson) {
+                	dataJson.result.positionMap=positionMap;
+                    laytpl($("#addAdTpl").html()).render(dataJson.result, function(html){
+                        layer.open({
+                            type: 1,
+                            title: "修改广告",
+                            btn: ['确定', '取消'],
+                            closeBtn: 0,
+                            btnAlign: 'r',
+                            area: ["800px"],
+                            shadeClose: false,
+                            content: html,
+                            success:function (layero, index) {
+                                layero.addClass('layui-form');
+                                layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                                form.render();
+                                $("#select_file_a").on("change", "input[type='file']", function () {
+                                    var filePath = $(this).val();
+                                    if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1) {
+                                        var arr = filePath.split('\\');
+                                        var fileName = arr[arr.length - 1];
+                                        $("#select_img").html("已选择文件" + fileName);
+                                    }
+                                })
+                            },
+                            yes: function(index){
+                                form.on('submit(fromContent)',function(){
+                                    uploadFile("/admin/ad/update.json", function (dataJson) {
+                                    	if(dataJson.result==true){
+                                            layer.alert("修改成功！", function (alertIndex) {
+                                            	callParent.parentUse("ad_list", "search");
+                                            	layer.close(alertIndex);
+                                                layer.close(index);
+                                            })
+                                        }
+                                    }, {
+                                        fileId: "url_id",
+                                        data: $("form").serializeObject()
+                                    });
+                                })
+                            }
+                          });
+                    });
+                })
+            })
+            
+            $("#addPositon").click(function () {
+                laytpl($("#addPositonTpl").html()).render({}, function(html){
+                    layer.open({
+                        type: 1,
+                        title: "新增广告位",
+                        btn: ['确定', '取消'],
+                        closeBtn: 0,
+                        btnAlign: 'r',
+                        area: ["800px"],
+                        shadeClose: false,
+                        content: html,
+                        success:function (layero, index) {
+                        	layero.addClass('layui-form');
+                            layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                            form.render();
+                        },
+                        yes: function(index){
+                            form.on('submit(fromContent)',function(){
+                                ajaxsend($("form").serialize(), "/admin/ad/position/save.json", function (dataJson) {
+                                    if(dataJson.result==true){
+                                        layer.alert("新增成功！", function (alertIndex) {
+                                        	callParent.parentUse("ad_list", "search");
+                                        	layer.close(alertIndex);
+                                            layer.close(index);
+                                        })
+                                    }
+                                }, "postForm");
+                            })
+                        }
+                      });
+                });
+                
+            });
+            
+            $("#positionTbody").on("click",".update", function() {
+                ajaxsend({"id":$(this).val()}, "/admin/ad/position/get.json", function (dataJson) {
+                    laytpl($("#addPositonTpl").html()).render(dataJson.result, function(html){
+                        layer.open({
+                            type: 1,
+                            title: "修改广告位",
+                            btn: ['确定', '取消'],
+                            closeBtn: 0,
+                            btnAlign: 'r',
+                            area: ["800px"],
+                            shadeClose: false,
+                            content: html,
+                            success:function (layero, index) {
+                                layero.addClass('layui-form');
+                                layero.find('.layui-layer-btn0').attr('lay-filter', 'fromContent').attr('lay-submit', '')
+                                form.render();
+                            },
+                            yes: function(index){
+                                form.on('submit(fromContent)',function(){
+                                    ajaxsend($("form").serialize(), "/admin/ad/position/update.json", function (dataJson) {
+                                        if(dataJson.result==true){
+                                            layer.alert("修改成功！", function (alertIndex) {
+                                            	callParent.parentUse("ad_list", "search");
+                                                layer.close(alertIndex);
+                                                layer.close(index);
+                                            })
+                                        }
+                                    }, "postForm");
+                                })
+                            }
+                          });
+                    });
+                })
+            })
+            
+            callParent.isLoadEnd("ad_list");
+            callParent.register(function () {
+            	getPosition();
+            }, "search");
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+    <link rel="stylesheet" href="../../common/css/amazeui.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/css/font-style.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <style>
+        html {
+            /*overflow-x: hidden;*/
+            color: #646976;
+        }
+
+        .layui-form-label {
+            width: 135px;
+        }
+
+        .layui-form-checkbox[lay-skin="primary"] span {
+            padding-right: 6px;
+        }
+
+        .commodityAttributes .layui-input-inline {
+            width: 800px;
+        }
+
+        .commodityAttributes .layui-input-inline .layui-form-checkbox[lay-skin="primary"] span {
+            padding-right: 52px;
+        }
+
+        .layui-table td, .layui-table th {
+            padding: 0;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .layui-table input {
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="list">
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title paddR50">
+            <li class="layui-this show-this" onclick="refreshLocalHtml();">订单信息</li>
+            <li class="productInfo show-this" id="topProDiveInfo">商品信息</li>
+            <li class="recieveInfo">收款信息</li>
+            <li class="sendGoodsInfo">发货信息</li>
+            <li class="openTicketInfo">开票信息</li>
+            <li class="orderLogInfo">订单日志</li>
+        </ul>
+        <div class="layui-tab-content paddR0">
+            <!--订单信息-->
+            <div class="layui-tab-item layui-show">
+                <!--完成步骤-->
+                <div class="mizone-button-groups button-w70">
+                    <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="payButton">支付</button>
+<!--                     <button class="layui-btn layui-btn-primary layui-btn-small btn-w86" id="divideButton">拆单</button>
+ -->                    <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="checkButton">审核订单</button>
+<!--                     <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="printJxdButton">打印拣货单</button> -->
+<!--                     <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="printExpressButton">打印快递单</button> -->
+<!--                     <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="sendGoodsButton">发货</button> -->
+                    <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="cansleButton">取消订单</button>
+                    <button class="layui-btn  layui-btn-small layui-btn-disabled btn-w86" id="completeButton">完成订单</button>
+                </div>
+                <!--<h2 class="title2">订单信息</h2>-->
+                <div style="position: relative">
+                    <h2 class="title2"><span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>订单信息</h2>
+                    <div class="mizone-button-groups button-w70" style="position: absolute;bottom: 7px;right: 0">
+                        <button class="layui-btn layui-btn-primary layui-btn-small" id="orderPriceEdit">编辑</button>
+                    </div>
+                </div>
+                <!--详细显示-->
+                <div class="order-content-container layui-clear">
+                    <div class="left-logo" id="logoInfo">
+                       <p class="orderPrice">￥<span id="showActrualPay"></span></p>
+                    </div>
+
+                    <div class="rightContent">
+                        <div class="rightContentList">
+                            <div class="rightContentInline">
+                                <label class="labelW75">订单编号&#58</label>
+                                <span id="orderSn" class="first-group"></span>
+                            </div>
+                            <div class="rightContentInline">
+                                <label class="labelW75">收货人&#58</label>
+                                <span id="consignee"></span>
+                            </div>
+                            <div class="rightContentInline">
+                                <label class="labelW75 userAccountEdit">会员账号&#58</label>
+                                <span id="userAccount"></span>
+                            </div>
+                        </div>
+                        <div class="rightContentList">
+                            <div class="rightContentInline">
+                                <label class="labelW75">平台来源&#58</label>
+                                <span id="platformName" class="first-group"></span>
+                            </div>
+                            <div class="rightContentInline">
+                                <label class="labelW75">发货仓库&#58</label>
+                                <span id="warehouseName"></span>
+                            </div>
+                             <div class="rightContentInline">
+                                <label class="labelW75">波次状态&#58</label>
+                                <span id="bcStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-content-b">
+                        <ul class="list-details">
+                            <li>
+                                <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">商品总额：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="orderAmount"></span>
+                                    </div>
+                                </div>
+                                <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">(含)邮费：</label>
+                                    <div class="fl Width300 normalEdit">
+                                        <span class="spanW300 list-details-span priceEdit" id="postFee"></span>
+                                    </div>
+                                     <div class="fl Width300 edit" style="display: none">
+                                        <input class="layui-input editInput" maxlength="10" value="" data-id=""
+                                               autocomplete="off" x-webkit-speech=""
+                                               x-webkit-grammar="builtin:translate" role="combobox" aria-haspopup="true"
+                                               type="num" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+                                    </div>
+                                </div>
+                              
+                            </li>
+                            <li>
+                                <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">促销金额：</label>
+
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="promotion"></span>
+                                    </div>
+                                </div>
+                                  <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">促销活动：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="promotionDesc"></span>
+                                    </div>
+                                </div>
+                               
+                            </li>
+                            <li>
+                                <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">优惠金额：</label>
+
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="coupon"></span>
+                                    </div>
+                                </div>
+                                  <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">优惠券：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="couponDesc"></span>
+                                    </div>
+                                </div>
+                               
+                            </li>
+                            <li>
+                                <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">调整金额：</label>
+
+                                    <div class="fl Width300 normalEdit">
+                                        <span class="spanW300 list-details-span priceEdit" id="adjustFee"></span>
+                                    </div>
+                                    <div class="fl Width300 edit" style="display: none">
+                                        <input class="layui-input editInput" maxlength="10" value="" data-id=""
+                                               autocomplete="off" x-webkit-speech=""
+                                               x-webkit-grammar="builtin:translate" role="combobox" aria-haspopup="true"
+                                               type="num" onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)">
+                                    </div>
+                                </div>
+                                 <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">调整金额备注：</label>
+                                    <div class="fl Width300 normalEdit">
+                                        <span class="spanW300 list-details-span priceEdit" id="adjustRemark"></span>
+                                        
+                                    </div>
+                                     <div class="fl Width300 edit" style="display: none">
+                                        <input class="layui-input editInput" maxlength="10" value="" data-id=""
+                                               autocomplete="off" x-webkit-speech=""
+                                               x-webkit-grammar="builtin:translate" role="combobox" aria-haspopup="true"
+                                               type="text">
+                                    </div>
+                                </div>
+                               
+                            </li>
+                            <li>
+                               <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">应收金额：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="actrualFee"></span>
+                                    </div>
+
+                                </div>
+                                 <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">商品数量：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="proNum"></span>
+                                    </div>
+                                </div>
+                               
+                            </li>
+                            <li>
+                            	<div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">已收金额：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="payAmount"></span>
+                                    </div>
+                                </div>
+                                 <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">商品重量：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="weight"></span>
+                                    </div>
+                                </div>
+                                
+                            </li>
+                            
+                            <li>
+                                <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">积分抵用金额：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="coinAmount"></span>
+                                    </div>
+                                </div>
+                                 <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">创建时间：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="createTime"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="miozne-inline">
+                                    <label class="labelW140 list-details-label">实际抵用的积分值：</label>
+
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="balancePayment"></span>
+                                    </div>
+                                </div>
+                                 <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">发货时间：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="consignTime"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">线上支付：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="onlinePay"></span>
+                                    </div>
+                                </div>
+                                <div class="miozne-inline layui-clear">
+                                    <label class="labelW140 list-details-label">线下支付：</label>
+                                    <div class="fl Width300">
+                                        <span class="spanW300 list-details-span" id="offlinePay"></span>
+                                    </div>
+                                </div>
+<!--                                  <div class="miozne-inline layui-clear"> -->
+<!--                                     <label class="labelW140 list-details-label">拣货单打印次数：</label> -->
+<!--                                     <div class="fl Width300"> -->
+<!--                                         <span class="spanW300 list-details-span" id="jxdPrintCount"></span> -->
+<!--                                     </div> -->
+<!--                                 </div> -->
+                            </li>
+                            <li>
+<!--                                  <div class="miozne-inline layui-clear"> -->
+<!--                                     <label class="labelW140 list-details-label">快递单打印次数：</label> -->
+<!--                                     <div class="fl Width300"> -->
+<!--                                         <span class="spanW300 list-details-span" id="expressPrintCount"></span> -->
+<!--                                     </div> -->
+<!--                                 </div> -->
+                            </li>
+                        </ul>
+                    </div>
+                    <!--<div class="button-change">编辑</div>-->
+                </div>
+                <!--分割线-->
+                <div style="position: relative">
+                    <h2 class="title2"><span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>收货信息</h2>
+                    <div class="mizone-button-groups button-w70" style="position: absolute;bottom: 7px;right: 0">
+                        <button class="layui-btn layui-btn-primary layui-btn-small" id="orderAddressEdit">编辑</button>
+                    </div>
+                </div>
+                <!--地址 备注信息修改 显示-->
+                <div class="layui-form poR keep-state">
+                    <div class="layui-form-item mizone-order-item" style="display: none" id="nameTelMessage">
+                        <div class="layui-inline">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>收货人</label>
+                            <div class="layui-input-inline inputW338">
+                                <input type="hidden" value="" id="warehouseId">
+                                <input type="text" class="layui-input addressEdit" value="" id="reciverName">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>收件电话</label>
+                            <div class="layui-input-inline inputW338">
+                                <input type="text" class="layui-input addressEdit" value="" id="reciverPhone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item mizone-order-item" id="nameTelMessageShow">
+                        <div class="layui-inline">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>收货人</label>
+                            <div class="layui-input-inline inputW338">
+                                <!--<input type="hidden" value="" id="warehouseIdShow">-->
+                                <!--<input type="text" class="layui-input addressEdit" value="" id="reciverNameShow">-->
+                                <span class="layui-input addressEdit" value="" id="reciverNameShow"></span>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>收件电话</label>
+                            <div class="layui-input-inline inputW338">
+                                <!--<input type="text" class="layui-input addressEdit" value="" id="reciverPhoneShow">-->
+                                <span class="layui-input addressEdit" id="reciverPhoneShow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item mizone-order-item" style="display: none" id="addresstipsW">
+                        <div class="layui-inline" id="addresstips">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>所在地区</label>
+                            <div class="layui-input-inline" id="proviceList">
+                                <select id="province" lay-filter="provinceFilter" class="addressEdit">
+                                    <option value="">请选择省</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="display: none" id="cityList">
+                                <select id="city" lay-filter="cityFilter" class="addressEdit">
+                                    <option value="">请选择市</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="display: none" id="areaList">
+                                <select id="sysarea" class="addressEdit">
+                                    <option value="">请选择县/区</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item mizone-order-item" style="display: none" id="fullAddressW">
+                       <div class="layui-inline">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>详细地址</label>
+                            <div class="layui-input-inline inputW438">
+                                <input type="text" class="layui-input addressEdit" value="" id="fullAddress">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item mizone-order-item" id="fullAddressTW">
+                        <div class="layui-inline">
+                            <label class="layui-form-label mizone-order-label"><span style="color:red">*</span>客户地址</label>
+                            <div class="layui-input-inline inputW438">
+                                <!--<input type="text" class="layui-input addressEdit" value="" id="fullAddressT">-->
+                                <span class="layui-input addressEdit" id="fullAddressT"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item mizone-order-item">
+                        <div class="layui-inline ">
+                            <label class="layui-form-label mizone-order-label">客户留言</label>
+                            <div class="layui-input-inline inputW438">
+                                <input type="text" class="layui-input" value="" id="buyerMessage" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item mizone-order-item">
+                        <div class="layui-inline ">
+                            <label class="layui-form-label mizone-order-label">订单备注</label>
+                            <div class="layui-input-inline inputW438">
+                                <input type="text" class="layui-input addressEdit" value="" id="sellerMessage">
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="button-change">编辑</div>-->
+                </div>
+                <div id="storeInfo">
+                    <div style="position: relative">
+                        <h2 class="title2"><span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>门店信息</h2>
+                    </div>
+                    <div class="layui-form poR keep-state">
+                        <div class="layui-form-item mizone-order-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label mizone-order-label">门店编号:</label>
+                                    <div class="layui-input-inline inputW338">
+                                        <span class="layui-input addressEdit" id="storeNo" ></span>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label mizone-order-label">门店名称:</label>
+                                    <div class="layui-input-inline inputW338">
+                                        <span class="layui-input addressEdit" id="storeName"></span>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="layui-form-item mizone-order-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label mizone-order-label">门店联系人:</label>
+                                    <div class="layui-input-inline inputW338">
+                                        <span class="layui-input addressEdit" id="storeContact" ></span>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label mizone-order-label">联系电话:</label>
+                                    <div class="layui-input-inline inputW338">
+                                        <span class="layui-input addressEdit" id="contactsPhone"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="layui-form-item mizone-order-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label mizone-order-label">收货地址:</label>
+                                <div class="layui-input-inline inputW438">
+                                    <span class="layui-input addressEdit " id="storeAddress"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--商品信息-->
+            <div class="layui-tab-item" id="proDiveInfo">
+                <div class="layui-inline" id="addProDiv">
+                
+           		 </div>
+           		  <div class="layui-inline fr">
+                    <a href="javascript:;" class="layui-btn layui-btn-small" id="edit_commodity">编辑</a>
+                </div>
+             <div class="layui-form">
+                <table class="layui-table" style="table-layout: fixed;width: 100%;max-width: 100%">
+                    <thead>
+                    <tr>
+                        <th width="45%">SKU编码/商品名称</th>
+                        <th width="10%">品牌</th>
+                        <th width="5%">单位</th>
+                        <th width="15%">商品分类</th>
+                        <th width="5%">销售单价</th>
+                        <th width="5%">下单数量</th>
+                        <th width="5%">小计</th>
+                        <th width="5%">销售库存</th>
+                        <th width="5%">实际库存</th>
+                        <th width="5%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="storageInItemsContent" lay-verify="productInfolistVerify">
+                    
+                    </tbody>
+                </table>
+            
+        </div>
+            </div>
+			
+			 <!--收款信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <td width="18%">支付编号</td>
+                        <td width="18% ">支付类型</td>
+                        <td width="18%">支付方式</td>
+                        <td width="11%">付款金额</td>
+                        <td width="15%">支付状态</td>
+                        <td width="20%">付款时间</td>
+                    </tr>
+                    </thead>
+                    <tbody id="payInfoList">
+
+                    </tbody>
+                </table>
+            </div>
+            
+            <!--发货信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <td width="20%">物流公司</td>
+                        <td width="20% ">物流单号</td>
+                        <td width="20%">收货人</td>
+                        <td width="5%">参考运费</td>
+                        <td width="35%">发货时间</td>
+                    </tr>
+                    </thead>
+                    <tbody id="logisticsList">
+
+                    </tbody>
+                </table>
+            </div>
+            <!--开票信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <td width="20%">开票公司名称</td>
+                        <td width="20%">纳税人识别号</td>
+                        <td width="20%">开户行</td>
+                        <td width="40%">银行帐号</td>
+                    </tr>
+                    </thead>
+                    <tbody id="invoiceList">
+
+                    </tbody>
+                </table>
+            </div>
+            <!--日志信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <td width="20%">操作名称</td>
+                        <td width="20% ">操作明细</td>
+                        <td width="20%">操作人</td>
+                        <td width="40%">操作时间</td>
+                    </tr>
+                    </thead>
+                    <tbody id="logInfoList">
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="mizone-bottom-btn">
+		<button class="layui-btn" id="closeButton">返回</button>    
+	</div>
+
+    <div id="pager" style="display: none"></div>
+    <div id="payOrderHtml" style="display: none"></div>
+    <div id="checkOrderHtml" style="display: none">
+    	<div class="layui-form choiceLogistics" style="margin-bottom: 0">
+        <div class="layui-inline">
+            <label class="dialog_label"><span style="color:red">*</span>分配仓库</label>
+            <div class="layui-input-inline">
+                <select id="consumeListSelect" lay-filter="consumeFilter">
+                    <option value="-1">选择经销商</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="dialog_label"></label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="changeWarehouseOrderId"/>
+                <select id="warehoustListSelect" lay-filter="warehouseFilter">
+                    <option value="-1">选择仓库</option>
+                </select>
+            </div>
+        </div>
+    	</div>
+    	<div class="layui-form choiceLogistics">
+    	<div class="layui-inline" style="display:none;">
+        <label class="dialog_label">分配物流</label>
+        <div class="layui-input-inline">
+            <select id="expressListSelect">
+                <option value="-1">选择物流</option>
+            </select>
+        </div>
+        </div>
+        <div class="layui-inline">
+        <label class="dialog_label">选择督导</label>
+        
+        <div class="layui-input-inline">
+            <select id="supervisorList">
+                <option value="-1">选择督导</option>
+            </select>
+            <!--<div class="am-selected am-dropdown  am-active" id="am-selected-supervisorList" style="width: 195px">
+                <input type="text" class="am-selected-btn am-btn am-dropdown-toggle am-btn-default"
+                       placeholder="请选择督导">
+                <i class="edge"></i>
+                <div class="am-selected-content am-dropdown-content"
+                     style="min-width: 195px;display: none">
+                    <div class="am-selected-search">
+                        <input autocomplete="off" class="am-form-field am-input-sm">
+                    </div>
+                    <ul class="am-selected-list" style="max-height: 300px;overflow-y: auto" id="supervisorList">
+                    </ul>
+                </div>
+            </div>-->
+        </div>
+    	</div>
+    	</div>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <td width="5%">序号</td>
+            <td width="20% ">SKU编码</td>
+            <td width="16%">品牌</td>
+            <td width="27%">商品名称</td>
+            <td width="5%">单位</td>
+            <td width="9%">下单数量</td>
+            <td width="9%">销售库存</td>
+            <td width="9%">实际库存</td>
+        </tr>
+        </thead>
+        <tbody id="productAndInventoryList">
+        </tbody>
+        </table>
+    </div>
+</div>
+<div class="layui-form dialog" id="form_addCommodity" style="display: none">
+    <form id="formOrdeProduct">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label padd_top" style="width: 30px;">品牌</label>
+                <div class="layui-input-inline">
+                    <select id="slcBrand" name="brandId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <label class="layui-form-label padd_top" style="width: 60px;">商品分类</label>
+                <div class="layui-input-inline">
+                    <select id="slcProductType" name="typeId">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline ">
+                <input type="text" name="inputStr" placeholder="商品编码/SKU编码" style="width: 250px;"
+                       autocomplete="off" class="layui-input small mizo-srarch-input">
+                <button class="layui-btn layui-btn-small" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+        </div>
+        <div id="hidNotInSku" style="display: none;"></div>
+    </form>
+    <div style="padding: 0 10px">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th></th>
+              	<th>SKU编码</th>
+                <th>品牌</th>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>商品分类</th>
+            </tr>
+            </thead>
+            <tbody id="proListContent">
+
+            </tbody>
+    	</table>
+    </div>
+    <div class="cf" align="right" style="margin-right: 20px">
+        <div id="pageNum"></div>
+    </div>
+</div>
+<div class="list" style="display: none" id="mergeHtml">
+    <!--分割线-->
+    <h2 class="title2">
+        <span class="icon-gongsisvgtubiaozongji22 title-iocn"></span>
+       	 可合并订单
+    </h2>
+
+    <!--订单列表-->
+    <div class="table_box layui-form" id="merOrderList">
+
+    </div>
+</div>
+<div id="editExpressHtml" style="display: none">
+		<div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>物流公司</label>
+                    <div class="layui-input-inline">
+              	 	 <select id="expressList" style="width:220px" lay-filter="expressChange" lay-verify="required">
+                          <option value="">物流公司</option>
+                      </select>
+					</div>
+                </div>
+            </div>
+		<div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span style="color:red">*</span>运单号</label>
+                    <div class="layui-input-inline">
+              	 	 	<input type="text" name="inputExpressNo" id="maxExpressNo" autocomplete="off" class="layui-input" style="width:220px">
+              	 	 	<input type="hidden" id="hideWarehouseId">
+					</div>
+                </div>
+        </div>
+		<div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="checkbox" id="checkElectricExpress" title="电子面单"> 
+                <input type="checkbox" id="checkPrint" title="重置打印机"> 
+            </div>
+        </div>
+  </div>
+<div id="sendGoodsHtml" style="display: none">
+     <table class="layui-table">
+        <thead>
+        <tr>
+            <td width="5%">序号</td>
+            <td width="20% ">SKU编码</td>
+            <td width="16%">品牌</td>
+            <td width="27%">商品名称</td>
+            <td width="5%">单位</td>
+            <td width="9%">下单数量</td>
+            <td width="9%">销售库存</td>
+            <td width="9%">实际库存</td>
+        </tr>
+        </thead>
+        <tbody id="productAndInventoryListForExpress">
+        </tbody>
+        </table>
+</div>
+<div id="totalOrderDetailHtml" style="display: none">
+
+</div>
+<!--审核弹窗-->
+<script type="text/javascript" src="../../js/common.js?v=2.12"></script>
+<script type="text/javascript" src="../../common/js/orderInfo/orderDetail.js?v=2.13"></script>
+<script type="text/javascript" src="../../common/js/area.js?v=2.12"></script>
+<script type="text/javascript" src="../../js/print/printChild.js?v=2.12"></script>
+<script id="tplOrderProductInventoryInfoTpl" type="text/html">
+                {{# layui.each(d, function(index, item){ }}
+                <tr {{#  if(item.saleNum==null||item.saleNum<0||(item.skuCode!=item.checkSkuCode)||item.skuCode==null){ }} style="color:red" {{#	 } }}>
+                    <td>{{++index}}</td>
+                    <td>{{item.skuCode}}</td>
+                    <td>{{item.brandName||''}}</td>
+                    <td style="text-align: left">{{item.proName||''}}{{item.skuCode==item.checkSkuCode&&item.skuCode!=''?'':'(没有本地商品信息)'}}</td>
+                    <td>{{item.packageUnit||''}}</td>
+                    <td>{{item.buyNum || ''}}</td>
+                    <td>{{item.saleNum==null?'':item.saleNum}}</td>
+                    <td>{{item.inventoryNum==null?'':item.inventoryNum}}</td>
+                </tr>
+                {{# }); }}
+</script>
+<script id="tplAddItems" type="text/html">
+    <tr>
+        <td>
+            <div  class="productSearchDiv relative">
+                <input type="text" name="" placeholder="商品名称/SKU编码" style="width: 100%"
+                       class="layui-input small mizo-srarch-input productSearch">
+                <input type="button" class="layui-btn layui-btn-small layui-icon change relative-search-btn" value="&#xe615;">
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="state_uhandle">
+            <div class=" deleteDiv">
+                <button class=" delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+<script id="tplProductLi" type="text/html">
+    <ul>
+        {{# layui.each(d, function(index, item){ }}
+        <li skucode="{{item.skuCode}}" class="skucodeList">{{item.skuCode}} / {{item.name}}
+        </li>
+        {{# }); }}
+    </ul>
+</script>
+<script id="tplStorageInItems" type="text/html">
+    {{#  layui.each(d.storageItemDTOList, function(index, item){ }}
+    <tr>
+        <td>
+            <div class="productSearchDiv relative">
+                <input class="proSku" type="hidden" name="{{item.productName}}"
+                       value="{{item.skuCode}}"/>
+                <input type="text" name="proskuCode" placeholder="商品名称/SKU编码" value="{{item.skuCode||'无sku'}} / {{item.productName}}{{(item.checkSkuCodeFlag!=null&&!item.checkSkuCodeFlag)?'(没有本地商品信息)':''}}"
+                       class="layui-input small mizo-srarch-input productSearch" style="width: 100%;{{# if(item.checkSkuCodeFlag!=null&&!item.checkSkuCodeFlag){ }}color:red {{# } }}" autocomplete="off">
+            	<input type="button" class="layui-btn layui-btn-small layui-icon change relative-search-btn" value="&#xe615;">
+            	
+            </div>
+        </td>
+        <td class="clearTd">{{item.brandName||''}}</td>
+        <td class="clearTd">{{item.productUnit||''}}</td>
+        <td class="clearTd">{{item.categoryName||''}}</td>
+        <td class="clearTd">
+            <input type="number" min="1" name="proPrice"
+                   class="layui-input small mizo-srarch-input proPrice" style="text-align:center;width: 100%"
+                   value="{{item.price || 0 }}" lay-verify="required"/></td>
+        <td class="clearTd">
+            <input type="number" min="1" name="proNum"
+                   class="layui-input small mizo-srarch-input proNum" style="text-align:center;width: 100%"
+                   value="{{item.num || 0}}" lay-verify="required"/></td>
+        </td>
+		<td name="priceAmount" class="priceAmount clearTd">
+			{{((item.price || 0)*(item.num ||1)).toFixed(2)}}
+		</td>
+		<td class="clearTd">
+			{{item.saleInventory==null?'':item.saleInventory}}
+		</td>
+		<td class="clearTd">
+			{{item.inventoryNum==null?'':item.inventoryNum}}
+		</td>
+        <td class="clearTd state_uhandle">
+            <div class=" deleteDiv">
+             <button class=" delete">
+                    <i class="icon-delete"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+ 	{{# if(d==null||d.storageItemDTOList==null||d.storageItemDTOList.length === 0){ }}
+       <tr aglin='center' style="color:red"><td colspan="9">没有对应的本地商品信息，请检查本地数据库中是否有该商品</td></tr>
+    {{# } }}
+</script>
+<script id="tplProList" type="text/html">
+    {{#  layui.each(d.result, function(index, item){ }}
+    <tr>
+        <td><input name="skuCodes" lay-skin="primary" type="checkbox" value="{{item.skuCode}}"></td>
+        <td>{{item.skuCode}}</td>
+        <td>{{item.brandName}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.categoryName}}</td>
+    </tr>
+    {{#  }); }}
+	{{# if(d==null||d.result.length== 0){ }}
+       <tr aglin='center' style="color:red"><td colspan="9">无商品信息</td></tr>
+    {{# } }}
+</script>
+
+<!--支付弹窗-->
+<script type="text/html" id="payOrder">
+    <div class="layui-form form-box">
+        <div class="layui-form-item dialog_form_item">
+            <div class="layui-clear">
+                <label class="dialog_label">订单编号：</label>
+                <span class="dialog_span color_orange" id="toPayOrderSn"></span>
+            </div>
+        </div>
+
+        <div class="layui-form-item dialog_form_item">
+            <div class="layui-clear">
+                <label class="dialog_label">支付金额：</label>
+              	<span class="dialog_span color_orange">￥:</span><span class="dialog_span color_orange" id="toPayOrderPrice"></span><span class="dialog_span color_orange" id="showSaleActivityMsh"></span>
+            </div>
+        </div>
+
+        <div class="layui-form-item dialog_form_item">
+            <div class="layui-inline">
+                <label class="dialog_label">支付方式：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <select id="payMethodList">
+                        <option value="-1">请选择支付方式</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <div class="layui-inline">
+                <label class="dialog_label">付款人：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <input type="text" class="layui-input" maxlength="6" id="payUserName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="dialog_label">收款银行：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <input type="text" class="layui-input" id="reciverBank">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item dialog_form_item">
+            <div class="layui-inline">
+                <label class="dialog_label">收款账号：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <input type="text" class="layui-input" maxlength="20" id="reciverAccount">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="dialog_label">备注：</label>
+                <div class="layui-input-inline dialog_input_inline">
+                    <input type="text" class="layui-input" id="payRemark">
+                </div>
+            </div>
+        </div>
+ 		<div class="layui-form-item dialog_form_item">
+            <div class="layui-clear">
+                <label class="dialog_label">优惠信息：</label>
+              	<span class="dialog_span">
+				<ul id="saleActivityList">
+				</ul>
+				</span>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!--发货Message-->
+<script type="text/html" id="logisticsListTpl">
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{item.trackingName||''}}</td>
+        <td>{{item.trackingNo||''}}</td>
+        <td>{{item.conName||''}}</td>
+        <td>{{item.price||''}}</td>
+        <td>{{item.operTime==null?"":laydate.now(item.operTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.length === 0){ }}
+       <tr aglin='center'><td colspan="5">无物流信息</td></tr>
+    {{# } }}
+</script>
+<!--付款Message-->
+<script type="text/html" id="payInfoListTpl">
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{item.paySn||''}}</td>
+        <td>{{changePayStatus(item.method)}}</td>
+        <td>{{item.payPluginName||''}}</td>
+        <td>{{item.amount||''}}</td>
+        <td>{{item.statusName||''}}</td>
+        <td>{{item.payTime==null?"":laydate.now(item.payTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.length === 0){ }}
+       <tr aglin='center'><td colspan="6">无收款信息</td></tr>
+    {{# } }}
+</script>
+<!--日志Message-->
+<script type="text/html" id="logListTpl">
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{item.typeDesc||''}}</td>
+        <td>{{item.content||''}}</td>
+        <td>{{item.createAccount||''}}</td>
+        <td>{{laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.length === 0){ }}
+       <tr aglin='center'><td colspan="4">无日志信息</td></tr>
+    {{# } }}
+</script>
+<script type="text/html" id="invoiceListTpl">
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{item.invoiceCompanyName||''}}</td>
+        <td>{{item.taxpayerIdentificationNo||''}}</td>
+        <td>{{item.openBank||''}}</td>
+        <td>{{item.account||''}}</td>
+    </tr>
+    {{# }); }}
+
+    {{# if(d.length === 0){ }}
+       <tr aglin='center'><td colspan="4">无日志信息</td></tr>
+    {{# } }}
+</script>
+<script id="tplOption" type="text/html">
+ 	<option value="">请选择</option>
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+    {{#  }); }}
+</script>
+<script id="saleActiveTPL" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <li>优惠名称:{{item.saleActiveName}}--优惠金额:{{item.discountAmount}}</li>
+    {{#  }); }}
+
+</script>
+<script id="warehouseListTpl" type="text/html">
+<option value="-1">选择仓库</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+ {{#  }); }}
+</script>
+<script id="consumerListTpl" type="text/html">
+<option value="-1">选择经销商</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.companyShortName}}</option>
+ {{#  }); }}
+</script>
+<script id="expressListTpl" type="text/html">
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}" expressCode="{{item.code}}" title="{{item.name}}" isWaybill="{{item.isWaybill}}">{{item.name}}-{{item.address}}</option>
+ {{#  }); }}
+ {{# if(d.length === 0){ }}
+       <option value="-1">选择物流网点</option>
+ {{# } }}
+</script>
+<script id="payMethodListTpl" type="text/html">
+<option value="-1">选择支付方式</option>
+ {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}</option>
+ {{#  }); }}
+</script>
+<script id="supervisorListTpl" type="text/html">
+    <option value="-1">选择督导</option>
+    {{# layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.supervisorName}}</option>
+    {{#  }); }}
+</script>
+<!--
+<script id="supervisorListTpl" type="text/html">
+    {{# layui.each(d, function(index, item){ }}
+    <li class="" value="{{item.id}}"><span class="am-selected-text">{{item.supervisorName}})</span> <i class="am-check icon-duigou"></i></li>
+    {{#  }); }}
+</script>
+-->
+<script id="merOrderListTpl" type="text/html">
+{{#  layui.each(d, function(index, item){ }}
+ <table class="layui-table text_left">
+            <thead>
+            <tr>
+                <td class="paddl3">
+                </td>
+                <td width="15%">订单编号</td>
+                <td width="15%">收货人</td>
+                <td width="15%">收货电话</td>
+                <td width="15%">会员账号</td>
+                <td width="10%">发货仓库</td>
+                <td width="10%">平台</td>
+                <td width="10%">状态</td>
+                <td width="10%">创建日期</td>
+            </tr>
+            </thead>
+            <tbody>
+<tr id="{{item.id}}">
+<td class="text-c">
+    <input type="hidden" class="version" value="{{item.version}}">
+    <input type="hidden" class="areaId value="{{item.userAddressId}}">
+    <input type="checkbox" lay-skin="primary" name="">
+</td>
+<td onclick="Public.openAndClose(this)" class="cursor_p">{{item.sn}}</td>
+<td class="consignee">{{item.consignee}}</td>
+<td class="phoneNo">{{item.phoneNo}}</td>
+<td>{{item.userName}}</td>
+<td class='warehouse' warehouseId="{{item.warehouseId}}">{{item.warehouseName}}</td>
+<td class='source' source="{{item.source}}">{{item.sourceName}}</td>
+<td>{{changeStatus(item.status)}}</td>
+<td>{{laydate.now(item.createTime,'YYYY-MM-DD')}}</td>
+</tr>
+<tr>
+<td colspan="7" class="detail">
+    <!--订单详细-->
+    <div class="togetherList">
+        <div class="listHeader">
+            <div class="wp10">SKU编码</div>
+            <div class="wp24">商品名称</div>
+            <div class="wp15">品牌</div>
+            <div class="wp10">单位</div>
+            <div class="wp15">商品分类</div>
+            <div class="wp8">销售单价</div>
+            <div class="wp8">下单数量</div>
+            <div class="wp10">小计</div>
+        </div>
+        <ul class="listBody">
+ 			{{#  layui.each(item.orderProductInventoryInfoList, function(index, item){ }}
+            <li>
+                <div class="wp10">{{item.skuCode}}</div>
+                <div class="wp24">{{item.proName}}</div>
+                <div class="wp15">{{item.brandName}}</div>
+                <div class="wp10">{{item.packageUnit}}</div>
+                <div class="wp15">{{item.categoryName}}</div>
+                <div class="wp8">{{item.price}}</div>
+                <div class="wp8">{{item.buyNum}}</div>
+                <div class="wp10">{{item.price*item.buyNum}}</div>
+            </li>
+			{{#  }); }}
+			{{#  if(item.orderProductInventoryInfoList.length == 0){ }}
+			<tr aglin='center'><td colspan="8">无数据</td></tr>
+			{{#  } }}
+        </ul>
+    </div>
+</td>
+</tr>
+ </tbody>
+ </table>
+{{#  }); }}
+
+{{#  if(d.length == 0){ }}
+<tr aglin='center'><td colspan="6">无数据</td></tr>
+{{#  } }}	
+</script>
+<script>
+    (function ($, window) {
+        var Public = {
+            openAndClose: function (parent) {
+                var $this=$(parent),$target=$this.parent('tr').next().children('td');
+                if(!this.isOpen){
+                    $target.slideUp('fast');
+                    this.isOpen = true
+                }else {
+                    $target.slideDown('fast');
+                    this.isOpen=false
+                }
+            }
+        }
+        window.Public = Public
+    })(jQuery, window)
+</script>
+<script id="detailTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+   <div class="box jxd" id="box{{(index+1)}}">
+    <div class="header">
+        <div><h3>杭州中策空间汽车服务有限公司发货单</h3></div>
+        <div style="position: relative;font-size: 14px">
+            <ul class="cf">
+                <li><span style="font-size: 18px;padding-right: 10px;font-weight: 700">{{item.reciverName}}</span></li>
+                <li><span style="font-size: 18px;padding-right: 10px;font-weight: 600">{{item.reciverPhone}}</span></li>
+            </ul>
+            <ul class="cf">
+				<li><i style="float:left">收货地址:</i><span style="display:inline-block;width:450px">{{item.address}}</span></li>
+            </ul>
+            <ul class="cf">
+                <li><i>订单编号:</i><span>{{item.orderSn}}</span></li>
+                <li><i>打印日期:</i><span>{{laydate.now()}}</span></li>
+                <li><i>总重量:</i><span>{{item.weight}}kg</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <table>
+            <tr>
+                	<th width="30">序号</th>
+                    <th width="150">SKU编码</th>
+                    <th width="380">商品名称</th>
+                    <th width="100">库位编码</th>
+                    <th width="40">数量</th>
+                    <th width="60">包装数量</th>
+            </tr>
+   			 {{#  layui.each(item.orderProductList, function(index, item){ }}
+            <tr rowspan="2">
+                <td>{{++index}}</td>
+                <td>{{item.skuCode}}</td>
+                <td>{{item.proName}}</td>
+                <td>{{item.inventorySn||""}}</td>
+                <td>{{item.buyNum}}{{item.proUnit==null?"":item.proUnit}}</td>
+                <td>{{Math.floor(item.buyNum/item.packageNum)+item.packageUnit}}{{item.buyNum%item.packageNum != 0 ?(item.buyNum%item.packageNum+item.proUnit):""}}</td>
+            </tr>
+			{{#  layui.each(item.listPackageDetaiList, function(index, newItem){ }}
+					<tr>
+					<td>-</td>
+               		 <td style="font-size: 12px;padding-left:3px;font-style:italic">{{newItem.skuCode}}</td>
+               		 <td style="text-align: left;font-size: 12px;padding-left:3px;font-style:italic">{{newItem.proName}}</td>
+               		 <td style="font-size: 12px"></td>
+               		 <td style="font-size: 12px;">{{newItem.buyNum*item.buyNum}}{{newItem.proUnit==null?"":newItem.proUnit}}</td>
+               		 <td style="font-size: 12px">{{Math.floor(newItem.buyNum*item.buyNum/newItem.packageNum)+newItem.packageUnit}}{{newItem.buyNum*item.buyNum%newItem.packageNum != 0 ?(newItem.buyNum*item.buyNum%newItem.packageNum+newItem.proUnit):""}}</td>
+            		</tr>
+			{{#  }); }}
+ 		   {{#  }); }}
+            <tr>
+		{{#  if(item.buyerMessage!=null&&item.buyerMessage != ""){ }}
+                <th class="message" colspan="7" style="border-bottom: none">买家留言:{{item.buyerMessage}}</th>
+ 		{{#  } }}
+            </tr>
+            <tr>
+               {{#  if(item.sellerMessage!=null&&item.sellerMessage != ""){ }}
+                      <th class="message" colspan="7" style="border: none">订单备注:{{item.sellerMessage}}</th>
+               {{#  } }}
+            </tr>
+        </table>
+    </div>
+</div>
+    {{#  }); }}
+    {{#  if(d==null||d.length == 0){ }}
+   <tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="detailA4Tpl">
+{{#  layui.each(d, function(index, item){ }}
+	<div class="box a4jxd">
+	    <div class="for-buyer">
+	        <div class="header">
+	            <h3>杭州中策车空间汽车服务有限公司发货单</h3>
+	            <div style="font-size:14px">
+				<ul class="cf">
+                    <li style="display: block"><span style="font-size: 18px;padding-right: 10px;font-weight: 700">{{item.reciverName}}</span>
+                        <span style="font-size:14px;font-weight:600">{{item.reciverPhone}}</span></li>
+					<li><i style="float:left"><span style="font-style:normal">收货地址:</span></i><span style="display:inline-block;width:450px">{{item.address}}</span></li>
+                    <li class="cf" style="display:block">
+                        <div class="fl num-wrap" style="display: inline-block"><span >订单编号:</span><span class="orderSn">{{item.orderSn}}</span></div>
+                        <div class="fl num-wrap" style="display: inline-block"><span>打印日期:</span><span>{{laydate.now()}}</span></div>
+                        <div class="fl num-wrap" style="display: inline-block"><span>总重量:</span><span>{{item.weight}}kg</span></div>
+                    </li>
+                </ul>
+	            </div>
+	        </div>
+	        <div class="content">
+	            <table>
+	                <tr class="bot">
+	                    <th width="30">序号</th>
+                    	<th width="150">SKU编码</th>
+                    	<th width="380">商品名称</th>
+                    	<th width="100">库位编码</th>
+                    	<th width="40">数量</th>
+                    	<th width="60">包装数量</th>
+	                </tr>
+	                 {{#  layui.each(item.orderProductList, function(index, item){ }}
+            			<tr rowspan="2">
+               		 <td>{{++index}}</td>
+               		 <td>{{item.skuCode}}</td>
+               		 <td style="text-align: left">{{item.proName}}</td>
+               		 <td>{{item.inventorySn||""}}</td>
+               		 <td>{{item.buyNum}}{{item.proUnit==null?"":item.proUnit}}</td>
+               		 <td>{{Math.floor(item.buyNum/item.packageNum)+item.packageUnit}}{{item.buyNum%item.packageNum != 0 ?(item.buyNum%item.packageNum+item.proUnit):""}}</td>
+            			</tr>
+                        {{#  layui.each(item.listPackageDetaiList, function(index, newItem){ }}
+                            <tr>
+                                <td>-</td>
+                                <td style="font-size: 12px;padding-left:3px;font-style:italic">{{newItem.skuCode}}</td>
+                                <td style="text-align: left;font-size: 12px;padding-left:3px;font-style:italic">{{newItem.proName}}</td>
+                                <td style="font-size: 12px"></td>
+                                <td style="font-size: 12px;">{{newItem.buyNum*item.buyNum}}{{newItem.proUnit==null?"":newItem.proUnit}}</td>
+                                <td style="font-size: 12px">{{Math.floor(newItem.buyNum*item.buyNum/newItem.packageNum)+newItem.packageUnit}}{{newItem.buyNum*item.buyNum%newItem.packageNum != 0 ?(newItem.buyNum*item.buyNum%newItem.packageNum+newItem.proUnit):""}}</td>
+                            </tr>
+                        {{#  }); }}
+ 		  			 {{#  }); }}
+	                	<tr>
+                        {{#  if(item.buyerMessage!=null&&item.buyerMessage != ""){ }}
+                            <th class="message" colspan="7" style="border-bottom: none">客户留言:{{item.buyerMessage}}</th>
+                        {{#  } }}
+          		 	 	</tr>
+                        <tr>
+                        {{#  if(item.sellerMessage!=null&&item.sellerMessage != ""){ }}
+                            <th class="message" colspan="7" style="border: none">订单备注:{{item.sellerMessage}}</th>
+                        {{#  } }}
+                        </tr>
+	            </table>
+	        </div>
+	    </div>
+	</div>
+  {{#  }); }}
+    {{#  if(d==null||d.length == 0){ }}
+   <tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="taobaoJxdTpl">
+{{#  layui.each(d, function(index, item){ }}
+<div class="box jxd">
+    <div class="header">
+        <div>
+            <h3>朝阳轮胎官方旗舰店发货单</h3>
+        </div>
+        <div style="position: relative;font-size: 14px">
+            <ul class="cf">
+                <li><i>收货人:</i><span>{{item.reciverName}}</span></li>
+                <li><i>收货电话:</i><span>{{item.reciverPhone}}</span></li>
+            </ul>
+            <ul class="cf">
+                <li><i style="float: left">收货地址:</i><span style="display:inline-block; width: 450px">{{item.address}}</span>
+                </li>
+            </ul>
+            <ul class="cf">
+                <li><i>订单编号:</i><span class="orderSn">{{item.orderSn}}</span></li>
+                <li><i>打印时间:</i><span>{{laydate.now()}}</span></li>
+                <li><i>总重量:</i><span>{{item.weight}}kg</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <table>
+            <tbody>
+            		<tr class="bot">
+	                    <th width="35">序号</th>
+               			<th width="155">SKU编码</th>
+                		<th width="410">商品名称</th>
+                		<th width="40">数量</th>
+                		<th width="60">单价</th>
+                		<th width="60">总额</th>
+	                </tr>
+	                 {{#  layui.each(item.orderProductList, function(index, item){ }}
+            		<tr rowspan="2">
+               		 <td>{{++index}}</td>
+               		 <td>{{item.skuCode}}</td>
+               		 <td style="text-align: left;">{{item.proName}}</td>
+               		 <td>{{item.buyNum}}</td>
+               		 <td>{{item.price||""}}</td>
+               		 <td>{{(item.price==null?0:item.price)*(item.buyNum==null?0:item.buyNum)}}{{}}</td>
+            			</tr>
+					{{#  layui.each(item.listPackageDetaiList, function(index, newItem){ }}
+					<tr>
+					<td>-</td>
+               		 <td style="font-size: 12px;padding-left:3px;font-style:italic">{{newItem.skuCode}}</td>
+               		 <td style="text-align: left;font-size: 12px;padding-left:3px;font-style:italic">{{newItem.proName}}</td>
+               		 <td style="font-size: 12px;">{{newItem.buyNum*item.buyNum}}</td>
+               		 <td style="font-size: 12px"></td>
+               		 <td style="font-size: 12px"></td>
+            		</tr>
+					 {{#  }); }}
+ 		  			 {{#  }); }}
+					 <tr>
+                	<td colspan="6" class="total no-border">
+                    <span>合计数量:<span class="totalPro">{{item.totalPro||'0'}}</span></span>
+                    <span>商品总额:<span class="totalAmount">{{item.totalAmount||''}}</span></span>
+                    <span>优惠金额:<span class="discountAmount">{{item.discountAmount||''}}</span></span>
+                    <span>邮费:<span class="postFee">{{item.postFee||'0'}}</span></span>
+                    <span>实付金额:<span class="payAmount">{{item.payAmount||''}}</span></span>
+                	</td>
+            		</tr>
+	                	<tr>
+						{{#  if(item.buyerMessage!=null&&item.buyerMessage != ""){ }}
+              		        <th class="message" colspan="7" style="border: none">买家留言:{{item.buyerMessage}}</th>
+ 						{{#  } }}
+          		 	 	</tr>
+                     <tr>
+                        {{#  if(item.sellerMessage!=null&&item.sellerMessage != ""){ }}
+                            <th class="message" colspan="7" style="border: none">订单备注:{{item.sellerMessage}}</th>
+                        {{#  } }}
+                        </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+ {{#  }); }}
+    {{#  if(d==null||d.length == 0){ }}
+   <tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+<script type="text/html" id="taobaoA4JxdTpl">
+{{#  layui.each(d, function(index, item){ }}
+<div class="box a4jxd">
+	 <div class="for-buyer">
+    <div class="header">
+        <div>
+            <h3>朝阳轮胎官方旗舰店发货单</h3>
+        </div>
+        <div style="position: relative;font-size: 14px">
+            <ul class="cf">
+                <li><i>收货人:</i><span>{{item.reciverName}}</span></li>
+                <li><i>收货电话:</i><span>{{item.reciverPhone}}</span></li>
+            </ul>
+            <ul class="cf">
+                <li><i style="float: left">收货地址:</i><span style="display:inline-block; width: 450px">{{item.address}}</span>
+                </li>
+            </ul>
+            <ul class="cf">
+                <li><i>订单编号:</i><span class="orderSn">{{item.orderSn}}</span></li>
+                <li><i>打印时间:</i><span>{{laydate.now()}}</span></li>
+                <li><i>总重量:</i><span>{{item.weight}}kg</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <table>
+            <tbody>
+            		<tr class="bot">
+	                    <th width="35">序号</th>
+               			<th width="155">SKU编码</th>
+                		<th width="410">商品名称</th>
+                		<th width="40">数量</th>
+                		<th width="60">单价</th>
+                		<th width="60">总额</th>
+	                </tr>
+	                 {{#  layui.each(item.orderProductList, function(index, item){ }}
+            		<tr rowspan="2">
+               		 <td>{{++index}}</td>
+               		 <td>{{item.skuCode}}</td>
+               		 <td style="text-align: left;">{{item.proName}}</td>
+               		 <td>{{item.buyNum}}</td>
+               		 <td>{{item.price||""}}</td>
+               		 <td>{{(item.price==null?0:item.price)*(item.buyNum==null?0:item.buyNum)}}{{}}</td>
+            			</tr>
+ 		  			 {{#  }); }}
+					 <tr>
+                	<td colspan="6" class="total no-border">
+                    <span>合计数量:<span class="totalPro">{{item.totalPro||'0'}}</span></span>
+                    <span>商品总额:<span class="totalAmount">{{item.totalAmount||''}}</span></span>
+                    <span>优惠金额:<span class="discountAmount">{{item.discountAmount||''}}</span></span>
+                    <span>邮费:<span class="postFee">{{item.postFee||'0'}}</span></span>
+                    <span>实付金额:<span class="payAmount">{{item.payAmount||''}}</span></span>
+                	</td>
+            		</tr>
+	                	<tr>
+						{{#  if(item.buyerMessage!=null&&item.buyerMessage != ""){ }}
+ 						<th class="message" colspan="7" style="border: none">客户留言:{{item.buyerMessage||''}}</th>
+ 						{{#  } }}
+          		 	 	</tr>
+                    <tr>
+                        {{#  if(item.sellerMessage!=null&&item.sellerMessage != ""){ }}
+                            <th class="message" colspan="7" style="border: none">订单备注:{{item.sellerMessage}}</th>
+                        {{#  } }}
+                        </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+	 <div class="for-seller">
+	 <div class="header">
+        <div>
+            <h3>朝阳轮胎官方旗舰店拣货单</h3>
+        </div>
+        <div style="position: relative;font-size: 14px">
+            <ul class="cf">
+                <li><i>收货人:</i><span>{{item.reciverName}}</span></li>
+                <li><i>收货电话:</i><span>{{item.reciverPhone}}</span></li>
+            </ul>
+            <ul class="cf">
+                <li><i style="float: left">收货地址:</i><span style="display:inline-block; width: 450px">{{item.address}}</span>
+                </li>
+            </ul>
+            <ul class="cf">
+                <li><i>订单编号:</i><span class="orderSn">{{item.orderSn}}</span></li>
+                <li><i>打印时间:</i><span>{{laydate.now()}}</span></li>
+                <li><i>总重量:</i><span>{{item.weight}}kg</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <table>
+            <tbody>
+            		<tr class="bot">
+	                    <th width="35">序号</th>
+               			<th width="155">SKU编码</th>
+                		<th width="410">商品名称</th>
+                		<th width="40">数量</th>
+                		<th width="60">单价</th>
+                		<th width="60">总额</th>
+	                </tr>
+	                 {{#  layui.each(item.orderProductListForSeller, function(index, item){ }}
+            		<tr rowspan="2">
+               		 <td>{{++index}}</td>
+               		 <td>{{item.skuCode}}</td>
+               		 <td style="text-align: left;">{{item.proName}}</td>
+               		 <td>{{item.buyNum}}</td>
+               		 <td>{{item.price||""}}</td>
+               		 <td>{{(item.price==null?0:item.price)*(item.buyNum==null?0:item.buyNum)}}{{}}</td>
+            			</tr>
+ 		  			 {{#  }); }}
+					 <tr>
+                	<td colspan="6" class="total no-border">
+                    <span>合计数量:<span class="totalPro">{{item.totalPro||'0'}}</span></span>
+                    <span>商品总额:<span class="totalAmount">{{item.totalAmount||''}}</span></span>
+                    <span>优惠金额:<span class="discountAmount">{{item.discountAmount||''}}</span></span>
+                    <span>邮费:<span class="postFee">{{item.postFee||'0'}}</span></span>
+                    <span>实付金额:<span class="payAmount">{{item.payAmount||''}}</span></span>
+                	</td>
+            		</tr>
+	                	<tr>
+                        {{#  if(item.buyerMessage!=null&&item.buyerMessage != ""){ }}
+                            <th class="message" colspan="7" style="border-bottom: none">买家留言:{{item.buyerMessage}}</th>
+                        {{#  } }}
+                        </tr>
+                        <tr>
+                        {{#  if(item.sellerMessage!=null&&item.sellerMessage != ""){ }}
+                            <th class="message" colspan="7" style="border: none">订单备注:{{item.sellerMessage}}</th>
+                        {{#  } }}
+                        </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+ {{#  }); }}
+    {{#  if(d==null||d.length == 0){ }}
+   <tr aglin='center'><td colspan="8">无数据</td></tr>
+    {{#  } }}
+</script>
+</body>
+</html>

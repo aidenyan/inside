@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jimmy.dao.sys.mapper.MenuInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jimmy.dao.sys.entity.MenuInfo">
+        <id column="id" property="id" jdbcType="SMALLINT"/>
+        <result column="url_path" property="urlPath" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="menu_type" property="menuType" jdbcType="TINYINT"/>
+        <result column="parent_menu_id" property="parentMenuId" jdbcType="SMALLINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="menu_url" property="menuUrl" jdbcType="VARCHAR"/>
+        <result column="menu_level" property="menuLevel" jdbcType="TINYINT"/>
+        <result column="order_num" property="orderNum" jdbcType="SMALLINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="INTEGER"/>
+        <result column="modify_id" property="modifyId" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, url_path, code, menu_type, parent_menu_id, name, menu_url, menu_level, order_num, 
+    deleted, create_time, modify_time, create_id, modify_id
+  </sql>
+    <select id="listMenuInfoByAccount" resultMap="BaseResultMap">
+     SELECT
+      DISTINCT  menu.id, menu.url_path, menu.code, menu.menu_type, menu.parent_menu_id, menu.name, menu.menu_url,
+       menu.menu_level, menu.order_num, menu.deleted, menu.create_time, menu.modify_time, menu.create_id, menu.modify_id
+      from t_account_info account JOIN  t_account_role account_role on account.id=account_role.account_id
+     and account.deleted=0 JOIN t_role_info role on role.id=account_role.role_id and role.deleted=0
+     JOIN t_role_menu role_menu on role.id=role_menu.role_id
+     join t_menu_info menu on role_menu.menu_id=menu.id and menu.deleted=0
+    where account.id=#{accountId}
+
+   </select>
+    <select id="list" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_menu_info
+        where deleted=0
+    </select>
+    <select id="listByParentId" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_menu_info
+        where deleted=0 and parent_menu_id
+        IN <foreach collection="parentMenuIdList" item="parentMenuId" close=")" open="(" separator=",">
+        #{parentMenuId}
+    </foreach>
+        and menu_level=4
+    </select>
+
+</mapper>

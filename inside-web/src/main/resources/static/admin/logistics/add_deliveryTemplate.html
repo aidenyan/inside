@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="content-wrpper">
+    <div class="list">
+        <!-- header -->
+        <div class="layui-form mizone-add">
+            <div class="infor-show-dotted">
+                <i class="icon-gongsisvgtubiaozongji22"
+                   style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                <span>运费信息</span>
+            </div>
+            <form id="form">
+            <input type="hidden" id="id" name="id">
+            <input type="hidden" id="valuationRules" name="valuationRules">
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>名称:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="required" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>物流公司:</label>
+                    <div class="layui-input-inline">
+                        <select id="expressOperation" name="expressOrgId" lay-verify="required"><option value="">请选择</option></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>首重重量(KG):</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="required|weight"  id="startStandard" name="startStandard" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>续重重量(KG):</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="required|weight" id="addStandard" name="addStandard" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-item-margButtom5">
+                <div class="layui-inline ">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>有效期:</label>
+                    <div class="layui-input-inline" style="width: 164px;">
+                            <input name="startTime" class="layui-input" lay-verify="required" placeholder="开始日" id="startTime" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                    </div>
+                    <div class="layui-input-inline" style="width: 164px;">
+                            <input name="endTime" class="layui-input" lay-verify="required" placeholder="截止日" id="endTime" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label padd_top"><span style="color:red">*</span>重量范围(KG):</label>
+                    <div class="layui-input-inline" style="width: 156px;">
+                        <input type="text" lay-verify="required" id="startWeight" name="startWeight" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 156px;">
+                        <input type="text" lay-verify="required" id="endWeight" name="endWeight" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+                <div class="infor-show-dotted">
+                    <i class="icon-gongsisvgtubiaozongji22"
+                       style="color:#009cff;background-color: #009cff;font-size: 12px!important;"></i>
+                    <span>地区运价设置</span>
+                </div>
+          <div class="layui-form">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>地区</th>
+                        <th>*首重运费（元）</th>
+                        <th>*续重运费（元）</th>
+                        <th>预计天数</th>
+                    </tr>
+                    </thead>
+                    <tbody id="areaFee">
+                    </tbody>
+                </table>
+           </div>
+           </form>
+          <div class="layui-inline">
+                <button class="layui-btn layui-btn-small save" lay-submit="" lay-filter="save" style="display:none;">保存并关闭</button>
+                <button class="layui-btn layui-btn-small save" lay-submit="" lay-filter="saveAndContinue" style="display:none;">保存后新增</button>
+                <button id="cancel" class="layui-btn layui-btn-small">返回</button>
+          </div>
+    </div>
+</div>
+<script type="text/javascript" src="../admin.js"></script>
+<script type="text/html" id="slcOption">
+    {{#  layui.each(d, function(index, item){ }}
+    <option value="{{item.id}}">{{item.name}}-{{item.address}}</option>
+    {{#  }); }}
+</script>
+<script type="text/html" id="areaFeeTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr id="{{item.id}}">
+        <td>{{item.name}}</td>
+        <td><div class="layui-input-inline">
+            <input type="text" class="layui-input startFee" lay-verify="amount" value="0">
+          </div></td>
+        <td><div class="layui-input-inline">
+            <input type="text" class="layui-input addFee" lay-verify="amount" value="0">
+          </div></td>
+        <td><div class="layui-input-inline">
+            <input type="text" class="layui-input day" value="0">
+          </div></td>
+    </tr>
+    {{#  }); }}
+</script>
+<script>
+$(window).ready(function () {
+        layui.use(['form', 'layedit','laytpl','laydate'], function () {
+        	var form = layui.form();
+            var layer = layui.layer;
+            var laytpl = layui.laytpl;
+            var layedit = layui.layedit;
+            var id = Utils.getHrefValue("id");
+            ajaxsend("","/express/listAll.json", function (dataJson) {
+                if(dataJson.code=="0"){
+                   laytpl($("#slcOption").html()).render(dataJson.result, function (html) {
+                       $("#expressOperation").append(html);
+                       form.render()
+                       if(id){
+                           ajaxsend({"id":id},"/deliveryTemplate/get.json", function (dataJson) {
+                               if(dataJson.code=="0"){
+                                   $("#id").val(dataJson.result.id);
+                                   $("#valuationRules").val(dataJson.result.valuationRules);
+                                   $("#name").val(dataJson.result.name);
+                                   $("#startStandard").val(dataJson.result.startStandard);
+                                   $("#addStandard").val(dataJson.result.addStandard);
+                                   $("#expressOperation").val(dataJson.result.expressOrgId);
+                                   $("#startWeight").val(dataJson.result.startWeight);
+                                   $("#endWeight").val(dataJson.result.endWeight);
+                                   $("#startTime").val(laydate.now(dataJson.result.startTime,'YYYY-MM-DD'));
+                                   $("#endTime").val(laydate.now(dataJson.result.endTime,'YYYY-MM-DD'));
+                                   form.render();
+                                   var valuationRules=JSON.parse(dataJson.result.valuationRules);
+                                   var isEdit=true;
+                                   if(dataJson.result.status == null){
+                                       $(".save").show();
+                                       isEdit=false
+                                   }
+                                   setAreaFee(isEdit,valuationRules);
+                               }
+                           })
+                       }else{
+                    	   $(".save").show();
+                    	   setAreaFee();
+                       }
+                   });
+                }
+            })
+            function setAreaFee(disabled,valuationRules){
+            	ajaxsend("", "/admin/common/province/list.json", function (dataJson) {
+            		laytpl($("#areaFeeTpl").html()).render(dataJson.result, function (html) {
+            			$("#areaFee").append(html);
+            			if(disabled){
+            				$("#form input").attr("disabled","disabled");
+            				$("#expressOperation").attr("disabled","disabled");
+            			}
+            			form.render();
+            			for(var i in valuationRules){
+            				var regions=valuationRules[i].regions;
+            				for(var j in regions){
+            					$("#"+regions[j]+" .startFee").val(valuationRules[i].startFee);
+            					$("#"+regions[j]+" .addFee").val(valuationRules[i].addFee);
+            					$("#"+regions[j]+" .day").val(valuationRules[i].day);
+            				}
+            			}
+            		});
+            	})
+            }
+            form.on('submit(save)',function(data){
+                saveInfo(null);
+            }); 
+            form.on('submit(saveAndContinue)',function(data){
+                saveInfo(1);
+            });
+            saveInfo=function(flag){
+            	var valuationRules=[];
+            	$("#areaFee tr").each(function(){
+            		var startFee=$(this).find(".startFee").val();
+            		if(startFee > 0){
+            			var valuationRule={};
+                        valuationRule.regions=[];
+                        valuationRule.regions.push($(this).attr("id"));
+                        valuationRule.startFee=startFee;
+                        valuationRule.addFee=$(this).find(".addFee").val();
+                        valuationRule.day=$(this).find(".day").val();
+                        valuationRules.push(valuationRule);
+            		}
+            	});
+            	$("#valuationRules").val(JSON.stringify(valuationRules));
+            	ajaxsend($("form").serialize(), "/deliveryTemplate/save.json", function (dataJson) {
+                    if(dataJson.result==true){
+                    	if(flag!=null){
+                            layer.msg("保存成功，请继续");
+                            $('#form')[0].reset();
+                            form.render();
+                        }else{
+                             callParent.parentUse("delivery_templatet", "search");
+                             $("#cancel").click();
+                        }
+                    }else{
+                    	layer.alert(data.message,{icon: 5});
+                    }
+                }, "postForm");
+            }
+            
+            $("#cancel").click(function(){
+                callParent.openTab("delivery_templatet");
+                if(id){
+                	callParent.closeTab("deliveryTemplate_update");
+                }else{
+                	callParent.closeTab("deliveryTemplate_add");
+                }
+                
+            })
+            form.verify({
+                weight: [
+                    /^((([0-9])|([1-9][0-9]+))\.[0-9]{1,2})|(([1-9])|([1-9][0-9]+))$/,
+                    '请输入正确的重量'
+                ],
+                amount: [
+                     /^((([0-9])|([1-9][0-9]+))\.[0-9]{1,2})|(([1-9])|([1-9][0-9]+))$/,
+                    '请输入正确的费用'
+                ],
+                days:[
+                    /^[1-9][0-9]*$/,
+                    '请输入正确的天数'
+                ]  
+            }) 
+        })
+})
+</script>
+</body>
+</html>
