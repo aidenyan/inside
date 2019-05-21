@@ -23,7 +23,7 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where id = #{id,jdbcType=INTEGER}
   </select>
   
@@ -31,7 +31,7 @@
 	    SELECT
 	  GROUP_CONCAT(id)
 	FROM
-	  sys_area
+	  t_sys_area
 	WHERE deleted = 0
 	  AND parent_tree LIKE 
 	  concat("%,",#{parentId,jdbcType=VARCHAR},",%")
@@ -41,14 +41,14 @@
   <select id="selectByFullName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where full_name like concat("%",#{fullName,jdbcType=VARCHAR},"%")
   </select>
   
    <select id="listSysAreaByParent" resultMap="BaseResultMap" parameterType="java.util.List" >
     select 
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where deleted=0
     <choose>
     <when test="parentIdList != null and parentIdList.size()>0" >
@@ -66,7 +66,7 @@
   <select id="listByIds" resultMap="BaseResultMap" parameterType="java.util.List" >
     select 
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where deleted=0 and id in
     <foreach collection="ids" item="id" open="(" close=")" separator="," >
          #{id}
@@ -75,14 +75,14 @@
   <select id="getAreaByAreaName" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where deleted=0 and name = #{areaName}
   </select>
   
    <select id="listSelectArea" resultMap="BaseResultMap" parameterType="java.lang.Long" >
   	 SELECT
 	<include refid="Base_Column_List" />
-	FROM sys_area
+	FROM t_sys_area
 	WHERE deleted=0 and
 	LOCATE(
 		parent_tree,
@@ -90,7 +90,7 @@
 			SELECT
 				a.parent_tree
 			FROM
-				sys_area a
+				t_sys_area a
 			WHERE
 				a.id = #{areaId}
 		)
@@ -102,24 +102,24 @@
   <select id="listAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where deleted=0
   </select>
   <select id="listProvince" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where deleted=0
     and parent_id is null
   </select>
   <update id="delete" parameterType="map" >
-    update sys_area set deleted=1,modify_id=#{modifyId,jdbcType=INTEGER},
+    update t_sys_area set deleted=1,modify_id=#{modifyId,jdbcType=INTEGER},
     modify_time=now()
     where id = #{id}
   </update>
   
   <insert id="insert" parameterType="com.jimmy.dao.sys.entity.SysArea" >
-    insert into sys_area (id, name, code, 
+    insert into t_sys_area (id, name, code, 
       full_name,orders,parent_tree, parent_id, create_time, 
       modify_time, create_id, modify_id
       )
@@ -130,7 +130,7 @@
   </insert>
   
   <update id="update" parameterType="com.jimmy.dao.sys.entity.SysArea" >
-    update sys_area
+    update t_sys_area
     <set >
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
@@ -166,7 +166,7 @@
   <select id="listSysAreaByFullName" resultType="com.jimmy.dao.sys.entity.SysArea" >
     select
     <include refid="Base_Column_List" />
-    from sys_area
+    from t_sys_area
     where full_name in <foreach collection="areaSet" close=")" open="(" separator="," item="fullName">
     #{fullName}
   </foreach>
