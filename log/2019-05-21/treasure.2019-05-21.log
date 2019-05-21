@@ -23553,3 +23553,9 @@ Caused by: java.lang.ClassNotFoundException: Cannot find class: com.zcckj.mizone
 2019-05-21 17:31:35.635 [http-nio-8083-exec-3] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization committing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@5d2cea23]
 2019-05-21 17:31:35.636 [http-nio-8083-exec-3] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@5d2cea23]
 2019-05-21 17:31:35.636 [http-nio-8083-exec-3] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@5d2cea23]
+2019-05-21 17:31:41.200 [http-nio-8083-exec-1] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+2019-05-21 17:31:41.201 [http-nio-8083-exec-1] DEBUG org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@3c95e016] was not registered for synchronization because synchronization is not active
+2019-05-21 17:31:41.207 [http-nio-8083-exec-1] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [com.mysql.jdbc.JDBC4Connection@2f1147fd] will not be managed by Spring
+2019-05-21 17:31:41.207 [http-nio-8083-exec-1] DEBUG com.jimmy.dao.sys.mapper.SysAreaMapper.listSysAreaByParent - ==>  Preparing: select id, name, code, full_name, parent_id,parent_tree, create_time, modify_time, create_id, modify_id from sys_area where deleted=0 and parent_id is null order by id 
+2019-05-21 17:31:41.208 [http-nio-8083-exec-1] DEBUG com.jimmy.dao.sys.mapper.SysAreaMapper.listSysAreaByParent - ==> Parameters: 
+2019-05-21 17:31:41.212 [http-nio-8083-exec-1] DEBUG org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@3c95e016]
