@@ -1,12 +1,17 @@
 package com.jimmy.web.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.jimmy.base.Page;
+import com.jimmy.base.PageReulst;
 import com.jimmy.base.Result;
 import com.jimmy.conts.SessionConst;
 import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.MenuInfo;
 import com.jimmy.local.RequestLocalThread;
+import com.jimmy.local.SiteInfoLocalThread;
 import com.jimmy.local.UserLocalThread;
 import com.jimmy.service.sys.MenuInfoService;
+import com.jimmy.web.consts.PageConst;
 import com.jimmy.web.enums.ResultEnum;
 import com.jimmy.web.mvc.DateEditor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,31 +42,60 @@ public class BaseController {
         return null;
     }
 
+    public void setPage(Integer pageNo, Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = PageConst.PAGE_FIRST;
+        }
+        if (pageSize == null) {
+            pageSize = PageConst.PAGE_DEFAULT_SIZE;
+        }
+        PageHelper.startPage(pageNo, pageSize);
+    }
+
     public AccountInfo getAccountInfo() {
         return UserLocalThread.get();
     }
+
     public <T> Result<T> getResult(T t, ResultEnum resultEnum) {
         Result<T> result = new Result<T>(resultEnum);
         result.setResult(t);
         return addAuthorityCodeList(result);
     }
+
     public <T> Result<T> addAuthorityCodeList(Result<T> result) {
 
-            List<MenuInfo> menuInfoList = getMenuList();
-            List<String> authorityCodeList = new ArrayList<String>();
-            for (MenuInfo tempMenuInfo : menuInfoList) {
-                authorityCodeList.add(tempMenuInfo.getCode());
-            }
-            result.setAuthorityCodeList(authorityCodeList);
+        List<MenuInfo> menuInfoList = getMenuList();
+        List<String> authorityCodeList = new ArrayList<String>();
+        for (MenuInfo tempMenuInfo : menuInfoList) {
+            authorityCodeList.add(tempMenuInfo.getCode());
+        }
+        result.setAuthorityCodeList(authorityCodeList);
 
         return result;
     }
+
     public Long getAccountId() {
         AccountInfo accountInfo = getAccountInfo();
         if (accountInfo != null) {
             return accountInfo.getId();
         }
         return null;
+    }
+
+    public <T> Result<PageReulst<T>> getPageResult(List<T> resultList, ResultEnum resultEnum) {
+        Result<PageReulst<T>> result = new Result<PageReulst<T>>(resultEnum);
+        PageReulst<T> resultPage = new PageReulst<T>();
+        if (resultList instanceof com.github.pagehelper.Page) {
+            com.github.pagehelper.Page<T> page = (com.github.pagehelper.Page<T>) resultList;
+            resultPage.setPageNo(page.getPageNum());
+            resultPage.setPageSize(page.getPageSize());
+            resultPage.setTotal(page.getTotal());
+            resultPage.setTotalPage(page.getPages());
+        }
+        resultPage.setResult(resultList);
+        result.setResult(resultPage);
+        result.setSiteId(SiteInfoLocalThread.getSiteId());
+        return addAuthorityCodeList(result);
     }
 
     @InitBinder

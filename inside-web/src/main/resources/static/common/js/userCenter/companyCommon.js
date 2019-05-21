@@ -5,7 +5,7 @@ $().ready(function () {
 //页面初始化
 var companyInit= function (id,pId) {
 		$.ajax({
-		url : "/admin/companyOrg/tree.json",
+		url : "/api/admin/account/department/tree",
 		type : "post",
 		traditional : true,
 		dataType : "json",

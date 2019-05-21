@@ -6,7 +6,7 @@
 <generatorConfiguration>
     <!--mysql的生成方式-->
     <classPathEntry
-            location="d:/work/repositorys/mysql/mysql-connector-java/5.1.36/mysql-connector-java-5.1.36.jar"/>
+            location="C:/work/repositorys/mysql/mysql-connector-java/5.1.36/mysql-connector-java-5.1.36.jar"/>
     <context id="my" targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressDate" value="false"/>
@@ -18,19 +18,19 @@
                         password="123456"/>
 
         <javaModelGenerator targetPackage="com.jimmy.dao.sys.entity"
-                            targetProject="D:/idea/work/inside/inside-dao/src/main/java">
+                            targetProject="C:/work/idea/work/inside/inside-dao/src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="com.jimmy.dao.sys.mapper"
-                         targetProject="D:/idea/work/inside/inside-dao/src/main/java">
+                         targetProject="C:/work/idea/work/inside/inside-dao/src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
         <javaClientGenerator targetPackage="com.jimmy.dao.sys.mapper"
-                             targetProject="D:/idea/work/inside/inside-dao/src/main/java"
+                             targetProject="C:/work/idea/work/inside/inside-dao/src/main/java"
                              type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -41,7 +41,7 @@
                selectByExampleQueryId="false"/>-->
 
 
-        <table tableName="t_department_info" domainObjectName="DepartmentInfo"
+        <table tableName="t_site_info" domainObjectName="SiteInfo"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

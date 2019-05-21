@@ -3,6 +3,7 @@ package com.jimmy.dao.sys.mapper;
 import com.jimmy.dao.sys.entity.DepartmentInfo;
 import com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -18,12 +19,6 @@ public interface DepartmentInfoMapper {
 
     int update(DepartmentInfo record);
 
-    int countDepartment(@Param("departmentName") String departmentName
-    );
 
-    List<DepartmentInfo> listDepartment(@Param("departmentName") String departmentName,
-
-                                   @Param("startRow") Integer startRow,
-                                   @Param("pageSize") Integer pageSize
-    );
+    List<DepartmentInfo> listDepartment(@Param("parentId") Long parentId,@Param("departmentName") String departmentName);
 }

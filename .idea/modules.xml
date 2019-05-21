@@ -7,7 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/inside-core/inside-core.iml" filepath="$PROJECT_DIR$/inside-core/inside-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/inside-dao/inside-dao.iml" filepath="$PROJECT_DIR$/inside-dao/inside-dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/inside-service/inside-service.iml" filepath="$PROJECT_DIR$/inside-service/inside-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/inside-sys/inside-sys-dao.iml" filepath="$PROJECT_DIR$/inside-sys/inside-sys-dao.iml" />
+      <module fileurl="file://C:\work\idea\work\inside\inside-sys\inside-sys-dao.iml" filepath="C:\work\idea\work\inside\inside-sys\inside-sys-dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/inside-web/inside-web.iml" filepath="$PROJECT_DIR$/inside-web/inside-web.iml" />
     </modules>
   </component>

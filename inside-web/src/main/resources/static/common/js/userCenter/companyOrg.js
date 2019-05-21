@@ -80,7 +80,7 @@ function zTreeOnClick(event, treeId, treeNode) {
 		return layer.msg("权限不足");
 	}
 	var data={
-			'parentTree':","+id+","
+			'parentId':id
 	}
 	dataAjaxPage(data);
 }
@@ -93,13 +93,13 @@ var orderObj = new Order(function (obj) {
 		parentId=nodes[0].id;
 	}
    var data={
-		   'parentTree':","+parentId+",",
-		   'companyName':$("#searchParam").val()
+		   'parentId':parentId,
+		   'department':$("#searchParam").val()
    }
-	myAjax.ajaxPage('/admin/companyOrg/page.json','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
+	myAjax.ajaxPage('/api/admin/account/department/page','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
 },"c.create_time");
 dataAjaxPage=function(data){
-    myAjax.ajaxPage('/admin/companyOrg/page.json','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
+    myAjax.ajaxPage('/api/admin/account/department/page','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
 }
 //组织类型
 companyOrgTypeRechange=function(value,defaultWarehouse){
@@ -232,7 +232,7 @@ $("#add_org").click(function () {
 		var parentTree=nodes[0].parentTree;
 		$('#companyOrgForm')[0].reset();
 		getProvinceList();
-		myAjax.ajaxSend("/admin/companyOrg/checkHasConsumer.json?parentTree="+parentTree,function(data){
+
 			layer.open({
 				  type: 1,
 				  title: "添加组织",
@@ -271,7 +271,6 @@ $("#add_org").click(function () {
 	                  })
 					 }
 				});
-		})
     })
 
 platformListShow=function(result){

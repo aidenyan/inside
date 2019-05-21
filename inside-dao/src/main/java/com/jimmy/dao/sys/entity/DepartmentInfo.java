@@ -30,6 +30,8 @@ public class DepartmentInfo {
 
     private String agentCode;
 
+    private Integer agentType;
+
     private Integer level;
 
     private Long parentId;

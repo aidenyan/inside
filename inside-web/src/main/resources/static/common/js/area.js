@@ -30,7 +30,7 @@ getProvinceList=function(vId,fnc){
 	}
 	areaClear(vId);
 	$.ajax({
-		url : "/admin/area/listByParentId.json",
+		url : "/api/admin/common/listByParentId",
 		type : "post",
 		traditional : true,
 		dataType : "json",

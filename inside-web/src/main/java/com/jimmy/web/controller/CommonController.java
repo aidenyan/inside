@@ -7,11 +7,13 @@ import com.jimmy.conts.AuthorityConst;
 import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.MenuInfo;
 import com.jimmy.dao.sys.entity.PersonInfo;
+import com.jimmy.dao.sys.entity.SysArea;
+import com.jimmy.dto.PasswordUpdateDTO;
 import com.jimmy.service.account.AccountInfoService;
 import com.jimmy.service.sys.MenuInfoService;
 import com.jimmy.service.sys.PersonInfoService;
+import com.jimmy.service.sys.SysAreaService;
 import com.jimmy.sublimation.validate.anno.ParamValidate;
-import com.jimmy.dto.PasswordUpdateDTO;
 import com.jimmy.web.enums.ResultControllerEnum;
 import com.jimmy.web.enums.ResultCoreEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +22,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/admin/common")
 public class CommonController extends BaseController {
+    @Autowired
+    private SysAreaService sysAreaService;
 
     @Autowired
     private MenuInfoService menuInfoService;
+
     @Autowired
     private AccountInfoService accountInfoService;
     @Autowired
     private PersonInfoService personInfoService;
+
 
     @RequestMapping("/account/name")
     @ResponseBody
@@ -41,6 +48,23 @@ public class CommonController extends BaseController {
             return getResult(accountInfo.getName(), ResultCoreEnum.RESULT_AUTHORITY_NOT_ENOUGH);
         }
         Result<String> result = getResult(accountInfo.getName(), ResultControllerEnum.RESULT_SUCCESS);
+        return result;
+    }
+
+    /**
+     * @param parentId
+     * @return
+     * @Description: 通过上级查询下级区域(不传查省份/直辖市)不传只查询省份列表
+     * @return: String
+     */
+    @RequestMapping("/listByParentId")
+    @ResponseBody
+    public Result<List<SysArea>> listByParentId(Long parentId) {
+        List<Long> parentIdList = null;
+        if (parentId != null) {
+            parentIdList = Arrays.asList(parentId);
+        }
+        Result<List<SysArea>> result = getResult(sysAreaService.listSysAreaByParent(parentIdList), ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
 
@@ -100,8 +124,8 @@ public class CommonController extends BaseController {
     @ResponseBody
     @ParamValidate
     public Result<List<MenuInfo>> listMenuInfo() {
-        List<MenuInfo> menuInfoList= menuInfoService.listAll();
-        Result<List<MenuInfo>>   result = getResult(menuInfoList, ResultControllerEnum.RESULT_SUCCESS);
+        List<MenuInfo> menuInfoList = menuInfoService.listAll();
+        Result<List<MenuInfo>> result = getResult(menuInfoList, ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
 

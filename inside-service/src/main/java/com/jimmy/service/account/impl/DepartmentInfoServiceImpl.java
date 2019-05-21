@@ -39,4 +39,9 @@ public class DepartmentInfoServiceImpl implements DepartmentInfoService {
         }
         return treeInfoDTOList;
     }
+
+    @Override
+    public List<DepartmentInfo> listDepartment(Long parentId, String departmentName) {
+        return departmentInfoMapper.listDepartment(parentId,departmentName);
+    }
 }
