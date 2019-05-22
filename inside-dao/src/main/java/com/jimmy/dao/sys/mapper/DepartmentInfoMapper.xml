@@ -28,7 +28,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, department_name, department_short_name, area_id, address, full_address, legal_person, 
-    contact_tel, contact_phone, email, wechat, agent_code,            agent_type level,
+    contact_tel, contact_phone, email, wechat, agent_code,            agent_type, level,
     parent_id, parent_tree, remark, deleted, create_time, modify_time, create_id, modify_id, 
     org_status
   </sql>
@@ -45,6 +45,12 @@
         where deleted=0
     </select>
 
+    <select id="listByAgentCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_department_info
+        where deleted=0 and agent_code = #{agentCode}
+    </select>
 
 
 

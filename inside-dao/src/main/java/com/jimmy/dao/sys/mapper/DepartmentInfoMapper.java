@@ -19,6 +19,8 @@ public interface DepartmentInfoMapper {
 
     int update(DepartmentInfo record);
 
+    List<DepartmentInfo> listByAgentCode(@Param("agentCode") String agentCode);
+
 
     List<DepartmentInfo> listDepartment(@Param("parentId") Long parentId,@Param("departmentName") String departmentName);
 }

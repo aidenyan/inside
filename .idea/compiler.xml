@@ -20,7 +20,6 @@
       <module name="inside-core" target="1.8" />
       <module name="inside-dao" target="1.8" />
       <module name="inside-service" target="1.8" />
-      <module name="inside-sys-dao" target="1.5" />
       <module name="inside-web" target="1.8" />
     </bytecodeTargetLevel>
   </component>

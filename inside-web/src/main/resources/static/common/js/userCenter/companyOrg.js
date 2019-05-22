@@ -29,7 +29,7 @@ layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], func
 			 			'组织简称格式不正确，只能为2到20位中文'
 			 			],
 		companyTypeCheck: function(){
-			if($("input[name='companyType']:checked").length<1){
+			if($("input[name='agentType']:checked").length<1){
 				return "请选择组织类型";
 			}
 			},
@@ -229,10 +229,18 @@ $("#add_org").click(function () {
 			return layer.msg("权限不足");
 		}
 		var selectId=nodes[0].id;
+		var agentType=nodes[0].agentType;
+        $("#agent_type_div").find("input").removeAttr("disabled")
+		if(agentType==2||agentType==3){
+            $("#agent_type_div").find("input").eq(0).attr("disabled","disabled")
+		}
+		if(agentType==3){
+			$("#agent_type_div").find("input").eq(1).attr("disabled","disabled")
+		}
+
 		var parentTree=nodes[0].parentTree;
 		$('#companyOrgForm')[0].reset();
 		getProvinceList();
-
 			layer.open({
 				  type: 1,
 				  title: "添加组织",
@@ -240,34 +248,18 @@ $("#add_org").click(function () {
 				  closeBtn: 0,
 				  btnAlign: 'r',
 				  area: ['600px', 'auto'],
-				  shadeClose: true,
+				  shadeClose: false,
 				  content: $('#companyOrgForm'),
 				  success:function (layero, index) {
 	                  layero.addClass('layui-form');
 	                  layero.find('.layui-layer-btn0').attr('lay-filter', 'companyOrgContent').attr('lay-submit', '')
-	                  if(data!=null&&data.result!=null&&data.result==true){
-	      				$("#companyOrgForm .consumer").prop("disabled",true);
-	      				}
 	                  $("#storeInfo").prop("disabled",true);
 	                  form.render();
 	              },
 				  yes: function(index){
 					  var newIndex=index;
 					  form.on('submit(companyOrgContent)',function(){
-						  if($("#defaultWarehouse").is(":checked")){
-							  layer.msg('每个经销商下默认仓库只有一个<br>当前选中的默认仓库会成为新的默认仓库<br>之前经销商下的默认仓库取消', {
-					    		  time: 0, //不自动关闭
-					    		  shade: 0.6,//遮罩透明度
-					      		  shadeClose:true,//点击遮罩关闭层
-					      		  btn: ['确定', '取消'],
-					    		  yes: function(index){
-					    			  layer.close(index);
-					    			  saveCompanyOrg(selectId,newIndex);
-					    		  }
-				        	 })
-						  }else{
 							  saveCompanyOrg(selectId,newIndex);
-						  }
 	                  })
 					 }
 				});
@@ -333,38 +325,15 @@ $('#searchParam').bind('keypress', function(event) {
 });
 
 getCompanyOrg=function(id,parentId){
-		var companyType=0;
-		var platforms=new Array();
-		var defaultWarehouse;
-		var checkInventory;
-		var supervisorId;
-		$("input[name='companyType'][type='checkbox']:checked").each(function(){
-			companyType+=parseInt($(this).val());
+		var agentType=0;
+
+		$("input[name='agentType'][type='radio']:checked").each(function(){
+            agentType=$(this).val();
 		})
-		if($("#warehouse").is(':checked')){
-			$("input[name='platform'][type='checkbox']:checked").each(function(){
-				platforms.push($(this).val());
-			})
-			if($("#defaultWarehouse").is(":checked")){
-				defaultWarehouse=true;
-			}else{
-				defaultWarehouse=false;
-			}
-			if($("#checkInventory").is(":checked")){
-				checkInventory=true;
-			}else{
-				checkInventory=false;
-			}
-		}
-		if($("#storeInfo").is(':checked')){
-			supervisorId=$("#checkSupervisor").val();
-			if(supervisorId!=null&&supervisorId<0){
-				supervisorId=null;
-			}
-		}
-		var companyName=$("#companyName").val();
-		var companyShortName=$("#companyShortName").val();
-		var companyCode=$("#companyCode").val();
+
+		var departmentName=$("#companyName").val();
+		var departmentShortName=$("#companyShortName").val();
+		var agentCode=$("#companyCode").val();
 		var legalPerson=$("#legalPerson").val();
 		var contactTel=$("#contactTel").val();
 		var contactPhone=$("#contactPhone").val();
@@ -388,10 +357,10 @@ getCompanyOrg=function(id,parentId){
 			}
 			data={
 					"id":id,
-					"agentType":companyType,
+					"agentType":agentType,
 					"parentId":parentId,
-					"companyName":companyName,
-					"companyShortName":companyShortName,
+					"departmentShortName":departmentShortName,
+					"departmentName":departmentName,
 					"agentCode":companyCode,
 					"legalPerson":legalPerson,
 					"contactTel":contactTel,
@@ -400,12 +369,8 @@ getCompanyOrg=function(id,parentId){
 					"areaCheck":areaCheck,
 					"address":fullAddress,
 					"fullAddress":address+fullAddress,
-					"remark":remark,
-					"defaultWarehouse":defaultWarehouse,
-					"checkInventory":checkInventory,
-					"platformList":platforms,
-					"supervisorId":supervisorId,
-				     "orderNum":$("#order_num").val()
+					"remark":remark
+
 			};
 		}else{
 			var treeObj = $.fn.zTree.getZTreeObj("companyTree");
@@ -417,22 +382,17 @@ getCompanyOrg=function(id,parentId){
 					"parentId":parentId,
 					"level":level,
 					"parentTree":parentTree,
-					"agentType":companyType,
-					"companyName":companyName,
-					"companyShortName":companyShortName,
-					"agentCode":companyCode,
+					"agentType":agentType,
+					"departmentName":departmentName,
+					"departmentShortName":departmentShortName,
+					"agentCode":agentCode,
 					"legalPerson":legalPerson,
 					"contactTel":contactTel,
 					"contactPhone":contactPhone,
 					"areaId":areaId,
 					"address":fullAddress,
 					"fullAddress":address+fullAddress,
-					"remark":remark,
-					"defaultWarehouse":defaultWarehouse,
-					"checkInventory":checkInventory,
-					"platformList":platforms,
-					"supervisorId":supervisorId,
-				    "orderNum":$("#order_num").val()
+					"remark":remark
 			};
 		}
 		return data;
@@ -596,7 +556,7 @@ deleteCompanyOrg=function(id,orgType){
 	}
 }
 saveCompanyOrg=function(selectId,index){
-	var url = "/admin/companyOrg/save.json";
+	var url = "/api/admin/account/department/save";
 	var data=getCompanyOrg();
 	if($("#consumer").is(':checked')){
 		if($("#companyCode").val()==''||$("#companyCode").val()==null){

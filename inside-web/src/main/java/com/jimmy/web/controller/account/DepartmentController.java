@@ -6,13 +6,16 @@ import com.jimmy.base.Result;
 import com.jimmy.dao.sys.entity.DepartmentInfo;
 import com.jimmy.dto.DepartTreeInfoDTO;
 import com.jimmy.service.account.DepartmentInfoService;
+import com.jimmy.validate.Validator;
 import com.jimmy.web.controller.BaseController;
 import com.jimmy.web.enums.ResultControllerEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -41,6 +44,21 @@ public class DepartmentController extends BaseController {
         this.setPage(pageNo, pageSize);
         List<DepartmentInfo> list = departmentInfoService.listDepartment(parentId, departmentName);
         Result<PageReulst<DepartmentInfo>> result = getPageResult(list, ResultControllerEnum.RESULT_SUCCESS);
+        return result;
+    }
+
+    /**
+     * @return
+     * @Description: 新增组织
+     * @return: Result<List<CompanyOrg>>
+     */
+    @RequestMapping("/save")
+    @ResponseBody
+    public Result<Boolean> saveCompanyOrg(@Valid DepartmentInfo departmentInfo, BindingResult bindingResult) {
+        Validator.checkErrors(bindingResult);
+        departmentInfoService.checkOrgCode(departmentInfo.getId(), departmentInfo.getAgentCode());
+        departmentInfoService.save(departmentInfo);
+        Result<Boolean> result = getResult(Boolean.TRUE, ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
 }

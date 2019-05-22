@@ -60,7 +60,7 @@ changeProvince=function(value, vId){
 	}
 	var provinceId =value;
 	$.ajax({
-		url : "/admin/area/listByParentId.json",
+		url : "/api/admin/common/listByParentId",
 		type : "post",
 		traditional : true,
 		data:{
@@ -96,7 +96,7 @@ changeCity=function(value, vId){
 	}
 	var provinceId = value;
 	$.ajax({
-		url : "/admin/area/listByParentId.json",
+		url : "/api/admin/common/listByParentId",
 		type : "post",
 		traditional : true,
 		data:{
@@ -132,7 +132,7 @@ getAreaSelect=function(id, vId){
 		return false;
 	}
 	$.ajax({
-		url : "/admin/area/listSelectArea.json",
+		url : "/api/admin/common/listSelectArea",
 		type : "post",
 		traditional : true,
 		data:{

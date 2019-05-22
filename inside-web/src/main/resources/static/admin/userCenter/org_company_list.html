@@ -81,14 +81,12 @@
 
 <form id="companyOrgForm" style="display: none" class="layui-form dialog">
     <div class="layui-form-item">
-        <label class="layui-form-label"><span style="color:red">*</span>组织类型</label>
-        <div class="layui-input-block" lay-verify="companyTypeCheck">
-           <input type="checkbox" name="companyType" lay-skin="primary" title="公司"  value="1">
-           <!--  <input type="checkbox" name="companyType" lay-skin="primary"   title="供应商" value="2"> -->
-            <input type="checkbox" name="companyType" lay-skin="primary" class="consumer" id="consumer" title="经销商" value="4">
-            <input type="checkbox" name="companyType" lay-skin="primary" title="仓库" lay-filter="warehouse" id="warehouse" value="8">
-            <input type="checkbox" name="companyType" lay-skin="primary" title="门店" value="16" lay-filter="storeInfo" id="storeInfo" disabled>
-            <input type="checkbox" name="companyType" lay-skin="primary" title="合作方" value="32">
+        <label class="layui-form-label"><span style="color:red">*</span>组织机构</label>
+        <div class="layui-input-block" id="agent_type_div" lay-verify="companyTypeCheck">
+           <input type="radio" name="agentType" lay-skin="primary" title="集团"   value="1" >
+            <input type="radio" name="agentType" lay-skin="primary" title="公司"  value="2">
+            <input type="radio" name="agentType" lay-skin="primary" title="部门"  value="3">
+
         </div>
     </div>
 	
@@ -98,37 +96,8 @@
         
         </div>
     </div>
-    
-    <div class="layui-form-item">
-	<div id="showDefaultWarehouse" hidden="true" class="layui-inline">
-        <label class="layui-form-label">默认仓库</label>
-        <div class="layui-input-block" id="defaultWarehouseHtml">
-            <input type="checkbox" name="defaultWarehouse" id="defaultWarehouse" lay-skin="primary" >
-        </div>
-    </div>
-	<div id="showCheckInventory" hidden="true" class="layui-inline">
-        <label class="layui-form-label">校验库存</label>
-        <div class="layui-input-block" id="checkInventoryHtml">
-            <input type="checkbox" name="checkInventory" id="checkInventory" lay-skin="primary" >
-        </div>
-    </div>
-    <div id="warehouse_orders" hidden="true" class="layui-inline">
-            <label class="layui-form-label">仓库序号</label>
-            <div class="layui-input-block" >
-                <input type="text" placeholder="仓库序号" class="layui-input" id="order_num" lay-verify="num" name="orderNum">
-            </div>
-      </div>
-    </div>
-   <!--  <div class="layui-form-item">
-	<div id="showSupervisor" hidden="true" class="layui-inline">
-        <label class="layui-form-label">督导信息</label>
-        <div class="layui-input-block" id="checkSupervisorHtml">
-           <select id="checkSupervisor" stype="width:40px">
-                 <option value="-1"></option>
-           </select>
-        </div>
-    </div>
-    </div> -->
+
+
     
     
     <div class="layui-form-item">
@@ -150,7 +119,7 @@
 	    <div class="layui-inline">
         <label class="layui-form-label">组织编号</label>
         <div class="layui-input-block">
-            <input type="text" placeholder="请输入组织编号" class="layui-input" id="companyCode" name="companyCode">
+            <input type="text" placeholder="请输入组织编号" class="layui-input" id="agentCode" name="agentCode">
         </div>
         </div>
           <div class="layui-inline">
