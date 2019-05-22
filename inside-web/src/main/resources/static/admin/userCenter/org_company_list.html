@@ -117,7 +117,7 @@
     
 	 <div class="layui-form-item">
 	    <div class="layui-inline">
-        <label class="layui-form-label">组织编号</label>
+        <label class="layui-form-label"><span style="color:red">*</span>组织编号</label>
         <div class="layui-input-block">
             <input type="text" placeholder="请输入组织编号" class="layui-input" id="agentCode" name="agentCode">
         </div>
@@ -197,8 +197,8 @@
     <tr>
         <td><input name="" lay-skin="primary" type="checkbox"></i></td>
         <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
-        <td>{{item.companyName==null||item.companyName==''?'-':item.companyName}}</td>
-        <td>{{item.companyShortName==null||item.companyShortName==''?'-':item.companyShortName}}</td>
+        <td>{{item.departmentName==null||item.departmentName==''?'-':item.departmentName}}</td>
+        <td>{{item.departmentShortName==null||item.departmentShortName==''?'-':item.departmentShortName}}</td>
         <td>{{item.agentCode==null||item.agentCode==''?'-':item.agentCode}}</td>
         <td>{{item.agentType==null||item.agentType==''?'-':companyOrgTypeRechange(item.agentType,item.defaultWarehouse)}}</td>
         <td>{{item.parentShortName==null||item.parentShortName==''?'-':item.parentShortName}}</td>

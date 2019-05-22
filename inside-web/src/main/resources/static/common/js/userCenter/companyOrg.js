@@ -333,7 +333,7 @@ getCompanyOrg=function(id,parentId){
 
 		var departmentName=$("#companyName").val();
 		var departmentShortName=$("#companyShortName").val();
-		var agentCode=$("#companyCode").val();
+		var agentCode=$("#agentCode").val();
 		var legalPerson=$("#legalPerson").val();
 		var contactTel=$("#contactTel").val();
 		var contactPhone=$("#contactPhone").val();
@@ -361,7 +361,7 @@ getCompanyOrg=function(id,parentId){
 					"parentId":parentId,
 					"departmentShortName":departmentShortName,
 					"departmentName":departmentName,
-					"agentCode":companyCode,
+					"agentCode":agentCode,
 					"legalPerson":legalPerson,
 					"contactTel":contactTel,
 					"contactPhone":contactPhone,
@@ -406,7 +406,7 @@ updateCompanyOrg=function(id){
 	$('#companyOrgForm')[0].reset();
 	$("#warehouse").prop("disabled",false);
 	$("#defaultWarehouse").prop("disabled",false);
-	var url = "/admin/companyOrg/info.json";
+	var url = "/api/admin/account/department/info";
 	$.ajax({
 		url : url,
 		type : "post",
@@ -422,9 +422,9 @@ updateCompanyOrg=function(id){
 			if(companyOrg.checkHasConsumer!=null&&companyOrg.checkHasConsumer==true){
 				$("#companyOrgForm .consumer").prop("disabled",true);
 			}
-			$("#companyName").val(companyOrg.companyName);
-			$("#companyShortName").val(companyOrg.companyShortName);
-			$("#companyCode").val(companyOrg.agentCode);
+			$("#companyName").val(companyOrg.departmentName);
+			$("#companyShortName").val(companyOrg.departmentShortName);
+			$("#agentCode").val(companyOrg.agentCode);
 			$("#legalPerson").val(companyOrg.legalPerson);
 			$("#contactTel").val(companyOrg.contactTel);
 			$("#contactPhone").val(companyOrg.contactPhone);
@@ -485,7 +485,7 @@ updateCompanyOrg=function(id){
 		});
 }
 updateDetail=function(data,index){
-	var url = "/admin/companyOrg/update.json";
+	var url = "/api/admin/account/department/update";
 	$.ajax({
 			url : url,
 			type : "post",
@@ -511,7 +511,7 @@ updateDetail=function(data,index){
 }
 
 deleteCompanyOrg=function(id,orgType){
-	var url = "/admin/companyOrg/delete.json";
+	var url = "/api/admin/account/department/delete";
 	var data={
 			"id":id
 	}

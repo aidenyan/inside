@@ -20,7 +20,7 @@ public interface DepartmentInfoMapper {
     int update(DepartmentInfo record);
 
     List<DepartmentInfo> listByAgentCode(@Param("agentCode") String agentCode);
-
+    Integer countByParentId(@Param("departmentId") Long departmentId);
 
     List<DepartmentInfo> listDepartment(@Param("parentId") Long parentId,@Param("departmentName") String departmentName);
 }

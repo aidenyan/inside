@@ -61,4 +61,36 @@ public class DepartmentController extends BaseController {
         Result<Boolean> result = getResult(Boolean.TRUE, ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
+
+    @RequestMapping("/update")
+    @ResponseBody
+    public Result<Boolean> update(@Valid DepartmentInfo departmentInfo, BindingResult bindingResult) {
+        Validator.checkErrors(bindingResult);
+        departmentInfoService.checkOrgCode(departmentInfo.getId(), departmentInfo.getAgentCode());
+        departmentInfoService.update(departmentInfo);
+        Result<Boolean> result = getResult(Boolean.TRUE, ResultControllerEnum.RESULT_SUCCESS);
+        return result;
+    }
+
+
+    @RequestMapping("/info")
+    @ResponseBody
+    public Result<DepartmentInfo> info(Long id) {
+        DepartmentInfo departmentInfo = departmentInfoService.find(id);
+        Result<DepartmentInfo> result = getResult(departmentInfo, ResultControllerEnum.RESULT_SUCCESS);
+        return result;
+    }
+    @RequestMapping("/delete")
+    @ResponseBody
+    public Result<Boolean> deleteCompanyOrg(Long id) {
+        Boolean flag = departmentInfoService.checkDelete(id);
+        Result<Boolean> result = null;
+        if (!flag) {
+            result = getResult(flag, ResultControllerEnum.RESULT_COMPANYORG_DELETECHECK);
+        } else {
+            flag = departmentInfoService.delete(id);
+            result = getResult(flag, ResultControllerEnum.RESULT_SUCCESS);
+        }
+        return result;
+    }
 }

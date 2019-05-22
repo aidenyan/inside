@@ -165,5 +165,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-
+  
+  <select id="countByDepartmentId" resultType="java.lang.Integer">
+    select count(id) from t_account_info where deleted=0 and department_id=#{departmentId}
+  </select>
 </mapper>

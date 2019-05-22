@@ -1,16 +1,22 @@
 package com.jimmy.service.account.impl;
 
 import com.jimmy.common.utils.StringUtils;
+import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.DepartmentInfo;
 import com.jimmy.dao.sys.mapper.DepartmentInfoMapper;
 import com.jimmy.dto.DepartTreeInfoDTO;
 import com.jimmy.exception.ParamterException;
+import com.jimmy.service.account.AccountInfoService;
 import com.jimmy.service.account.DepartmentInfoService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +27,8 @@ public class DepartmentInfoServiceImpl implements DepartmentInfoService {
 
     @Autowired
     private DepartmentInfoMapper departmentInfoMapper;
+    @Autowired
+    private AccountInfoService accountInfoService;
 
     @Override
     public List<DepartTreeInfoDTO> listTree() {
@@ -45,8 +53,8 @@ public class DepartmentInfoServiceImpl implements DepartmentInfoService {
 
     @Override
     public Boolean checkOrgCode(Long id, String agentCode) {
-        if (StringUtils.isNotBlank(agentCode)) {
-            throw new ParamterException();
+        if (StringUtils.isBlank(agentCode)) {
+            throw new ParamterException("组织编号不能未空");
         }
         DepartmentInfo checkDepartment = new DepartmentInfo();
         checkDepartment.setAgentCode(agentCode.trim());
@@ -60,10 +68,49 @@ public class DepartmentInfoServiceImpl implements DepartmentInfoService {
         }
         return true;
     }
+    public Boolean checkDelete(Long id) {
+        if (id == null) {
+            throw new ParamterException();
+        }
+        AccountInfo accountInfo = new AccountInfo();
+
+        Integer count= accountInfoService.countByDepartmentId(id);
+        if (count < 1) {
+
+            count= departmentInfoMapper.countByParentId(id);
+            if (count< 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean delete(Long id) {
+        DepartmentInfo departmentInfo=new DepartmentInfo();
+        departmentInfo.setId(id);
+        departmentInfo.setDeleted(true);
+         departmentInfoMapper.updateProperty(departmentInfo);
+return Boolean.TRUE;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(DepartmentInfo departmentInfo) {
         departmentInfoMapper.insert(departmentInfo);
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void update(DepartmentInfo departmentInfo) {
+        departmentInfoMapper.updateProperty(departmentInfo);
+    }
+
+    @Override
+    public DepartmentInfo find(Long id) {
+        return departmentInfoMapper.find(id);
     }
 
     @Override
@@ -71,4 +118,6 @@ public class DepartmentInfoServiceImpl implements DepartmentInfoService {
     public List<DepartmentInfo> listDepartment(Long parentId, String departmentName) {
         return departmentInfoMapper.listDepartment(parentId, departmentName);
     }
+
+
 }

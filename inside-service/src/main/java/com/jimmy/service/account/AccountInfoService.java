@@ -11,6 +11,8 @@ public interface AccountInfoService {
 
     AccountInfo find(Long id);
 
+    Integer countByDepartmentId(Long departmentId);
+
     void updateAccountInfo(AccountInfo accountInfo);
 
     void updatePersonInfo(AccountInfo accountInfo, PersonInfo personInfo);

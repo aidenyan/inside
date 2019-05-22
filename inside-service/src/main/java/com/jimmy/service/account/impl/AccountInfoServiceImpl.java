@@ -35,6 +35,12 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
+    public Integer countByDepartmentId(Long departmentId) {
+        Assert.notNull(departmentId);
+        return accountInfoMapper.countByDepartmentId(departmentId);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateAccountInfo(AccountInfo accountInfo) {
         Assert.notNull(accountInfo);

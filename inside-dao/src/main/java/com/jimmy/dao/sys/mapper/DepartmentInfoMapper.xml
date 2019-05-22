@@ -221,9 +221,7 @@
                 wechat = #{wechat,jdbcType=VARCHAR},
             </if>
 
-            <if test="bankId != null">
-                bank_id = #{bankId,jdbcType=SMALLINT},
-            </if>
+
             <if test="agentCode != null">
                 agent_code = #{agentCode,jdbcType=VARCHAR},
             </if>
@@ -255,7 +253,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jimmy.dao.sys.entity.DepartmentInfo">
+    <update id="update" parameterType="com.jimmy.dao.sys.entity.DepartmentInfo">
     update t_department_info
     set department_name = #{departmentName,jdbcType=VARCHAR},
       department_short_name = #{departmentShortName,jdbcType=VARCHAR},
@@ -293,5 +291,9 @@
         <if test="parentId != null">
             and c.parent_tree LIKE concat(concat('%,',#{parentId}),',%')
         </if>
+    </select>
+    
+    <select id="countByParentId" resultType="java.lang.Integer">
+        select count(id) from t_department_info where deleted=0 and parent_id=#{departmentId}
     </select>
 </mapper>

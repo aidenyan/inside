@@ -80,6 +80,12 @@ public class CommonController extends BaseController {
         Result<String> result = getResult(personName, ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
+    @RequestMapping("/listSelectArea")
+    @ResponseBody
+    public Result<List<SysArea>> listSelectArea(Long areaId) {
+        Result<List<SysArea>> result = getResult(sysAreaService.listSelectArea(areaId), ResultControllerEnum.RESULT_SUCCESS);
+        return result;
+    }
 
     @RequestMapping("/account/check_password")
     @ResponseBody

@@ -6,8 +6,8 @@ CREATE TABLE `t_site_info` (
   `child_enabled` tinyint(4) DEFAULT NULL COMMENT '是否可以查看下级',
   `org_id` int(11) DEFAULT NULL COMMENT '所属组织',
   `deleted` tinyint(4) DEFAULT '0' COMMENT '删除标志',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `create_time`  timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `modify_time`  timestamp NULL DEFAULT NULL COMMENT '修改时间',
   `create_id` int(11) DEFAULT NULL COMMENT '创建人',
   `modify_id` int(11) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)

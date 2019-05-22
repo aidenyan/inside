@@ -3,15 +3,14 @@ package com.jimmy.dao.sys.entity;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+
 import java.util.Date;
 
 @Data
 public class DepartmentInfo {
     private Long id;
-    @Pattern(regexp = "[\u4e00-\u9fa5]{4,20}", message = "组织名称格式不正确，只能为4到20位中文")
+    @NotNull(message = "组织名称并能为空")
     private String departmentName;
-    @Pattern(regexp = "[\u4e00-\u9fa5]{2,10}", message = "组织简称格式不正确，只能为2到10位中文")
     private String departmentShortName;
 
     private Integer areaId;
@@ -42,7 +41,7 @@ public class DepartmentInfo {
 
     private String remark;
 
-    private Byte deleted;
+    private Boolean deleted;
 
     private Date createTime;
 
@@ -52,7 +51,7 @@ public class DepartmentInfo {
 
     private Integer modifyId;
 
-    private Byte orgStatus;
+    private Integer orgStatus;
 
 
 }
