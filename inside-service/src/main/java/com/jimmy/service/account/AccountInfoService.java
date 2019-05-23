@@ -4,6 +4,8 @@ import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.PersonInfo;
 import com.jimmy.dao.sys.enums.AccountTypeEnum;
 
+import java.util.List;
+
 
 public interface AccountInfoService {
 
@@ -16,4 +18,6 @@ public interface AccountInfoService {
     void updateAccountInfo(AccountInfo accountInfo);
 
     void updatePersonInfo(AccountInfo accountInfo, PersonInfo personInfo);
+
+    List<AccountInfo> listByDepartmentId(Long departmentId, String searchName);
 }

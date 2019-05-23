@@ -133,10 +133,10 @@ var orderObj = new Order(function (obj) {
 			'orgId':companyId,
 			'name':$("#searchParam").val()
 	}
-	myAjax.ajaxPage('/admin/account/pageByOrg.json','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
+	myAjax.ajaxPage('/api/admin/account/page','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
 },"m1.createTime");
 dataAjaxPage=function(data){
-    myAjax.ajaxPage('/admin/account/pageByOrg.json','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
+    myAjax.ajaxPage('/api/admin/account/page','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
 }
 
 $("#searchAccount").click(function(){
@@ -178,23 +178,15 @@ setSellerAreaList=function(value){
 	}
 }
 jumpToAddHtml=function(companyId){
-	var url="/admin/account/add.json";
+	var url="/api/admin/account/role_list";
 	$.ajax({
 		url : url,
 		type : "post",
-		data:{
-			"companyId":companyId
-		},
 		traditional : true,
 		dataType : "json",
 		success : function(data) {
-			var account=data.result;
-			platformList=account.platformList;
-			positionList=account.positionList;
-			sellerAreaList=account.categoryInfoList;
-			roleList=account.roleList;
-			setPlatformList(platformList,null);
-			setPositionList(positionList);
+			var roleList=data.result;
+            roleListInit(roleList)
 			getProvinceList();
 		},
 		error:function(message){
@@ -324,7 +316,7 @@ setRoleList=function(warehouseId){
 	}
 }
 
-roleListInit=function(){
+roleListInit=function(roleList){
 	var options="";
 	$.each(roleList,function(k,p){
 		options+="<div class='mizon-dialog-add_use-chooseRol'><input type='checkbox' name='role' lay-filter='role' lay-skin='primary' title='"+p.name+"' value='"+p.id+"'></div>";

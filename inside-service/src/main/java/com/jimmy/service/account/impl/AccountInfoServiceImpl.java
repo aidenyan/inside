@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class AccountInfoServiceImpl implements AccountInfoService {
@@ -61,6 +63,15 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         accountInfo.setPersonId(personInfo.getId());
         updateAccountInfo(accountInfo);
 
+    }
+
+    @Override
+    public List<AccountInfo> listByDepartmentId(Long departmentId, String searchName) {
+        Assert.notNull(departmentId);
+        if (StringUtils.isBlank(searchName)) {
+            searchName = null;
+        }
+        return accountInfoMapper.listByDepartmentId(departmentId, searchName);
     }
 
 

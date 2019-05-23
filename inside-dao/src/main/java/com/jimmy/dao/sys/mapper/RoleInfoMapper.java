@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RoleInfoMapper {
 
-
+    List<RoleInfo> listAll();
     int insert(RoleInfo record);
     int count();
     List<RoleInfo> list(@Param("startRow") Integer startRow,@Param("pageSize") Integer pageSize);

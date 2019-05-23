@@ -1,7 +1,6 @@
 package com.jimmy.service.sys;
 
 import com.jimmy.base.Page;
-import com.jimmy.dao.sys.entity.MenuInfo;
 import com.jimmy.dao.sys.entity.RoleInfo;
 import com.jimmy.dto.RoleInfoDTO;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 public interface RoleInfoService {
 
-    Page<RoleInfo> page( Integer pageSize, Integer currentPage);
+    Page<RoleInfo> page(Integer pageSize, Integer currentPage);
 
     void deleted(List<Long> idList);
 
@@ -18,7 +17,9 @@ public interface RoleInfoService {
 
     RoleInfoDTO findRoleDetail(Long id);
 
-    boolean save(RoleInfo roleInfo,List<Long> menuIdList);
+    List<RoleInfo> listAll();
+
+    boolean save(RoleInfo roleInfo, List<Long> menuIdList);
 
 
 }

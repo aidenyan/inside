@@ -14,8 +14,15 @@
   <sql id="Base_Column_List" >
     id, name, role_desc, deleted, create_time, modify_time, create_id, modify_id
   </sql>
-  <select id="list" resultMap="BaseResultMap"  >
+  <select id="listAll" resultMap="BaseResultMap"  >
     select 
+    <include refid="Base_Column_List" />
+    from t_role_info
+    where deleted=0
+    ORDER BY create_time desc
+  </select>
+  <select id="list" resultMap="BaseResultMap"  >
+    select
     <include refid="Base_Column_List" />
     from t_role_info
     where deleted=0

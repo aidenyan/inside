@@ -169,4 +169,15 @@
   <select id="countByDepartmentId" resultType="java.lang.Integer">
     select count(id) from t_account_info where deleted=0 and department_id=#{departmentId}
   </select>
+  
+  <select id="listByDepartmentId" resultMap="BaseResultMap">
+     select
+    <include refid="Base_Column_List" />
+    from t_account_info a where deleted=0 and department_id=#{departmentId}
+    <if test="searchName != null ">
+     and  (a.name like contcat('%','#{searchName}','%')
+      or EXISTS (SELECT  p.id from t_person_info p where p.deleted=0 and p.name like contcat('%','#{searchName}','%') )
+      )
+    </if>
+  </select>
 </mapper>

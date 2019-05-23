@@ -59,10 +59,15 @@ public class RoleInfoServiceImpl implements RoleInfoService {
 
     @Override
     public RoleInfoDTO findRoleDetail(Long id) {
-        RoleInfoDTO roleInfoDTO=new RoleInfoDTO();
+        RoleInfoDTO roleInfoDTO = new RoleInfoDTO();
         roleInfoDTO.setRoleInfo(find(id));
         roleInfoDTO.setMenuIdList(roleMenuMapper.listMenuId(id));
         return roleInfoDTO;
+    }
+
+    @Override
+    public List<RoleInfo> listAll() {
+        return roleInfoMapper.listAll();
     }
 
     @Override
