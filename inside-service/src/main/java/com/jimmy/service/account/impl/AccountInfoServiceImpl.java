@@ -2,6 +2,7 @@ package com.jimmy.service.account.impl;
 
 import com.jimmy.common.utils.StringUtils;
 import com.jimmy.dao.sys.entity.AccountInfo;
+import com.jimmy.dao.sys.entity.AccountPerson;
 import com.jimmy.dao.sys.entity.AccountRole;
 import com.jimmy.dao.sys.entity.PersonInfo;
 import com.jimmy.dao.sys.enums.AccountTypeEnum;
@@ -109,7 +110,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public List<AccountInfo> listByDepartmentId(Long departmentId, String searchName) {
+    public List<AccountPerson> listByDepartmentId(Long departmentId, String searchName) {
         Assert.notNull(departmentId);
         if (StringUtils.isBlank(searchName)) {
             searchName = null;

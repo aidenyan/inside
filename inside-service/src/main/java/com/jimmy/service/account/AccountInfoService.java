@@ -1,6 +1,7 @@
 package com.jimmy.service.account;
 
 import com.jimmy.dao.sys.entity.AccountInfo;
+import com.jimmy.dao.sys.entity.AccountPerson;
 import com.jimmy.dao.sys.entity.AccountRole;
 import com.jimmy.dao.sys.entity.PersonInfo;
 import com.jimmy.dao.sys.enums.AccountTypeEnum;
@@ -27,7 +28,7 @@ public interface AccountInfoService {
 
     void save(AccountInfo accountInfo, PersonInfo personInfo, List<Long> roleIdList);
 
-    List<AccountInfo> listByDepartmentId(Long departmentId, String searchName);
+    List<AccountPerson> listByDepartmentId(Long departmentId, String searchName);
 
     List<AccountRole> listRoleAccountInfo(Long accountId);
 

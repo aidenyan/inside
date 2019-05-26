@@ -179,16 +179,31 @@
     <select id="countByDepartmentId" resultType="java.lang.Integer">
     select count(id) from t_account_info where deleted=0 and department_id=#{departmentId}
   </select>
-
-    <select id="listByDepartmentId" resultMap="BaseResultMap">
+    <resultMap id="accountPersonResultMap" type="com.jimmy.dao.sys.entity.AccountPerson">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="person_id" property="personId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="person_name" property="personName"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="contact_tel" property="contactTel" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="org_name" property="orgName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="INTEGER"/>
+        <result column="modify_id" property="modifyId" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="listByDepartmentId" resultMap="accountPersonResultMap">
         select
-        <include refid="Base_Column_List"/>
-        from t_account_info a where deleted=0 and department_id=#{departmentId}
+         a.id,a.person_id,a.name,p.name person_name,p.email,p.contact_tel,a.status,p.create_time,p.modify_time,
+        p.create_id,p.modify_id,dp.department_name org_name
+        from t_account_info a
+        JOIN t_person_info p on a.person_id=p.id and p.deleted=0
+        JOIN t_department_info dp on a.department_id=dp.id
+        where a.deleted=0 and a.department_id=#{departmentId}
         <if test="searchName != null ">
             and (a.name like contcat('%','#{searchName}','%')
-            or EXISTS (SELECT p.id from t_person_info p where p.deleted=0 and p.name like
-            contcat('%','#{searchName}','%') )
-            )
+              or p.name like contcat('%','#{searchName}','%') )
         </if>
     </select>
 </mapper>

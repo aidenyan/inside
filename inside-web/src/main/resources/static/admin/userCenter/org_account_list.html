@@ -47,7 +47,6 @@
                         <th class="width40">序号</th>
                         <th class="sort width70" name="m1.personName">姓名</th>
                         <th class="sort width80" name="m1.name">账号</th>
-                        <th class="width80">工作岗位</th>
                         <th class="width120">联系邮箱</th>
                         <th class="width100">联系电话</th>
                        <!-- <th style="min-width: 100px">联系地址</th>-->
@@ -250,7 +249,6 @@
         <td>{{(index+1)+(d.pageSize*(d.pageNo-1))}}</td>
         <td class='over_show'>{{item.personName==null||item.personName==''?'-':item.personName}}</td>
         <td>{{item.name==null||item.name==''?'':item.name}}</td>
-        <td class='over_show'>{{item.positionName==null||item.positionName==''?'-':item.positionName}}</td>
         <td class='over_show'>{{item.email==null||item.email==''?'-':item.email}}</td>
         <td>{{item.contactTel||'-'}}</td>
         <!--<td class='over_show'>{{item.address==null||item.address==''?'-':item.address}}</td>-->

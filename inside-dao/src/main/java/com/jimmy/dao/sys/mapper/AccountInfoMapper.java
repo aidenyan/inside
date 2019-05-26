@@ -1,6 +1,7 @@
 package com.jimmy.dao.sys.mapper;
 
 import com.jimmy.dao.sys.entity.AccountInfo;
+import com.jimmy.dao.sys.entity.AccountPerson;
 import com.jimmy.dao.sys.enums.AccountTypeEnum;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,5 +17,5 @@ public interface AccountInfoMapper {
 
     AccountInfo findByLoginName(@Param("loginName") String loginName, @Param("type")Integer type);
     void deleteById(@Param("id")Long id);
-    List<AccountInfo> listByDepartmentId(@Param("departmentId") Long departmentId, @Param("searchName") String searchName);
+    List<AccountPerson> listByDepartmentId(@Param("departmentId") Long departmentId, @Param("searchName") String searchName);
 }

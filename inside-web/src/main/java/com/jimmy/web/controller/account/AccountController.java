@@ -50,15 +50,15 @@ public class AccountController extends BaseController {
 
     @RequestMapping("/page")
     @ResponseBody
-    public Result<PageReulst<AccountInfo>> page(Long orgId, String name, Integer pageNo, Integer pageSize) {
+    public Result<PageReulst<AccountPerson>> page(Long orgId, String name, Integer pageNo, Integer pageSize) {
         this.setPage(pageNo, pageSize);
-        List<AccountInfo> accountInfoList = accountInfoService.listByDepartmentId(orgId, name);
-        Result<PageReulst<AccountInfo>> result = getPageResult(accountInfoList, ResultControllerEnum.RESULT_SUCCESS);
+        List<AccountPerson> accountInfoList = accountInfoService.listByDepartmentId(orgId, name);
+        Result<PageReulst<AccountPerson>> result = getPageResult(accountInfoList, ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
 
     /**
-     * @param accountId
+     * @param
      * @return
      * @Description: 权限信息
      * @return: Result<AccountVO>
@@ -112,7 +112,7 @@ public class AccountController extends BaseController {
     }
 
     /**
-     * @param accountInfo
+     * @param
      * @return
      * @Description: 保存账号信息
      * @return: Result<Boolean>
