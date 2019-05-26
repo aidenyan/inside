@@ -125,8 +125,13 @@ public class AccountController extends BaseController {
 
         Result<Boolean> result = null;
         AccountInfo accountInfo = accountDTO.getAccountInfo();
+        accountInfo.setPassword(EncryptUtils.encryptMd5(accountInfo.getPassword(), AuthorityConst.USER_LOGIN_PASSWORD_SECRET));
         Long departmentId = accountInfo.getDepartmentId();
         DepartmentInfo departmentInfo = departmentInfoService.find(departmentId);
+        if (departmentInfo != null) {
+            result = getResult(Boolean.FALSE, ResultControllerEnum.RESULT_DEPARTMENT_ERROR);
+            return result;
+        }
         AccountInfo tempAccountInfo = accountInfoService.getAccountInfoByName(accountInfo.getName(), ACCOUNT_TYPE_SYS_ADMIN);
         if (tempAccountInfo != null) {
             result = getResult(Boolean.FALSE, ResultControllerEnum.RESULT_ACCOUNT_NAMECHECK);

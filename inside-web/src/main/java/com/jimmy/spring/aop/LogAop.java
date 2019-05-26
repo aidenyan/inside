@@ -124,7 +124,7 @@ public class LogAop {
                                 paramList.add(tempObj);
                             }
                         }
-                        sysLogInfo.setOperationContent(JSON.toJSONString(paramList));
+                        sysLogInfo.setOperationDetail(JSON.toJSONString(paramList));
                     }
                 }
             }
