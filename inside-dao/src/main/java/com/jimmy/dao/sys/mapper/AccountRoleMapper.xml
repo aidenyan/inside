@@ -9,19 +9,19 @@
     <sql id="Base_Column_List">
     id, role_id, account_id
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="listByAccountId" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List"/>
         from t_account_role
-        where id = #{id,jdbcType=INTEGER}
+        where account_id = #{accountId}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByAccountId" >
     delete from t_account_role
-    where id = #{id,jdbcType=INTEGER}
+    where account_id = #{accountId}
   </delete>
     <insert id="insert" parameterType="com.jimmy.dao.sys.entity.AccountRole">
-    insert into t_account_role (id, role_id, account_id)
-    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=SMALLINT}, #{accountId,jdbcType=INTEGER}
+    insert into t_account_role ( role_id, account_id)
+    values (#{roleId,jdbcType=SMALLINT}, #{accountId,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.jimmy.dao.sys.entity.AccountRole">
         insert into t_account_role

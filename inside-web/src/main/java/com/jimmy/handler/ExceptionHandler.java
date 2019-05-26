@@ -2,6 +2,7 @@ package com.jimmy.handler;
 
 import com.jimmy.base.Result;
 import com.jimmy.exception.AuthorException;
+import com.jimmy.exception.ParamterException;
 import com.jimmy.sublimation.validate.exception.ValidateException;
 import com.jimmy.web.enums.ResultCoreEnum;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,7 +30,14 @@ public class ExceptionHandler {
     }
     @ResponseBody
     @org.springframework.web.bind.annotation.ExceptionHandler(ValidateException.class)
-    public Result<Void> ValidateExceptionHandler(AuthorException e) {
+    public Result<Void> validateExceptionHandler(AuthorException e) {
+        Result<Void> resultModel = new Result<>(ResultCoreEnum.RESULT_PARAMETER_EXCEPTION);
+        resultModel.setMessage(e.getMessage());
+        return resultModel;
+    }
+    @ResponseBody
+    @org.springframework.web.bind.annotation.ExceptionHandler(ParamterException.class)
+    public Result<Void> paramterExceptionHandler(ParamterException e) {
         Result<Void> resultModel = new Result<>(ResultCoreEnum.RESULT_PARAMETER_EXCEPTION);
         resultModel.setMessage(e.getMessage());
         return resultModel;
