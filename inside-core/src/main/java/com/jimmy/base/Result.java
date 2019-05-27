@@ -2,7 +2,7 @@ package com.jimmy.base;
 
 
 
-import com.jimmy.web.enums.ResultEnum;
+import com.jimmy.enums.ResultEnum;
 
 import java.util.HashMap;
 import java.util.List;

@@ -23,6 +23,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private AuthorityUserInterceptor authorityUserInterceptor;
+    @Autowired
+    private SpringMvcConfig springMvcConfig;
 
     /**
      * Docket可以有多个,groupName分组的信息,每个分组可以有自己的类型
@@ -59,11 +61,13 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/upload/**").addResourceLocations(springMvcConfig.getFilePath());
+
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        AuthorInterceptor authorInterceptor=new AuthorInterceptor();
+        AuthorInterceptor authorInterceptor = new AuthorInterceptor();
         authorInterceptor.setAuthorityUserInterceptor(authorityUserInterceptor);
         registry.addInterceptor(authorInterceptor).addPathPatterns("/admin/**");
     }

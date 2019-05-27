@@ -1,7 +1,6 @@
 package com.jimmy.web.controller;
 
 import com.github.pagehelper.PageHelper;
-import com.jimmy.base.Page;
 import com.jimmy.base.PageReulst;
 import com.jimmy.base.Result;
 import com.jimmy.conts.SessionConst;
@@ -12,7 +11,7 @@ import com.jimmy.local.SiteInfoLocalThread;
 import com.jimmy.local.UserLocalThread;
 import com.jimmy.service.sys.MenuInfoService;
 import com.jimmy.web.consts.PageConst;
-import com.jimmy.web.enums.ResultEnum;
+import com.jimmy.enums.ResultEnum;
 import com.jimmy.web.mvc.DateEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

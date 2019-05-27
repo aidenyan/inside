@@ -29,7 +29,7 @@ else
 fi
 
 
-"$JAVA" $JAVA_OPTS $JAVA_MEM_OPTS "-Dlog4j.level=WARN" "-Dlog.home=${LOG_HOME}" "-Dwork.home=${WORK_HOME}" -cp $CLASSPATH $MAINCLASS > $STDOUT_FILE 2>&1 &
+"$JAVA" $JAVA_OPTS $JAVA_MEM_OPTS "-Dlog4j.level=WARN" "-Dlog.home=${LOG_HOME}" "-Dspring.proﬁles.active=prod" ""-Dwork.home=${WORK_HOME}" -cp $CLASSPATH $MAINCLASS > $STDOUT_FILE 2>&1 &
 
 COUNT=0
 while [ $COUNT -lt 1 ]; do

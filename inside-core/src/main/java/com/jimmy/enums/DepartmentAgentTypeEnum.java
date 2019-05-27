@@ -1,17 +1,13 @@
-package com.jimmy.dao.sys.enums;
+package com.jimmy.enums;
 
-/**
- * @author aiden
- * @date 2017/3/1
- */
-public enum AccountStatusEnum {
-    ACCOUNT_STATUS_DISABLE(1, "禁用"),
-    ACCOUNT_STATUS_USING(0, "启用"),
-    ACCOUNT_STATUS_LOCK(2, "锁足");
+public enum DepartmentAgentTypeEnum {
+    TYPE_GROUP(1, "集团"),
+    TYPE_COMPANY(2, "公司"),
+    TYPE_DEPARTMENT(3, "部门"),;
     private Integer value;
     private String desc;
 
-    private AccountStatusEnum(Integer value, String desc) {
+    private DepartmentAgentTypeEnum(Integer value, String desc) {
         this.value = value;
         this.desc = desc;
     }

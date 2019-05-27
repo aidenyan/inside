@@ -1,16 +1,16 @@
-package com.jimmy.dao.sys.enums;
+package com.jimmy.enums;
 
 /**
  * @author aiden
  * @date 2017/3/1
  */
-public enum AccountTypeEnum {
-    ACCOUNT_TYPE_SYS_ADMIN(0, "系统管理员"),
-    ACCOUNT_TYPE_MEMBER(1, "会员"),;
+public enum LogObjTypeEnum {
+    ROLE(0, "角色"),
+    ;
     private Integer value;
     private String desc;
 
-    private AccountTypeEnum(Integer value, String desc) {
+    private LogObjTypeEnum(Integer value, String desc) {
         this.value = value;
         this.desc = desc;
     }
@@ -30,14 +30,15 @@ public enum AccountTypeEnum {
     public void setDesc(String desc) {
         this.desc = desc;
     }
-    public static AccountTypeEnum values(Integer value){
 
-        for(AccountTypeEnum accountTypeEnum:AccountTypeEnum.values()){
-            if(accountTypeEnum.getValue().equals(value)){
+    public static LogObjTypeEnum values(Integer value) {
+
+        for (LogObjTypeEnum accountTypeEnum : LogObjTypeEnum.values()) {
+            if (accountTypeEnum.getValue().equals(value)) {
                 return accountTypeEnum;
             }
         }
         return null;
     }
-    }
+}
 

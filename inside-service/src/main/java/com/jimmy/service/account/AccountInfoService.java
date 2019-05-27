@@ -4,7 +4,7 @@ import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.AccountPerson;
 import com.jimmy.dao.sys.entity.AccountRole;
 import com.jimmy.dao.sys.entity.PersonInfo;
-import com.jimmy.dao.sys.enums.AccountTypeEnum;
+import com.jimmy.enums.AccountTypeEnum;
 
 import java.util.List;
 

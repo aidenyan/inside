@@ -1,7 +1,7 @@
 package com.jimmy.base;
 
 
-import com.jimmy.web.enums.ResultEnum;
+import com.jimmy.enums.ResultEnum;
 
 /**
  * @author aiden

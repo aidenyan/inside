@@ -4,7 +4,7 @@ import com.jimmy.base.Result;
 import com.jimmy.exception.AuthorException;
 import com.jimmy.exception.ParamterException;
 import com.jimmy.sublimation.validate.exception.ValidateException;
-import com.jimmy.web.enums.ResultCoreEnum;
+import com.jimmy.enums.ResultCoreEnum;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
 

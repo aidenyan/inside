@@ -1,18 +1,16 @@
-package com.jimmy.dao.sys.enums;
+package com.jimmy.enums;
 
 /**
  * @author aiden
  * @date 2017/3/1
  */
-public enum LogTypeEnum {
-    ADD(0, "增加"),
-    DELETED(1, "删除"),
-    UPDATE(2, "修改"),
-    ;
+public enum AccountTypeEnum {
+    ACCOUNT_TYPE_SYS_ADMIN(0, "系统管理员"),
+    ACCOUNT_TYPE_MEMBER(1, "会员"),;
     private Integer value;
     private String desc;
 
-    private LogTypeEnum(Integer value, String desc) {
+    private AccountTypeEnum(Integer value, String desc) {
         this.value = value;
         this.desc = desc;
     }
@@ -32,9 +30,9 @@ public enum LogTypeEnum {
     public void setDesc(String desc) {
         this.desc = desc;
     }
-    public static LogTypeEnum values(Integer value){
+    public static AccountTypeEnum values(Integer value){
 
-        for(LogTypeEnum accountTypeEnum: LogTypeEnum.values()){
+        for(AccountTypeEnum accountTypeEnum:AccountTypeEnum.values()){
             if(accountTypeEnum.getValue().equals(value)){
                 return accountTypeEnum;
             }

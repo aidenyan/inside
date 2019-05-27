@@ -1,4 +1,4 @@
-package com.jimmy.dao.sys.enums;
+package com.jimmy.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

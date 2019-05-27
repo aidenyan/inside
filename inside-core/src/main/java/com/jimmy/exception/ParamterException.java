@@ -1,7 +1,7 @@
 package com.jimmy.exception;
 
 
-import com.jimmy.web.enums.ResultCoreEnum;
+import com.jimmy.enums.ResultCoreEnum;
 
 /**
  * @author aiden

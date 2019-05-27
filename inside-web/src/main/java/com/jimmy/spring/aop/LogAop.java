@@ -1,16 +1,18 @@
 package com.jimmy.spring.aop;
 
 import com.alibaba.fastjson.JSON;
+import com.jimmy.anno.LogInfo;
 import com.jimmy.annon.DisabledLog;
 import com.jimmy.common.utils.BeanUtils;
 import com.jimmy.common.utils.IpUtils;
 import com.jimmy.common.utils.ObjectUtils;
 import com.jimmy.common.utils.StringUtils;
+import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs;
+import com.jimmy.local.LogInfoLocalThread;
 import com.jimmy.local.RequestLocalThread;
+import com.jimmy.local.UserLocalThread;
 import com.jimmy.service.sys.SysLogInfoService;
-import com.jimmy.spring.anno.LogInfo;
-import com.jimmy.spring.local.LogInfoLocalThread;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -38,11 +40,11 @@ import java.util.Map;
 @Aspect
 @Component
 public class LogAop {
-    Logger logger = Logger.getLogger(LogAop.class);
     /**
      * 默认忽略参数
      */
     private static final String[] DEFAULT_IGNORE_PARAMETERS = new String[]{"password", "rePassword", "currentPassword"};
+    Logger logger = Logger.getLogger(LogAop.class);
     /**
      * 忽略参数
      */
@@ -62,7 +64,7 @@ public class LogAop {
         Object obj = null;
         LogInfo logInfoLocal = LogInfoLocalThread.get();
         DisabledLog disabledLog = method.getAnnotation(DisabledLog.class);
-        if (disabledLog==null&&logInfo == null && logInfoLocal != null && !transactional.readOnly()) {
+        if (disabledLog == null && logInfo == null && logInfoLocal != null && !transactional.readOnly()) {
             obj = dealSysLog(joinPoint, logInfoLocal, method, (byte) 1);
         } else {
             obj = joinPoint.proceed(joinPoint.getArgs());
@@ -95,6 +97,10 @@ public class LogAop {
     private Object dealSysLog(ProceedingJoinPoint joinPoint, LogInfo logInfo, Method method, Byte logType) throws Throwable {
         Object obj = null;
         SysLogInfoWithBLOBs sysLogInfo = new SysLogInfoWithBLOBs();
+        AccountInfo accountInfo = UserLocalThread.get();
+        if (accountInfo != null) {
+            sysLogInfo.setOperationName(accountInfo.getName());
+        }
         try {
             HttpServletRequest request = RequestLocalThread.get();
             if (request != null) {
@@ -114,12 +120,11 @@ public class LogAop {
                         }
 
                     }
-                    sysLogInfo.setOperationContent(JSON.toJSONString(paramMap));
+                    sysLogInfo.setOperationDetail(JSON.toJSONString(paramMap));
                 } else {
                     if (paramObj != null) {
                         List<Object> paramList = new ArrayList<Object>();
                         for (Object tempObj : paramObj) {
-
                             if (!(tempObj instanceof ServletRequest) && !(tempObj instanceof ServletResponse) && !(tempObj instanceof BindingResult)) {
                                 paramList.add(tempObj);
                             }
@@ -133,7 +138,6 @@ public class LogAop {
                 if (value != null) {
                     sysLogInfo.setObjId(JSON.toJSONString(value));
                 }
-
             }
             sysLogInfo.setOperationCode(logInfo.operation().getCode().toString());
             sysLogInfo.setObjType(logInfo.type().getCode());

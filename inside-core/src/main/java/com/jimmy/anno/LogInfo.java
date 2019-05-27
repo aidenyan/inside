@@ -1,9 +1,10 @@
-package com.jimmy.spring.anno;
+package com.jimmy.anno;
 
 
 
-import com.jimmy.dao.sys.enums.ObjTypeEnum;
-import com.jimmy.dao.sys.enums.OperationEnum;
+
+import com.jimmy.enums.ObjTypeEnum;
+import com.jimmy.enums.OperationEnum;
 
 import java.lang.annotation.*;
 

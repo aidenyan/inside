@@ -1,4 +1,4 @@
-package com.jimmy.web.enums;
+package com.jimmy.enums;
 
 /**
  * @author aiden

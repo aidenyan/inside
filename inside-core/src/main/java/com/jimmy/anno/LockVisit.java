@@ -1,4 +1,4 @@
-package com.jimmy.spring.anno;
+package com.jimmy.anno;
 
 import java.lang.annotation.*;
 

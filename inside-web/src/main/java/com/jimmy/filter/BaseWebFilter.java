@@ -5,7 +5,7 @@ import com.jimmy.base.Result;
 import com.jimmy.local.RequestLocalThread;
 import com.jimmy.local.ResponseLocalThread;
 import com.jimmy.sublimation.validate.exception.ValidateException;
-import com.jimmy.web.enums.ResultCoreEnum;
+import com.jimmy.enums.ResultCoreEnum;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.NestedServletException;
 

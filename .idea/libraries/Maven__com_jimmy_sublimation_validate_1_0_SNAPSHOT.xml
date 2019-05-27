@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.jimmy:sublimation-validate:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-validate/1.0-SNAPSHOT/sublimation-validate-1.0-20190525.235633-5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-validate/1.0-SNAPSHOT/sublimation-validate-1.0-20190527.063049-1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-validate/1.0-SNAPSHOT/sublimation-validate-1.0-20190525.235633-5-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-validate/1.0-SNAPSHOT/sublimation-validate-1.0-20190527.063049-1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-validate/1.0-SNAPSHOT/sublimation-validate-1.0-20190525.235633-5-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-validate/1.0-SNAPSHOT/sublimation-validate-1.0-20190527.063049-1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

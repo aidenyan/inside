@@ -1,7 +1,7 @@
-package com.jimmy.spring.local;
+package com.jimmy.local;
 
 
-import com.jimmy.spring.anno.LogInfo;
+import com.jimmy.anno.LogInfo;
 
 /**
  * @author aiden

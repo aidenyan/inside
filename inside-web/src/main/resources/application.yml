@@ -1,22 +1,5 @@
 spring:
-  application:
-    name: inside
-  datasource:
-    driver-class-name:  com.mysql.jdbc.Driver
-    url: jdbc:mysql://94.191.60.104:3306/inside?useUnicode=true&characterEncoding=utf-8
-    username: root
-    type: com.alibaba.druid.pool.DruidDataSource
-    password: 123456
-  mvc:
-    view:
-      suffix: .html
-      prefix: /
-
-server:
-  port: 8083
-
-logging:
-  config: classpath:log.xml
-
+     profiles:
+        active: test
 
 

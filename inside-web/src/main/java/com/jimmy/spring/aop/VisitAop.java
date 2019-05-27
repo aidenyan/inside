@@ -6,7 +6,7 @@ import com.jimmy.common.utils.ObjectUtils;
 import com.jimmy.common.utils.StringUtils;
 import com.jimmy.exception.ServiceException;
 import com.jimmy.local.RequestLocalThread;
-import com.jimmy.spring.anno.LockVisit;
+import com.jimmy.anno.LockVisit;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

@@ -1,6 +1,8 @@
 package com.jimmy.web.enums;
 
 
+import com.jimmy.enums.ResultEnum;
+
 /**
  * @author aiden
  * @date 2017/3/1

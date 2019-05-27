@@ -1,26 +1,32 @@
 package com.jimmy.web.controller;
 
 import com.jimmy.base.Result;
+import com.jimmy.common.utils.DateUtils;
 import com.jimmy.common.utils.EncryptUtils;
+import com.jimmy.common.utils.FileUtils;
 import com.jimmy.common.utils.StringUtils;
+import com.jimmy.config.SpringMvcConfig;
 import com.jimmy.conts.AuthorityConst;
 import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.MenuInfo;
 import com.jimmy.dao.sys.entity.PersonInfo;
 import com.jimmy.dao.sys.entity.SysArea;
 import com.jimmy.dto.PasswordUpdateDTO;
+import com.jimmy.enums.ResultCoreEnum;
+import com.jimmy.exception.ParamterException;
 import com.jimmy.service.account.AccountInfoService;
 import com.jimmy.service.sys.MenuInfoService;
 import com.jimmy.service.sys.PersonInfoService;
 import com.jimmy.service.sys.SysAreaService;
 import com.jimmy.sublimation.validate.anno.ParamValidate;
 import com.jimmy.web.enums.ResultControllerEnum;
-import com.jimmy.web.enums.ResultCoreEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,10 +41,31 @@ public class CommonController extends BaseController {
     private MenuInfoService menuInfoService;
 
     @Autowired
+    private SpringMvcConfig springMvcConfig;
+
+    @Autowired
     private AccountInfoService accountInfoService;
     @Autowired
     private PersonInfoService personInfoService;
 
+    @PostMapping("/update_file")
+    @ResponseBody
+    public Result<String> updateFile(MultipartFile multipartFile) {
+        Result<String> result = null;
+        if (multipartFile != null) {
+            try {
+                String fileType = multipartFile.getOriginalFilename();
+                fileType = fileType.substring(fileType.lastIndexOf("."));
+                String headerUrl = FileUtils.saveFile(springMvcConfig.getFilePath(), "/" + DateUtils.getCurrentDateString() + "/", multipartFile.getInputStream(), fileType);
+                result = getResult(headerUrl, ResultControllerEnum.RESULT_SUCCESS);
+            } catch (Exception e) {
+                throw new ParamterException("写入图片信息失败！");
+            }
+        } else {
+            result = getResult(null, ResultControllerEnum.RESULT_FAIL);
+        }
+        return result;
+    }
 
     @RequestMapping("/account/name")
     @ResponseBody
@@ -80,6 +107,7 @@ public class CommonController extends BaseController {
         Result<String> result = getResult(personName, ResultControllerEnum.RESULT_SUCCESS);
         return result;
     }
+
     @RequestMapping("/listSelectArea")
     @ResponseBody
     public Result<List<SysArea>> listSelectArea(Long areaId) {

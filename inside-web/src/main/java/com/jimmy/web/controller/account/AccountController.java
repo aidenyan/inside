@@ -5,14 +5,14 @@ import com.jimmy.base.Result;
 import com.jimmy.common.utils.EncryptUtils;
 import com.jimmy.conts.AuthorityConst;
 import com.jimmy.dao.sys.entity.*;
-import com.jimmy.dao.sys.enums.ObjTypeEnum;
-import com.jimmy.dao.sys.enums.OperationEnum;
+import com.jimmy.enums.ObjTypeEnum;
+import com.jimmy.enums.OperationEnum;
 import com.jimmy.exception.ParamterException;
 import com.jimmy.local.UserLocalThread;
 import com.jimmy.service.account.AccountInfoService;
 import com.jimmy.service.account.DepartmentInfoService;
 import com.jimmy.service.sys.RoleInfoService;
-import com.jimmy.spring.anno.LogInfo;
+import com.jimmy.anno.LogInfo;
 import com.jimmy.sublimation.validate.anno.NotNull;
 import com.jimmy.sublimation.validate.anno.ParamValidate;
 import com.jimmy.web.controller.BaseController;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jimmy.dao.sys.enums.AccountTypeEnum.ACCOUNT_TYPE_SYS_ADMIN;
+import static com.jimmy.enums.AccountTypeEnum.ACCOUNT_TYPE_SYS_ADMIN;
 
 
 @Controller

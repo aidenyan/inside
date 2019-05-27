@@ -2,7 +2,6 @@ package com.jimmy.dao.sys.mapper;
 
 import com.jimmy.dao.sys.entity.AccountInfo;
 import com.jimmy.dao.sys.entity.AccountPerson;
-import com.jimmy.dao.sys.enums.AccountTypeEnum;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

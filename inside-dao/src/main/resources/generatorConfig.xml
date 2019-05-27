@@ -14,7 +14,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/inside" userId="root"
+                        connectionURL="jdbc:mysql://94.191.60.104:3306/inside" userId="root"
                         password="123456"/>
 
         <javaModelGenerator targetPackage="com.jimmy.dao.sys.entity"
@@ -41,7 +41,7 @@
                selectByExampleQueryId="false"/>-->
 
 
-        <table tableName="t_site_info" domainObjectName="SiteInfo"
+        <table tableName="t_sys_config" domainObjectName="SysConfig"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

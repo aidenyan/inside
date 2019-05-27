@@ -7,7 +7,7 @@ import com.jimmy.common.utils.EncryptUtils;
 import com.jimmy.conts.AuthorityConst;
 import com.jimmy.conts.SessionConst;
 import com.jimmy.dao.sys.entity.AccountInfo;
-import com.jimmy.dao.sys.enums.AccountTypeEnum;
+import com.jimmy.enums.AccountTypeEnum;
 import com.jimmy.local.RequestLocalThread;
 import com.jimmy.local.ResponseLocalThread;
 import com.jimmy.service.core.CookieService;

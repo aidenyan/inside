@@ -17,5 +17,10 @@ public class SpringWebConfig {
         servletServletRegistrationBean.addUrlMappings("/static/*");
         return servletServletRegistrationBean;
     }
+    @Bean
+    public SpringMvcConfig springMvcConfig() {
+        SpringMvcConfig springMvcConfig = new SpringMvcConfig();
+        return springMvcConfig;
+    }
 
 }
