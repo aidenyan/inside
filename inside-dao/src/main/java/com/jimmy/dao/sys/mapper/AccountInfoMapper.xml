@@ -1,183 +1,209 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jimmy.dao.sys.mapper.AccountInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.jimmy.dao.sys.entity.AccountInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="department_id" property="departmentId" />
-    <result column="person_id" property="personId" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="TINYINT" />
-    <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
-    <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
-    <result column="error_num" property="errorNum" jdbcType="TINYINT" />
-    <result column="deleted" property="deleted" jdbcType="TINYINT" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="create_id" property="createId" jdbcType="INTEGER" />
-    <result column="modify_id" property="modifyId" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.jimmy.dao.sys.mapper.AccountInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jimmy.dao.sys.entity.AccountInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="department_id" property="departmentId"/>
+        <result column="person_id" property="personId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="login_time" property="loginTime" jdbcType="TIMESTAMP"/>
+        <result column="login_ip" property="loginIp" jdbcType="VARCHAR"/>
+        <result column="error_num" property="errorNum" jdbcType="TINYINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="INTEGER"/>
+        <result column="modify_id" property="modifyId" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, person_id, name, contact_phone, password, type, status, login_time, login_ip,department_id,
     error_num, deleted, create_time, modify_time, create_id, modify_id
   </sql>
-  <select id="find" resultMap="BaseResultMap" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_account_info
-    where id = #{id}
-  </select>
+    <select id="find" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_account_info
+        where id = #{id}
+    </select>
+    <update id="deleteById">
+       UPDATE t_account_info set deleted=1 where id=#{id}
+    </update>
+    <select id="findByLoginName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_account_info
+        where name = #{loginName,jdbcType=INTEGER} and deleted=0 and type=#{type}
+    </select>
 
-  <select id="findByLoginName" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from t_account_info
-    where name = #{loginName,jdbcType=INTEGER} and deleted=0 and type=#{type}
-  </select>
-  <insert id="insert" parameterType="com.jimmy.dao.sys.entity.AccountInfo" >
-    insert into t_account_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="departmentId != null" >
-        department_id,
-      </if>
-      <if test="personId != null" >
-        person_id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="contactPhone != null" >
-        contact_phone,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="loginTime != null" >
-        login_time,
-      </if>
-      <if test="loginIp != null" >
-        login_ip,
-      </if>
-      <if test="errorNum != null" >
-        error_num,
-      </if>
+    <select id="findAccountPhone" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_account_info
+        where contact_phone = #{mobile} and deleted=0 and type=#{type}
+    </select>
 
-        deleted,
-        create_time,
-        modify_time,
-      <if test="createId != null" >
-        create_id,
-      </if>
-      <if test="modifyId != null" >
-        modify_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="departmentId != null" >
-        #{departmentId},
-      </if>
-      <if test="personId != null" >
-        #{personId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="contactPhone != null" >
-        #{contactPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=TINYINT},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=TINYINT},
-      </if>
-      <if test="loginTime != null" >
-        #{loginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="loginIp != null" >
-        #{loginIp,jdbcType=VARCHAR},
-      </if>
-      <if test="errorNum != null" >
-        #{errorNum,jdbcType=TINYINT},
-      </if>
-      0,
-     now(),
-      now(),
-      <if test="createId != null" >
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="modifyId != null" >
-        #{modifyId,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="update" parameterType="com.jimmy.dao.sys.entity.AccountInfo" >
-    update t_account_info
-    <set >
-      <if test="departmentId != null" >
-        department_id=#{departmentId},
-      </if>
-      <if test="personId != null" >
-        person_id = #{personId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="contactPhone != null" >
-        contact_phone = #{contactPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=TINYINT},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=TINYINT},
-      </if>
-      <if test="loginTime != null" >
-        login_time = #{loginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="loginIp != null" >
-        login_ip = #{loginIp,jdbcType=VARCHAR},
-      </if>
-      <if test="errorNum != null" >
-        error_num = #{errorNum,jdbcType=TINYINT},
-      </if>
-      <if test="deleted != null" >
-        deleted = #{deleted,jdbcType=TINYINT},
-      </if>
-        modify_time = now(),
-      <if test="modifyId != null" >
-        modify_id = #{modifyId,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <select id="countByDepartmentId" resultType="java.lang.Integer">
+    <insert id="insert" parameterType="com.jimmy.dao.sys.entity.AccountInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_account_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="departmentId != null">
+                department_id,
+            </if>
+            <if test="personId != null">
+                person_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="contactPhone != null">
+                contact_phone,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="loginTime != null">
+                login_time,
+            </if>
+            <if test="loginIp != null">
+                login_ip,
+            </if>
+            <if test="errorNum != null">
+                error_num,
+            </if>
+
+            deleted,
+            create_time,
+            modify_time,
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="modifyId != null">
+                modify_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="departmentId != null">
+                #{departmentId},
+            </if>
+            <if test="personId != null">
+                #{personId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="loginTime != null">
+                #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loginIp != null">
+                #{loginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="errorNum != null">
+                #{errorNum,jdbcType=TINYINT},
+            </if>
+            0,
+            now(),
+            now(),
+            <if test="createId != null">
+                #{createId,jdbcType=INTEGER},
+            </if>
+            <if test="modifyId != null">
+                #{modifyId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.jimmy.dao.sys.entity.AccountInfo">
+        update t_account_info
+        <set>
+            <if test="departmentId != null">
+                department_id=#{departmentId},
+            </if>
+            <if test="personId != null">
+                person_id = #{personId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loginIp != null">
+                login_ip = #{loginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="errorNum != null">
+                error_num = #{errorNum,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+            modify_time = now(),
+            <if test="modifyId != null">
+                modify_id = #{modifyId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="countByDepartmentId" resultType="java.lang.Integer">
     select count(id) from t_account_info where deleted=0 and department_id=#{departmentId}
   </select>
-  
-  <select id="listByDepartmentId" resultMap="BaseResultMap">
-     select
-    <include refid="Base_Column_List" />
-    from t_account_info a where deleted=0 and department_id=#{departmentId}
-    <if test="searchName != null ">
-     and  (a.name like contcat('%','#{searchName}','%')
-      or EXISTS (SELECT  p.id from t_person_info p where p.deleted=0 and p.name like contcat('%','#{searchName}','%') )
-      )
-    </if>
-  </select>
+    <resultMap id="accountPersonResultMap" type="com.jimmy.dao.sys.entity.AccountPerson">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="person_id" property="personId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="person_name" property="personName"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="contact_tel" property="contactTel" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="org_name" property="orgName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="INTEGER"/>
+        <result column="modify_id" property="modifyId" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="listByDepartmentId" resultMap="accountPersonResultMap">
+        select
+         a.id,a.person_id,a.name,p.name person_name,p.email,p.contact_tel,a.status,p.create_time,p.modify_time,
+        p.create_id,p.modify_id,dp.department_name org_name
+        from t_account_info a
+        JOIN t_person_info p on a.person_id=p.id and p.deleted=0
+        JOIN t_department_info dp on a.department_id=dp.id
+        where a.deleted=0 and a.department_id=#{departmentId}
+        <if test="searchName != null ">
+            and (a.name like contcat('%','#{searchName}','%')
+              or p.name like contcat('%','#{searchName}','%') )
+        </if>
+    </select>
 </mapper>

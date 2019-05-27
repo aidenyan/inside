@@ -1,5 +1,6 @@
 package com.jimmy.service.sys.impl;
 
+import com.jimmy.annon.DisabledLog;
 import com.jimmy.base.Page;
 import com.jimmy.dao.sys.entity.SysLogInfo;
 import com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs;
@@ -39,5 +40,13 @@ public class SysLogInfoServiceImpl implements SysLogInfoService {
         Assert.notNull(id);
 
         return sysLogInfoMapper.find(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor =Exception.class)
+    @DisabledLog
+    public void save(SysLogInfoWithBLOBs sysLogInfoWithBLOBs) {
+        Assert.notNull(sysLogInfoWithBLOBs);
+         sysLogInfoMapper.insert(sysLogInfoWithBLOBs);
     }
 }

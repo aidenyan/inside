@@ -5,7 +5,7 @@ CONFDIR="${DK_HOME}/../conf"
 LOG_HOME="${DK_HOME}/../logs"
 WORK_HOME="${DK_HOME}/../work"
 CLASSPATH="${DK_HOME}/../lib/*:${CONFDIR}"
-MAINCLASS="com.zcckj.Application"
+MAINCLASS="com.jimmy.Application"
 
 if [ ! -d $LOG_HOME ]; then
     mkdir $LOG_HOME

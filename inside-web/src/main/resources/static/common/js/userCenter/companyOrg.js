@@ -63,7 +63,7 @@ layui.use(['form','laypage','layer','laytpl','element','myAjax','laydate'], func
     	}
        var data={
     		   'parentTree':","+parentId+",",
-    		   'companyName':$("#searchParam").val()
+    		   'departmentName':$("#searchParam").val()
        }
     	dataAjaxPage(data);
        }, "search");
@@ -94,7 +94,7 @@ var orderObj = new Order(function (obj) {
 	}
    var data={
 		   'parentId':parentId,
-		   'department':$("#searchParam").val()
+		   'departmentName':$("#searchParam").val()
    }
 	myAjax.ajaxPage('/api/admin/account/department/page','pageNum','page_tbody','pageTpl',orderObj.setOption(data),'post');
 },"c.create_time");
@@ -204,7 +204,7 @@ $("#searchCompany").click(function(){
 	}
    var data={
 		   'parentTree':","+parentId+",",
-		   'companyName':$("#searchParam").val()
+		   'departmentName':$("#searchParam").val()
    }
    dataAjaxPage(data);
 })

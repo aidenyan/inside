@@ -1,6 +1,8 @@
 package com.jimmy.service.account;
 
 import com.jimmy.dao.sys.entity.AccountInfo;
+import com.jimmy.dao.sys.entity.AccountPerson;
+import com.jimmy.dao.sys.entity.AccountRole;
 import com.jimmy.dao.sys.entity.PersonInfo;
 import com.jimmy.dao.sys.enums.AccountTypeEnum;
 
@@ -13,11 +15,24 @@ public interface AccountInfoService {
 
     AccountInfo find(Long id);
 
+    boolean checkAccountPhone(String mobile, AccountTypeEnum type);
+
     Integer countByDepartmentId(Long departmentId);
 
     void updateAccountInfo(AccountInfo accountInfo);
 
-    void updatePersonInfo(AccountInfo accountInfo, PersonInfo personInfo);
+    void deleteById(Long id);
 
-    List<AccountInfo> listByDepartmentId(Long departmentId, String searchName);
+    void updatePersonInfo(AccountInfo accountInfo, PersonInfo personInfo);
+    void updatePersonInfo( PersonInfo personInfo);
+
+    void save(AccountInfo accountInfo, PersonInfo personInfo, List<Long> roleIdList);
+
+    List<AccountPerson> listByDepartmentId(Long departmentId, String searchName);
+
+    List<AccountRole> listRoleAccountInfo(Long accountId);
+
+    void updateAccountRole(List<Long> roleIdList, Long accountId);
+
+    PersonInfo findPerson(Long personId);
 }

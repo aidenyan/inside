@@ -61,7 +61,6 @@
                     <th>组织简称</th>
                     <th class="sort" name="c.agent_code">组织编号</th>
                     <th class="sort" name="c.agent_type">组织类型</th>
-                    <th>父类简称</th>
                     <th class="sort" name="c.level">层级</th>
                     <th class="sort" name="c.create_time">创建时间</th>
                     <th class="">操作</th>
@@ -201,7 +200,6 @@
         <td>{{item.departmentShortName==null||item.departmentShortName==''?'-':item.departmentShortName}}</td>
         <td>{{item.agentCode==null||item.agentCode==''?'-':item.agentCode}}</td>
         <td>{{item.agentType==null||item.agentType==''?'-':companyOrgTypeRechange(item.agentType,item.defaultWarehouse)}}</td>
-        <td>{{item.parentShortName==null||item.parentShortName==''?'-':item.parentShortName}}</td>
         <td>{{item.level==null||item.level==''?'-':item.level}}级</td>
         <td>{{item.createTime==null?'-':laydate.now(item.createTime,'YYYY-MM-DD hh:mm:ss')}}</td>
         <td class="state_uhandle">

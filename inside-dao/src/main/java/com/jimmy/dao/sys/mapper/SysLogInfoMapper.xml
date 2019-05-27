@@ -19,7 +19,7 @@
   <resultMap id="ResultMapWithBLOBs" type="com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs" extends="BaseResultMap" >
     <result column="operation_result" property="operationResult" jdbcType="LONGVARCHAR" />
     <result column="operation_detail" property="operationDetail" jdbcType="LONGVARCHAR" />
-    <result column="obj_id" property="objId" jdbcType="VARBINARY" />
+    <result column="obj_id" property="objId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, operation_content, operation_code, log_type, operation_ip, operation_token, sign, 
@@ -87,9 +87,6 @@
   <insert id="insert" parameterType="com.jimmy.dao.sys.entity.SysLogInfoWithBLOBs" >
     insert into t_sys_log_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="operationContent != null" >
         operation_content,
       </if>
@@ -136,9 +133,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="operationContent != null" >
         #{operationContent,jdbcType=VARCHAR},
       </if>
@@ -224,7 +218,7 @@
         operation_detail = #{operationDetail,jdbcType=LONGVARCHAR},
       </if>
       <if test="objId != null" >
-        obj_id = #{objId,jdbcType=VARBINARY},
+        obj_id = #{objId,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

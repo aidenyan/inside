@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.jimmy:sublimation-common:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-common/1.0-SNAPSHOT/sublimation-common-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-common/1.0-SNAPSHOT/sublimation-common-1.0-20190513.134419-3.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-common/1.0-SNAPSHOT/sublimation-common-1.0-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-common/1.0-SNAPSHOT/sublimation-common-1.0-20190513.134419-3-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-common/1.0-SNAPSHOT/sublimation-common-1.0-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jimmy/sublimation-common/1.0-SNAPSHOT/sublimation-common-1.0-20190513.134419-3-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

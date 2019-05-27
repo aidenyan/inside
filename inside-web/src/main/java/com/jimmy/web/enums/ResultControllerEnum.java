@@ -15,7 +15,7 @@ public enum ResultControllerEnum implements ResultEnum {
     RESULT_PASSWORD_ERROR("-2005", "原来的密码错误！"),
 	RESULT_ACCOUNT_NAMECHECK("-2006", "用户账号重复"),
 	RESULT_ACCOUNT_PHONECHECK("-2007", "用户手机重复"),
-	RESULT_PLATFORM_CODECHECK("-2008", "平台编号重复"),
+	RESULT_DEPARTMENT_ERROR("-2008", "对应的组织机构不存在"),
 	RESULT_SYSMODEL_CODECHECK("-2009", "模板编号重复"),
 	RESULT_COMPANYORG_DELETECHECK("-2010", "无法删除，该组织下存在子组织或用户"),
 	RESULT_POSITION_DELETECHECK("-2011", "无法删除，该职位已有用户在使用");

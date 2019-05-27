@@ -43,7 +43,7 @@ public class DepartmentInfoServiceImpl implements DepartmentInfoService {
             departTreeInfoDTO.setId(departmentInfo.getId());
             departTreeInfoDTO.setLevel(departmentInfo.getLevel());
             departTreeInfoDTO.setName(departmentInfo.getDepartmentName());
-            departTreeInfoDTO.setPId(departmentInfo.getParentId());
+            departTreeInfoDTO.setpId(departmentInfo.getParentId());
             departTreeInfoDTO.setAgentType(departmentInfo.getAgentType());
             departTreeInfoDTO.setParentTree(departmentInfo.getParentTree());
             treeInfoDTOList.add(departTreeInfoDTO);

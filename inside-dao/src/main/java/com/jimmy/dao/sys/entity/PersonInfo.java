@@ -1,12 +1,13 @@
 package com.jimmy.dao.sys.entity;
 
+import com.jimmy.sublimation.validate.anno.NotEmpty;
 import lombok.Data;
 
 import java.util.Date;
 @Data
 public class PersonInfo {
     private Long id;
-
+    @NotEmpty(value = "个人信息不能为空",groups = {"save"})
     private String name;
 
     private Integer gender;
