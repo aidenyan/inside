@@ -8,4 +8,8 @@ import lombok.Data;
 @Data
 public class SysConfigDTO {
     private String logoUrl;
+
+    private String sysUrl;
+
+    private String sysName;
 }

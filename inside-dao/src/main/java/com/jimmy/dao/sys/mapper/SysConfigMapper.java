@@ -2,16 +2,16 @@ package com.jimmy.dao.sys.mapper;
 
 import com.jimmy.dao.sys.entity.SysConfig;
 
+import java.util.List;
+
 public interface SysConfigMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleted();
 
     int insert(SysConfig record);
 
-    int insertSelective(SysConfig record);
+    List<SysConfig> list();
 
-    SysConfig selectByPrimaryKey(Integer id);
+    int update(SysConfig sysConfig);
 
-    int updateByPrimaryKeySelective(SysConfig record);
 
-    int updateByPrimaryKey(SysConfig record);
 }

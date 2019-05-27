@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(readOnly = true)
 public class SysAreaServiceImpl implements SysAreaService {
 	
 	@Autowired
